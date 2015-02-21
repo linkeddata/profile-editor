@@ -1,0 +1,67 @@
+.main {
+	padding-top: 10px;
+}
+
+.nav-wrapper {
+	padding: 0 10px 0 10px;
+}
+
+nav .brand-logo {
+	position: relative;
+	left: inherit;
+	width: inherit;
+}
+
+ul.side-nav li {
+	width:100%;
+	padding: 0px;
+	display: inline-block;
+	vertical-align:top;
+}
+
+ul.side-nav li a {
+	width: 100%;
+	padding: 0;
+}
+
+#toggle-sidenav {
+	margin-right: 50px;
+	position: relative;
+	left: 10px;
+}
+
+.page-title {
+	padding-left: 10px;
+}
+
+.profile-card {
+	padding: 10px 0 10px 0;
+	color: #fff;
+	line-height: 32px;
+}
+
+#left-menu li:hover {
+	background-color: #ddd;
+}
+
+#left-menu li i {
+	margin-right: 10px;
+}
+
+.bottom-dots {
+	border-bottom: 1px dotted #ddd;
+}
+
+/* override label color */
+.input-field label {
+ color: #000;
+}
+/* label focus color */
+.input-field input[type=text]:focus + label {
+ color: #2196f3;
+}
+/* label underline focus color */
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid #2196f3;
+ box-shadow: 0 1px 0 0 #2196f3;
+}

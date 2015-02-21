@@ -1,0 +1,25 @@
+{
+  "name": "WebID-profile-editor",
+  "version": "0.0.!",
+  "homepage": "https://github.com/linkeddata/profile-editor",
+  "authors": [
+    "Andrei Sambra <andrei@w3.org>"
+  ],
+  "description": "Profile editor for WebID accounts",
+  "license": "MIT",
+  "keywords": "webid, polymer, angularjs, web-components",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "~0.2.13",
+    "angularjs": "~1.3.13",
+    "materialize": "~0.95.2"
+  }
+}
