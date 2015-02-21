@@ -9,7 +9,7 @@
 </head>
 <body ng-cloak>
   <nav>
-    <div class="nav-wrapper blue lighten-1">
+    <div class="nav-wrapper blue accent-2">
       <div class="col s12">
         <a href="#" data-activates="left-menu" id="toggle-sidenav" class="left"><i class="mdi-navigation-menu"></i></a>
         <div class="brand-logo valign-wrapper"><span class="valign">{{pageTitle}}</span></div>
@@ -54,6 +54,8 @@
 <script>
   $( document ).ready(function(){
     $('#toggle-sidenav').sideNav({closeOnClick: true});
+    NotifierjsConfig.defaultTimeOut = 1500;
+    NotifierjsConfig.position = ["top", "right"];
   });
 
 </script>

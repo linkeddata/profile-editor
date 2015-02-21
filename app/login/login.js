@@ -53,7 +53,7 @@ angular.module( 'App.login', [
           if (depic) {
             pic = depic.value;
           } else {
-            pic = 'assets/generic_photo.png';
+            pic = 'images/generic_photo.png';
           }
         }
         userProfile.classtype = classType;
@@ -87,8 +87,8 @@ angular.module( 'App.login', [
       var user = headers('User');
       if (user && user.length > 0 && user.slice(0,4) == 'http') {
         $scope.getProfile(user, true);
-        console.log('Authenticated through WebID-TLS!');
       } else {
+        Notifier.warning('WebID-TLS authentication failed.');
         console.log('WebID-TLS authentication failed.');
       }
     });
@@ -100,6 +100,9 @@ angular.module( 'App.login', [
     app.userProfile = $scope.$parent.userProfile;
     sessionStorage.setItem($scope.$parent.appuri, JSON.stringify(app));
     $scope.$parent.loggedIn = true;
+    console.log('Authenticated through WebID-TLS!');
+    var authUser = ($scope.$parent.userProfile.fullname)?" as "+$scope.$parent.userProfile.fullname:"";
+    Notifier.success('Authenticated'+authUser);
   };
 
 });
