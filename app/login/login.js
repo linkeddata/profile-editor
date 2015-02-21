@@ -16,10 +16,11 @@ angular.module( 'App.login', [
 })
 
 .controller( 'LoginCtrl', function AboutCtrl( $scope, $http, $location, $state, global ) {
-
+  $scope.loginButtonText = 'Login';
+  
   $scope.getProfile = function(uri, login) {
     var userProfile = {};
-    userProfile.webid = uri;   
+    userProfile.webid = uri;
 
     var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
     var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
@@ -37,6 +38,8 @@ angular.module( 'App.login', [
         userProfile.name = uri;
         console.log('Warning - profile not found.');
         userProfile.loading = false;
+        Notifier.warning('Failed to fetch profile. HTTP '+xhr.status);
+        $scope.loginButtonText = 'Login';
         $scope.$apply();
       } else {
         var classType = (g.any(webidRes, RDF('type')).value == FOAF('Group').value)?'agentClass':'agent';
@@ -78,10 +81,11 @@ angular.module( 'App.login', [
   };
 
   $scope.login = function() {
+    $scope.loginButtonText = 'Loggin in...';
     $http({
-    method: 'HEAD',
-    url: "https://rww.io/",
-    withCredentials: true
+      method: 'HEAD',
+      url: "https://rww.io/",
+      withCredentials: true
     }).success(function(data, status, headers) {
       // add dir to local list
       var user = headers('User');
@@ -91,6 +95,11 @@ angular.module( 'App.login', [
         Notifier.warning('WebID-TLS authentication failed.');
         console.log('WebID-TLS authentication failed.');
       }
+    }).error(function(data, status, headers) {
+      Notifier.error('Could not connect to auth server: HTTP '+status);
+      console.log('Could not connect to auth server: HTTP '+status);
+      $scope.loginButtonText = 'Login done';
+      $scope.$appy();
     });
   };
 
@@ -103,6 +112,7 @@ angular.module( 'App.login', [
     console.log('Authenticated through WebID-TLS!');
     var authUser = ($scope.$parent.userProfile.fullname)?" as "+$scope.$parent.userProfile.fullname:"";
     Notifier.success('Authenticated'+authUser);
+    $scope.loginButtonText = 'Login done';
   };
 
 });

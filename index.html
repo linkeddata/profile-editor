@@ -7,24 +7,26 @@
   <link rel="stylesheet" href="css/style.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
-<body ng-cloak>
+<body ng-cloak class="blue-grey darken-2">
   <nav>
-    <div class="nav-wrapper blue accent-2">
+    <div class="nav-wrapper black">
       <div class="col s12">
         <a href="#" data-activates="left-menu" id="toggle-sidenav" class="left"><i class="mdi-navigation-menu"></i></a>
         <div class="brand-logo valign-wrapper"><span class="valign">{{pageTitle}}</span></div>
         
-        <ul class="side-nav" id="left-menu">
+        <ul class="side-nav blue-grey darken-3" id="left-menu">
           <li class="blue accent-2" ng-show="loggedIn"><a href="#/view" class="valign-wrapper"><profile-card></profile-card></a></li>
-          <li class="bottom-dots" ng-show="loggedIn"><a href="#/edit" class="valign-wrapper left"><i class="mdi-content-create valign"></i><span class="valign">Edit</span></a></li>
-          <li class="bottom-dots" ng-show="loggedIn"><a href="" ng-click="logout()" class="valign-wrapper left"><i class="mdi-action-exit-to-app valign"></i><span class="valign">Logout</span></a></a></li>
-          <li class="bottom-dots" ng-hide="loggedIn"><a href="#/login" class="valign-wrapper left"><i class="mdi-action-exit-to-app valign"></i><span class="valign">Login</span></a></a></li>
+          <li class="bottom-dots" ng-show="loggedIn"><a href="#/edit" class="valign-wrapper left white-text"><i class="mdi-content-create valign"></i><span class="valign">Edit</span></a></li>
+          <li class="bottom-dots" ng-show="loggedIn"><a href="" ng-click="logout()" class="valign-wrapper left white-text"><i class="mdi-action-exit-to-app valign"></i><span class="valign">Logout</span></a></a></li>
+          <li class="bottom-dots" ng-hide="loggedIn"><a href="#/login" class="valign-wrapper left white-text"><i class="mdi-action-exit-to-app valign"></i><span class="valign">Login</span></a></a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <div ui-view="main" class="main"></div>
+  <div class="container">
+    <div ui-view="main" class="main"></div>
+  </div>
 
 	<footer class="footer">
     <div class="container">

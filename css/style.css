@@ -1,3 +1,14 @@
+body {
+	color: #fff;
+	font-weight: 200;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
 .main {
 	padding-top: 10px;
 }
@@ -10,6 +21,7 @@ nav .brand-logo {
 	position: relative;
 	left: inherit;
 	width: inherit;
+	font-weight: 200;
 }
 
 ul.side-nav li {
@@ -22,6 +34,7 @@ ul.side-nav li {
 ul.side-nav li a {
 	width: 100%;
 	padding: 0;
+	font-weight: 200;
 }
 
 #toggle-sidenav {
@@ -49,12 +62,16 @@ ul.side-nav li a {
 }
 
 .bottom-dots {
-	border-bottom: 1px dotted #ddd;
+	border-bottom: 1px dotted #546e7a;
+}
+
+form {
+	font-weight: 200;
 }
 
 /* override label color */
 .input-field label {
- color: #000;
+ color: #fff;
 }
 /* label focus color */
 .input-field input[type=text]:focus + label {
