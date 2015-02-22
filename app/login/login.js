@@ -45,8 +45,12 @@ angular.module( 'App.login', [
         var classType = (g.any(webidRes, RDF('type')).value == FOAF('Group').value)?'agentClass':'agent';
         // get some basic info
         var name = g.any(webidRes, FOAF('name'));
+        var first = g.any(webidRes, FOAF('givenName'));
+        var last = g.any(webidRes, FOAF('familyName'));
         // Clean up name
         name = (name)?name.value:'';
+        first = (first)?first.value:'';
+        last = (last)?last.value:'';
         var pic = g.any(webidRes, FOAF('img'));
         var depic = g.any(webidRes, FOAF('depiction'));
         // set avatar picture
@@ -61,6 +65,8 @@ angular.module( 'App.login', [
         }
         userProfile.classtype = classType;
         userProfile.fullname = name;
+        userProfile.firstname = first;
+        userProfile.lastname = last;
         userProfile.picture = pic;
         userProfile.loading = false;
         $scope.$parent.userProfile = userProfile;

@@ -4,7 +4,7 @@ body {
 }
 
 footer {
-	position: absolute;
+	position: realtive;
 	bottom: 0;
 	width: 100%;
 }
@@ -13,6 +13,9 @@ footer {
 	padding-top: 10px;
 }
 
+.row .col {
+	padding:0px;
+}
 .nav-wrapper {
 	padding: 0 10px 0 10px;
 }
@@ -57,6 +60,8 @@ ul.side-nav li a {
 	line-height: 32px;
 }
 .profile-picture {
+	top: 50px;
+	left: 50px;
 	max-width: 204px;
 	max-height: 204px;
 	position: relative;
@@ -66,7 +71,7 @@ ul.side-nav li a {
 	position: absolute;
 	bottom: 30px;
 	background: #000;
-	opacity: 0.3;
+	opacity: 0.4;
 	width: 201px;
 }
 .profile-picture a span {
@@ -79,9 +84,11 @@ ul.side-nav li a {
 	margin-right: auto;
 	margin-top: 5px;
 }
-
+.drop-box:hover {
+   border: 2px solid #fff;
+}
 .dragover {
-	border: 2px solid #90caf9;
+	border: 2px solid #fff;
 }
 
 .user-name {
@@ -116,11 +123,15 @@ form {
  color: #fff;
 }
 /* label focus color */
-.input-field input[type=text]:focus + label {
+.input-field input:focus + label {
  color: #90caf9;
 }
 /* label underline focus color */
-.input-field input[type=text]:focus {
+.input-field input:focus {
+ border-bottom: 1px solid #90caf9;
+ box-shadow: 0 1px 0 0 #90caf9;
+}
+.input-field input.valid {
  border-bottom: 1px solid #90caf9;
  box-shadow: 0 1px 0 0 #90caf9;
 }

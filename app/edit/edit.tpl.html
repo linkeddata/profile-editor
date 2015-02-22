@@ -2,7 +2,7 @@
   <form class="col s12">
     <div class="row">
       <div class="col s12 m4">
-        <div ng-file-drop ng-model="files" class="drop-box valign-wrapper profile-picture" 
+        <div ng-file-drop ng-model="files" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
               accept=".jpg,.jpeg,.png">
               <a ng-file-select ng-model="files" class="relative">
@@ -16,33 +16,90 @@
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
       </div>
       <div class="col s12 m8">
+        <p><br/></p>
         <div class="input-field col s12">
-          <input id="first_name" type="text" class="">
-          <label for="first_name">First Name</label>
+          <input id="first_name" type="text" ng-model="profile.firstname">
+          <label for="first_name" ng-class="{active: profile.firstname.length > 0}">First Name</label>
         </div>
         <div class="input-field col s12">
-          <input id="last_name" type="text" class="validate">
-          <label for="last_name">Last Name</label>
+          <input id="last_name" type="text" ng-model="profile.lastname">
+          <label for="last_name" ng-class="{active: profile.lastname.length > 0}">Last Name</label>
+        </div>
+        <div class="input-field col s12">
+          <input id="last_name" type="text" ng-model="profile.fullname">
+          <label for="last_name" ng-class="{active: profile.fullname.length > 0}">Full Name</label>
         </div>
       </div>
     </div>
+
     <div class="row">
-      <div class="input-field col s12">
-        <input id="username" type="text" class="validate">
-        <label for="username">Username</label>
+      <div class="col s12">
+        <h5>Phone numbers</h5>
+      </div>
+      <!-- <div class="col s12 divider"></div> -->
+    </div>
+
+    <div class="row">
+      <div class="input-field col s12" ng-repeat="(id, phone) in profile.phones track by $index">
+        <a class="prefix" ng-if="phone.value.length > 0" ng-click="deletePhone(id)"><i class="mdi-action-delete white-text"></i></a>
+        <input id="telephone" type="tel" ng-model="phone.value">
+        <label for="telephone" ng-class="{active: phone.value.length > 0}">Phone</label>
+      </div>
+      <div class="col s12">
+        <a class="btn-floating waves-effect waves-light blue" ng-click="addPhone('')" alt="Add phone humber"><i class="mdi-content-add"></i></a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <h5>Emails</h5>
+      </div>
+      <!-- <div class="col s12 divider"></div> -->
+    </div>
+
+    <div class="row">
+      <div class="input-field col s12" ng-repeat="(id, email) in profile.emails track by $index">
+        <a class="prefix" ng-if="email.value.length > 0" ng-click="deleteEmail(id)"><i class="mdi-action-delete white-text"></i></a>
+        <input id="email" type="text" ng-model="email.value">
+        <label for="email" ng-class="{active: email.value.length > 0}">Email</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+          <a class="btn-floating waves-effect waves-light blue" ng-click="addEmail('')" alt="Add email address"><i class="mdi-content-add"></i></a>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        <h5>Homepages</h5>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="input-field col s12" ng-repeat="(id, homepage) in profile.homepages track by $index">
+        <a class="prefix" ng-if="homepage.value.length > 0" ng-click="deleteHomepage(id)"><i class="mdi-action-delete white-text"></i></a>
+        <input id="homepage" type="text" ng-model="homepage.value">
+        <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage</label>
+      </div>
+      <div class="col s12">
+        <a class="btn-floating waves-effect waves-light blue" ng-click="addHomepage('')" alt="Add homepage"><i class="mdi-content-add"></i></a>
       </div>
 
-      <div class="input-field col s12">
-        <input id="password" type="password" class="validate">
-        <label for="password">Password</label>
+      <div class="input-field col s12" ng-repeat="(id, workpage) in profile.workpages track by $index">
+        <a class="prefix" ng-if="workpage.value.length > 0" ng-click="deleteWorkpage(id)"><i class="mdi-action-delete white-text"></i></a>
+        <input id="workpage" type="text" ng-model="workpage.value">
+        <label for="workpage" ng-class="{active: workpage.value.length > 0}">Work homepage</label>
       </div>
-
-      <div class="input-field col s12">
-        <input id="email" type="email" class="validate">
-        <label for="email">Email</label>
+      <div class="col s12">
+        <a class="btn-floating waves-effect waves-light blue" ng-click="addWorkpage('')" alt="Add workpage"><i class="mdi-content-add"></i></a>
       </div>
+    </div>
 
+    <div class="row">
+      <div class="col s12 divider"></div>
       <div class="button-field col s12">
+        <br>
         <button class="btn waves-effect waves-light blue" type="submit" name="action">
           Update
           <i class="mdi-navigation-check right" ng-show="isSubmitOk"></i>
