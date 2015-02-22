@@ -64,17 +64,16 @@ ul.side-nav li a {
 }
 .profile-picture a div {
 	position: absolute;
-	max-width: 200px;
 	bottom: 30px;
 	background: #000;
 	opacity: 0.3;
-	width: 100%;
+	width: 201px;
 }
 .profile-picture a span {
 	color: #fff;
 }
 .profile-picture img {
-	max-width: 200px;
+	width: 200px;
 	max-height: 200px;
 	margin-left: auto;
 	margin-right: auto;
@@ -107,6 +106,9 @@ form {
 
 .fixed {
 	position: fixed!important;
+}
+.relative {
+	position: relative!important;
 }
 
 /* override label color */

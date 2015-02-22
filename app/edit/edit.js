@@ -1,6 +1,6 @@
 angular.module( 'App.edit', [
   'ui.router',
-  // 'placeholders'
+  'angularFileUpload'
 ])
 
 .config(function config( $stateProvider ) {
@@ -8,7 +8,7 @@ angular.module( 'App.edit', [
     url: '/edit',
     views: {
       "main": {
-        controller: 'LoginCtrl',
+        controller: 'EditCtrl',
         templateUrl: 'app/edit/edit.tpl.html'
       }
     },
@@ -16,9 +16,15 @@ angular.module( 'App.edit', [
   });
 })
 
-.controller( 'EditCtrl', function AboutCtrl( $scope ) {
+.controller( 'EditCtrl', function AboutCtrl( $scope, $upload ) {
   // blank
-  
-})
+  $scope.profile = {};
+  if (!$scope.profile.picture) {
+    $scope.profile.picture = "images/generic_photo.png";
+    if ($scope.$parent.userProfile && $scope.$parent.userProfile.picture) {
+      $scope.profile.picture = $scope.$parent.userProfile.picture;
+    }
+  }
+  console.log($scope.profile);
 
-;
+});
