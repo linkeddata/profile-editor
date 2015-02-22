@@ -24,6 +24,10 @@ nav .brand-logo {
 	font-weight: 200;
 }
 
+ul.side-nav {
+	width: 150px;
+}
+
 ul.side-nav li {
 	width:100%;
 	padding: 0px;
@@ -52,6 +56,38 @@ ul.side-nav li a {
 	color: #fff;
 	line-height: 32px;
 }
+.profile-picture {
+	max-width: 204px;
+	max-height: 204px;
+	position: relative;
+	cursor: pointer;
+}
+.profile-picture a div {
+	position: absolute;
+	max-width: 200px;
+	bottom: 30px;
+	background: #000;
+	opacity: 0.3;
+	width: 100%;
+}
+.profile-picture a span {
+	color: #fff;
+}
+.profile-picture img {
+	max-width: 200px;
+	max-height: 200px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 5px;
+}
+
+.dragover {
+	border: 2px solid #90caf9;
+}
+
+.user-name {
+	padding: 0 10px 0 10px;
+}
 
 #left-menu li:hover {
 	background-color: #ddd;
@@ -69,16 +105,20 @@ form {
 	font-weight: 200;
 }
 
+.fixed {
+	position: fixed!important;
+}
+
 /* override label color */
 .input-field label {
  color: #fff;
 }
 /* label focus color */
 .input-field input[type=text]:focus + label {
- color: #2196f3;
+ color: #90caf9;
 }
 /* label underline focus color */
 .input-field input[type=text]:focus {
- border-bottom: 1px solid #2196f3;
- box-shadow: 0 1px 0 0 #2196f3;
+ border-bottom: 1px solid #90caf9;
+ box-shadow: 0 1px 0 0 #90caf9;
 }

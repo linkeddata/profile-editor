@@ -18,7 +18,7 @@ angular.module( 'App.login', [
 .controller( 'LoginCtrl', function AboutCtrl( $scope, $http, $location, $state, global ) {
   $scope.loginButtonText = 'Login';
   
-  $scope.getProfile = function(uri, login) {
+  $scope.getProfile = function(uri) {
     var userProfile = {};
     userProfile.webid = uri;
 
@@ -64,16 +64,7 @@ angular.module( 'App.login', [
         userProfile.picture = pic;
         userProfile.loading = false;
         $scope.$parent.userProfile = userProfile;
-        $scope.$parent.userGraph = g;
-        if (login) {
-          $scope.saveCredentials();
-        }
-        // index or update the authenticated WebID on webizen.org
-        $http.get('https://api.webizen.org/v1/search', {
-          params: {
-            q: uri
-          }
-        });
+        $scope.saveCredentials();
         // return to main page
         $state.go('view', {}, {reload: true});
       }
@@ -90,7 +81,7 @@ angular.module( 'App.login', [
       // add dir to local list
       var user = headers('User');
       if (user && user.length > 0 && user.slice(0,4) == 'http') {
-        $scope.getProfile(user, true);
+        $scope.getProfile(user);
       } else {
         Notifier.warning('WebID-TLS authentication failed.');
         console.log('WebID-TLS authentication failed.');

@@ -12,7 +12,8 @@ angular.module( 'App', [
   'App.login',
   'App.view',
   'App.edit',
-  'ui.router'
+  'ui.router',
+  'angularFileUpload'
 ])
 
 .config( function AppConfig ( $stateProvider, $urlRouterProvider ) {
