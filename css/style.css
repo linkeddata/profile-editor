@@ -51,6 +51,7 @@ ul.side-nav li a {
 	margin-right: 50px;
 	position: relative;
 	left: 10px;
+	cursor: pointer;
 }
 
 .page-title {
@@ -61,6 +62,7 @@ ul.side-nav li a {
 	padding: 10px;
 	color: #fff;
 	line-height: 32px;
+	cursor: pointer;
 }
 .profile-picture {
 	margin-top: 20px;
@@ -68,7 +70,11 @@ ul.side-nav li a {
 	max-height: 204px;
 	cursor: pointer;
 }
-.profile-picture a div {
+
+.pick-area {
+	height: 200px;
+}
+.pick-file {
 	position: absolute;
 	bottom: 30px;
 	background: #000;
@@ -83,8 +89,8 @@ ul.side-nav li a {
 	max-height: 200px;
 	margin-left: auto;
 	margin-right: auto;
-	margin-top: 5px;
 }
+
 .drop-box:hover {
    border: 2px solid #fff;
 }
@@ -122,9 +128,10 @@ form {
 	display: inline-block!important;
 }
 .align-left {
-	text-align: left;
-	-webkit-justify-content: left;
-	justify-content: left;
+	text-align: left!important;
+	-webkit-justify-content: inherit!important;
+	-moz-justify-content: inherit!important;
+	justify-content: inherit!important;
 }
 
 .right-10 {

@@ -2,17 +2,17 @@
   <form ng-if="profile.webid" class="col s12">
     <div class="row">
       <div class="col s12 m4 center">
-        <div ng-file-drop ng-model="files" class="drop-box valign-wrapper center profile-picture" 
+        <div ng-file-drop ng-model="pictureFile" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
               accept=".jpg,.jpeg,.png">
-              <a ng-file-select ng-model="files" class="relative center">
-                <div class="valign center valign-wrapper">
+              <div ng-file-select ng-model="pictureFile" class="relative center pick-area">
+                <div class="valign center valign-wrapper pick-file">
                   <i class="mdi-image-camera-alt small white-text valign"></i>
                   <span class="valign">Change photo</span>
                 </div>
                 <img ng-src="{{profile.picture}}"/>
                 <img ng-if="profile.picture.length == 0" src="images/generic_photo.png">
-              </a>
+              </div>
         </div>
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
       </div>
@@ -132,4 +132,19 @@
     <h4>You must prove you own a profile before you can edit it.</h4>
     <a class="waves-effect waves-light btn blue valign" ng-click="login()">{{$parent.loginButtonText}}</a>
   </div>
+
+
+  <div class="modal" id="picture-cropper">
+  <div class="modal-content">
+    <div class="modal-body">
+      <div id="picture-to-crop">
+        <img src="{{picToCrop}}" alt="Picture">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#" class="waves-effect blue white-text btn-flat modal-action modal-close">Close</a>
+      <a href="#" class="waves-effect blue white-text btn-flat modal-action modal-close" ng-click="savePicture()">Save</a>
+    </div>
+  </div>
+</div>
 </div>
