@@ -35,6 +35,7 @@ angular.module( 'App', [
   $scope.appuri = window.location.hostname+window.location.pathname;
   $scope.loginButtonText = 'Login';
   $scope.webid = '';
+
   $scope.profile = {};
   $scope.profile.authenticated = false;
 
@@ -69,15 +70,19 @@ angular.module( 'App', [
             $scope.profile.authenticated = true;
           }
         }
+        // set time of loading
+        $scope.profile.date = Date.now();
 
         // get info
         var name = g.any(webidRes, FOAF('name'));
         var first = g.any(webidRes, FOAF('givenName'));
         var last = g.any(webidRes, FOAF('familyName'));
+        var nick = g.any(webidRes, FOAF('nick'));
         // Clean up name
         name = (name)?name.value:'';
         first = (first)?first.value:'';
         last = (last)?last.value:'';
+        nick = (nick)?nick.value:'';
         // Get pictures
         var img = g.any(webidRes, FOAF('img'));
         var depic = g.any(webidRes, FOAF('depiction'));
@@ -88,6 +93,16 @@ angular.module( 'App', [
         } else if (depic) {
           var picture = depic.value;
           $scope.profile.picture = picture;
+        }
+
+        var blogs = g.statementsMatching(webidRes, FOAF('weblog'));
+        if (blogs.length > 0) {
+          blogs.forEach(function(blog){
+            if (!$scope.profile.blogs) {
+              $scope.profile.blogs = [];
+            }
+            $scope.profile.blogs.push({value: blog['object']['value']});
+          });
         }
 
         var homepages = g.statementsMatching(webidRes, FOAF('homepage'));
@@ -114,6 +129,7 @@ angular.module( 'App', [
         $scope.profile.fullname = name;
         $scope.profile.firstname = first;
         $scope.profile.lastname = last;
+        $scope.profile.nick = nick;
         
         $scope.profile.loading = false;
         $scope.$apply();
@@ -202,8 +218,14 @@ angular.module( 'App', [
       if (!$scope.profile) {
         $scope.profile = {};
       }
-      $scope.profile = app.profile;
-      $scope.loggedIn = true;
+      // don't let session data become stale (24h validity)
+      var dateValid = app.profile.date + 1000 * 60 * 60 * 24;
+      if (Date.now() < dateValid) {
+        $scope.profile = app.profile;
+        $scope.loggedIn = true;
+      } else {
+        sessionStorage.removeItem($scope.appuri);
+      }
     } else {
       // clear sessionStorage in case there was a change to the data structure
       sessionStorage.removeItem($scope.appuri);

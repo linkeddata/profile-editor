@@ -56,7 +56,7 @@ ul.side-nav li a {
 }
 
 .profile-card {
-	padding: 10px 0 10px 0;
+	padding: 10px;
 	color: #fff;
 	line-height: 32px;
 }
@@ -89,9 +89,8 @@ ul.side-nav li a {
 .dragover {
 	border: 2px solid #fff;
 }
-
-.user-name {
-	padding: 0 10px 0 10px;
+#left-menu li a {
+	margin-left: 10px;
 }
 
 #left-menu li:hover {
@@ -99,6 +98,7 @@ ul.side-nav li a {
 }
 
 #left-menu li i {
+	float: left;
 	margin-right: 10px;
 }
 
@@ -115,6 +115,14 @@ form {
 }
 .relative {
 	position: relative!important;
+}
+.inline-block {
+	display: inline-block!important;
+}
+.align-left {
+	text-align: left;
+	-webkit-justify-content: left;
+	justify-content: left;
 }
 
 .btn {

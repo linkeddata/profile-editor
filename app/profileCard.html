@@ -1,6 +1,7 @@
 <div class="profile-card center-align">
 	<div>
-    <img class="circle responsive-img" ng-src="{{profile.picture}}" />
+    <img ng-if="profile.picture" class="circle responsive-img" ng-src="{{profile.picture}}" />
+    <img ng-if="!profile.picture" class="circle responsive-img" src="images/generic_photo.png" />
   </div>
   <div class="user-name">
     <span class="truncate">{{profile.fullname}}</span>
