@@ -1,4 +1,3 @@
-var profile = {};
 angular.module( 'App.edit', [
   'ui.router',
   'angularFileUpload'
@@ -19,26 +18,17 @@ angular.module( 'App.edit', [
 
 .controller( 'EditCtrl', function AboutCtrl( $scope, $upload ) {
   // blank
-  $scope.profile = {};
-  profile = $scope.profile;
+  $scope.profile = ($scope.$parent.profile)?$scope.$parent.profile:{};
+
   $scope.profile.phones = [{value: ''}];
   $scope.profile.emails = [{value: ''}];
   $scope.profile.homepages = [{value: ''}];
   $scope.profile.workpages = [{value: ''}];
   if (!$scope.profile.picture) {
     $scope.profile.picture = "images/generic_photo.png";
-    if ($scope.$parent.userProfile && $scope.$parent.userProfile.picture) {
-      $scope.profile.picture = $scope.$parent.userProfile.picture;
+    if ($scope.$parent.profile && $scope.$parent.profile.picture) {
+      $scope.profile.picture = $scope.$parent.profile.picture;
     }
-  }
-  if (!$scope.profile.fullname && $scope.$parent.userProfile && $scope.$parent.userProfile.fullname) {
-    $scope.profile.fullname = $scope.$parent.userProfile.fullname;
-  }
-  if (!$scope.profile.firstname && $scope.$parent.userProfile && $scope.$parent.userProfile.firstname) {
-    $scope.profile.firstname = $scope.$parent.userProfile.firstname;
-  }
-  if (!$scope.profile.lastname && $scope.$parent.userProfile && $scope.$parent.userProfile.lastname) {
-    $scope.profile.lastname = $scope.$parent.userProfile.lastname;
   }
 
   console.log($scope.profile);
@@ -67,6 +57,8 @@ angular.module( 'App.edit', [
      $scope.profile.workpages.splice(id, 1);
   }
 
-
+  $scope.login = function() {
+    $scope.$parent.login();
+  }
   $scope.$watchCollection('profile', function () { console.log("change");});
 });

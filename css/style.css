@@ -42,6 +42,7 @@ ul.side-nav li a {
 	width: 100%;
 	padding: 0;
 	font-weight: 200;
+	cursor: pointer;
 }
 
 #toggle-sidenav {
@@ -114,6 +115,15 @@ form {
 }
 .relative {
 	position: relative!important;
+}
+
+.btn {
+	margin-bottom: 0;
+}
+
+.h3 {
+	font-size: 2.1rem;
+	padding: 5px;
 }
 
 /* override label color */

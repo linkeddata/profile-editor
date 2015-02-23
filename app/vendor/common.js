@@ -172,7 +172,7 @@ function parseLinkHeader(header) {
     Notifier.notify(message, title, "mdi-action-highlight-remove red-text");
   };
   Notifier.success = function(message, title) {
-    Notifier.notify(message, title, "mdi-action-done-all green-text");
+    Notifier.notify(message, title, "mdi-action-done green-text");
   };
 
 }(jQuery));

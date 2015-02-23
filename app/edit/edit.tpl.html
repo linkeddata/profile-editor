@@ -1,5 +1,5 @@
 <div class="row">
-  <form class="col s12">
+  <form ng-if="profile.webid" class="col s12">
     <div class="row">
       <div class="col s12 m4 center">
         <div ng-file-drop ng-model="files" class="drop-box valign-wrapper center profile-picture" 
@@ -11,6 +11,7 @@
                   <span class="valign">Change photo</span>
                 </div>
                 <img ng-src="{{profile.picture}}"/>
+                <img ng-if="profile.picture.length == 0" src="images/generic_photo.png">
               </a>
         </div>
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
@@ -107,4 +108,8 @@
       </div>
     </div>
   </form>
+  <div ng-hide="profile.webid" class="center">
+    <h4>You must prove you own a profile before you can edit it.</h4>
+    <a class="waves-effect waves-light btn blue valign" ng-click="login()">{{$parent.loginButtonText}}</a>
+  </div>
 </div>
