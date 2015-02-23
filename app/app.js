@@ -21,8 +21,7 @@ angular.module( 'App', [
     url: '/',
     views: {
       "main": {
-        controller: 'MainCtrl',
-        templateUrl: 'app/home.tpl.html'
+        controller: 'MainCtrl'
       }
     },
     data:{ pageTitle: 'Home' }
