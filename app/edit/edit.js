@@ -71,5 +71,4 @@ angular.module( 'App.edit', [
   $scope.login = function() {
     $scope.$parent.login();
   }
-  $scope.$watchCollection('profile', function () { console.log("change");});
 });
