@@ -43,8 +43,7 @@ angular.module( 'App', [
   };
 
   $scope.getProfile = function(uri) {
-    var profile = {};
-    profile.webid = uri;
+    $scope.profile.webid = uri;
 
     var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
     var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
@@ -53,27 +52,25 @@ angular.module( 'App', [
 
     var docURI = (uri.indexOf('#') >= 0)?uri.slice(0, uri.indexOf('#')):uri;
     var webidRes = $rdf.sym(uri);
-    profile.loading = true;
-    profile.authenticated = $scope.profile.authenticated;
+    $scope.profile.loading = true;
     // fetch user data
     f.nowOrWhenFetched(docURI,undefined,function(ok, body, xhr) {
       if (!ok) {
-        profile.uri = uri;
-        profile.name = uri;
         console.log('Warning - profile not found.');
-        profile.loading = false;
+        Notifier.warning('Failed to fetch profile. HTTP '+xhr.status);
+        $scope.profile.uri = uri;
+        $scope.profile.name = uri;
+        $scope.profile.loading = false;
         $scope.loginButtonText = "Login";
         $scope.$apply();
-        Notifier.warning('Failed to fetch profile. HTTP '+xhr.status);
       } else {
         if (xhr && xhr.getResponseHeader('User')) {
           if (xhr.getResponseHeader('User') == uri) {
-            profile.authenticated = true;
+            $scope.profile.authenticated = true;
           }
         }
 
-        var classType = (g.any(webidRes, RDF('type')).value == FOAF('Group').value)?'agentClass':'agent';
-        // get some basic info
+        // get info
         var name = g.any(webidRes, FOAF('name'));
         var first = g.any(webidRes, FOAF('givenName'));
         var last = g.any(webidRes, FOAF('familyName'));
@@ -81,28 +78,51 @@ angular.module( 'App', [
         name = (name)?name.value:'';
         first = (first)?first.value:'';
         last = (last)?last.value:'';
-        var pic = g.any(webidRes, FOAF('img'));
+        // Get pictures
+        var img = g.any(webidRes, FOAF('img'));
         var depic = g.any(webidRes, FOAF('depiction'));
         // set avatar picture
-        if (pic) {
-          pic = pic.value;
+        if (img) {
+          var picture = img.value;
+          $scope.profile.picture = picture;
         } else if (depic) {
-          pic = depic.value;
-        }
-        profile.classtype = classType;
-        profile.fullname = name;
-        profile.firstname = first;
-        profile.lastname = last;
-        profile.picture = pic;
-        profile.loading = false;
-        $scope.profile = profile;
-        console.log($scope.profile);
-        if (profile.authenticated) {
-          $scope.saveCredentials();
+          var picture = depic.value;
+          $scope.profile.picture = picture;
         }
 
-        $scope.loginButtonText = "Login";
+        var homepages = g.statementsMatching(webidRes, FOAF('homepage'));
+        if (homepages.length > 0) {
+          homepages.forEach(function(homepage){
+            if (!$scope.profile.homepages) {
+              $scope.profile.homepages = [];
+            }
+            $scope.profile.homepages.push({value: homepage['object']['value']});
+          });
+        }
+
+        var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'));
+        console.log(workpages);
+        if (workpages.length > 0) {
+          workpages.forEach(function(workpage){
+            if (!$scope.profile.workpages) {
+              $scope.profile.workpages = [];
+            }
+            $scope.profile.workpages.push({value: workpage['object']['value']});
+          });
+        }
+
+        $scope.profile.fullname = name;
+        $scope.profile.firstname = first;
+        $scope.profile.lastname = last;
+        
+        $scope.profile.loading = false;
         $scope.$apply();
+
+        if ($scope.profile.authenticated) {
+          $scope.loginButtonText = "Login";
+          $scope.saveCredentials();
+        }
+        $state.go('view', {}, {redirect: true});
       }
     });
   };

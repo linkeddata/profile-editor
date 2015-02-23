@@ -19,11 +19,18 @@ angular.module( 'App.edit', [
 .controller( 'EditCtrl', function AboutCtrl( $scope, $upload ) {
   // blank
   $scope.profile = ($scope.$parent.profile)?$scope.$parent.profile:{};
-
-  $scope.profile.phones = [{value: ''}];
-  $scope.profile.emails = [{value: ''}];
-  $scope.profile.homepages = [{value: ''}];
-  $scope.profile.workpages = [{value: ''}];
+  if (!$scope.profile.phones) {
+    $scope.profile.phones = [{value: ''}];
+  }
+  if (!$scope.profile.emails) {
+    $scope.profile.emails = [{value: ''}];
+  }
+  if (!$scope.profile.homepages) {
+    $scope.profile.homepages = [{value: ''}];
+  }
+  if (!$scope.profile.workpages) {
+    $scope.profile.workpages = [{value: ''}];
+  }
   if (!$scope.profile.picture) {
     $scope.profile.picture = "images/generic_photo.png";
     if ($scope.$parent.profile && $scope.$parent.profile.picture) {
@@ -31,7 +38,6 @@ angular.module( 'App.edit', [
     }
   }
 
-  console.log($scope.profile);
   $scope.addPhone = function(phone) {
     $scope.profile.phones.push({value: phone});
   }
