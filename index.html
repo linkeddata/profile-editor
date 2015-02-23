@@ -9,21 +9,23 @@
 </head>
 <body ng-cloak class="blue-grey darken-2">
   <div id="body">
-    <nav>
-      <div class="nav-wrapper blue-grey darken-4">
-        <div class="col s12">
-          <a href="#" data-activates="left-menu" id="toggle-sidenav" class="left"><i class="mdi-navigation-menu"></i></a>
-          <div class="brand-logo valign-wrapper"><span class="valign">{{pageTitle}}</span></div>
-          
-          <ul class="side-nav blue-grey darken-3" id="left-menu">
-            <li class="blue accent-2" ng-show="loggedIn"><a href="#/view" class="valign-wrapper"><profile-card></profile-card></a></li>
-            <li class="bottom-dots" ng-show="loggedIn"><a href="#/edit" class="valign-wrapper left-align white-text"><i class="mdi-content-create prefix valign"></i><span class="valign">Edit</span></a></li>
-            <li class="bottom-dots" ng-show="loggedIn"><a href="" ng-click="logout()" class="valign-wrapper left-align white-text"><i class="mdi-action-exit-to-app prefix valign"></i><span class="valign">Logout</span></a></a></li>
-            <li class="bottom-dots" ng-hide="loggedIn"><a href="#/login" class="valign-wrapper left-align white-text"><i class="mdi-action-exit-to-app prefix valign"></i><span class="valign">Login</span></a></a></li>
-          </ul>
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper blue-grey darken-4">
+          <div class="col s12">
+            <a href="#" data-activates="left-menu" id="toggle-sidenav" class="left"><i class="mdi-navigation-menu"></i></a>
+            <div class="brand-logo valign-wrapper"><span class="valign">{{pageTitle}}</span></div>
+            
+            <ul class="side-nav blue-grey darken-3" id="left-menu">
+              <li class="blue accent-2" ng-show="loggedIn"><a href="#/view" class="valign-wrapper"><profile-card></profile-card></a></li>
+              <li class="bottom-dots" ng-show="loggedIn"><a href="#/edit" class="valign-wrapper left-align white-text"><i class="mdi-content-create prefix valign"></i><span class="valign">Edit</span></a></li>
+              <li class="bottom-dots" ng-show="loggedIn"><a href="" ng-click="logout()" class="valign-wrapper left-align white-text"><i class="mdi-action-exit-to-app prefix valign"></i><span class="valign">Logout</span></a></a></li>
+              <li class="bottom-dots" ng-hide="loggedIn"><a href="#/login" class="valign-wrapper left-align white-text"><i class="mdi-action-exit-to-app prefix valign"></i><span class="valign">Login</span></a></a></li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
 
     <div class="container">
       <div ui-view="main" class="main"></div>

@@ -10,7 +10,7 @@ footer {
 }
 
 .main {
-	padding-top: 10px;
+	padding-top: 20px;
 }
 
 .row .col {
@@ -60,11 +60,9 @@ ul.side-nav li a {
 	line-height: 32px;
 }
 .profile-picture {
-	top: 50px;
-	left: 50px;
+	/*top: 50px;*/
 	max-width: 204px;
 	max-height: 204px;
-	position: relative;
 	cursor: pointer;
 }
 .profile-picture a div {
@@ -119,19 +117,22 @@ form {
 }
 
 /* override label color */
+.input-field a {
+	cursor: pointer;
+}
 .input-field label {
- color: #fff;
+	color: #fff;
 }
 /* label focus color */
 .input-field input:focus + label {
- color: #90caf9;
+	color: #90caf9!important;
 }
 /* label underline focus color */
 .input-field input:focus {
- border-bottom: 1px solid #90caf9;
- box-shadow: 0 1px 0 0 #90caf9;
+	border-bottom: 1px solid #90caf9;
+	box-shadow: 0 1px 0 0 #90caf9;
 }
 .input-field input.valid {
- border-bottom: 1px solid #90caf9;
- box-shadow: 0 1px 0 0 #90caf9;
+	border-bottom: 1px solid #90caf9;
+	box-shadow: 0 1px 0 0 #90caf9;
 }

@@ -1,11 +1,11 @@
 <div class="row">
   <form class="col s12">
     <div class="row">
-      <div class="col s12 m4">
+      <div class="col s12 m4 center">
         <div ng-file-drop ng-model="files" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
               accept=".jpg,.jpeg,.png">
-              <a ng-file-select ng-model="files" class="relative">
+              <a ng-file-select ng-model="files" class="relative center">
                 <div class="valign center valign-wrapper">
                   <i class="mdi-image-camera-alt small white-text valign"></i>
                   <span class="valign">Change photo</span>
@@ -16,7 +16,7 @@
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
       </div>
       <div class="col s12 m8">
-        <p><br/></p>
+        <!-- <p><br/></p> -->
         <div class="input-field col s12">
           <input id="first_name" type="text" ng-model="profile.firstname">
           <label for="first_name" ng-class="{active: profile.firstname.length > 0}">First Name</label>
