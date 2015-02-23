@@ -2,10 +2,10 @@
   <form ng-if="profile.webid" class="col s12">
     <div class="row">
       <div class="col s12 m4 center">
-        <div ng-file-drop ng-model="pictureFile" class="drop-box valign-wrapper center profile-picture" 
+        <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
               accept=".jpg,.jpeg,.png">
-              <div ng-file-select ng-model="pictureFile" class="relative center pick-area">
+              <div ng-file-select ng-model="pictureFile.file" class="relative center pick-area">
                 <div class="valign center valign-wrapper pick-file">
                   <i class="mdi-image-camera-alt small white-text valign"></i>
                   <span class="valign">Change photo</span>
@@ -16,19 +16,31 @@
         </div>
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
       </div>
+
       <div class="col s12 m8">
-        <!-- <p><br/></p> -->
-        <div class="input-field col s12">
-          <input id="first_name" type="text" ng-model="profile.firstname">
-          <label for="first_name" ng-class="{active: profile.firstname.length > 0}">First Name</label>
+        <h4 class="valign-wrapper align-left"><i class="mdi-action-account-box white-text valign right-10"></i>Name</h4>
+      </div>
+      <div class="col s12 m8">
+        <div class="row">
+          <div class="input-field pad-right-10 col s12 m6">
+            <input id="firstname" type="text" ng-model="profile.firstname">
+            <label for="firstname" ng-class="{active: profile.firstname.length > 0}">First Name</label>
+          </div>
+          <div class="input-field pad-right-10 col s12 m3">
+            <input id="lastname" type="text" ng-model="profile.lastname">
+            <label for="lastname" ng-class="{active: profile.lastname.length > 0}">Last Name</label>
+          </div>
+          <div class="input-field col s12 m3">
+            <input id="nick" type="text" ng-model="profile.nick">
+            <label for="nick" ng-class="{active: profile.nick.length > 0}">Nickname</label>
+          </div>
+
         </div>
-        <div class="input-field col s12">
-          <input id="last_name" type="text" ng-model="profile.lastname">
-          <label for="last_name" ng-class="{active: profile.lastname.length > 0}">Last Name</label>
-        </div>
-        <div class="input-field col s12">
-          <input id="last_name" type="text" ng-model="profile.fullname">
-          <label for="last_name" ng-class="{active: profile.fullname.length > 0}">Full Name</label>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="fullname" type="text" ng-model="profile.fullname">
+            <label for="fullname" ng-class="{active: profile.fullname.length > 0}">Full Name</label>
+          </div>
         </div>
       </div>
     </div>
@@ -37,7 +49,6 @@
       <div class="col s12">
         <h4 class="valign-wrapper align-left"><i class="mdi-communication-phone white-text valign right-10"></i>Phone numbers</h4>
       </div>
-      <!-- <div class="col s12 divider"></div> -->
     </div>
 
     <div class="row">
@@ -55,7 +66,6 @@
       <div class="col s12">
         <h4 class="valign-wrapper align-left"><i class="mdi-communication-email white-text valign right-10"></i>Emails</h4>
       </div>
-      <!-- <div class="col s12 divider"></div> -->
     </div>
 
     <div class="row">
@@ -133,18 +143,22 @@
     <a class="waves-effect waves-light btn blue valign" ng-click="login()">{{$parent.loginButtonText}}</a>
   </div>
 
-
-  <div class="modal" id="picture-cropper">
-  <div class="modal-content">
-    <div class="modal-body">
-      <div id="picture-to-crop">
-        <img src="{{picToCrop}}" alt="Picture">
+  <div class="modal s12 m3" id="picture-cropper">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="col s12 m6 valign-wrapper">
+          <div class="cropArea valign">
+            <img-crop image="originalImage" area-type="square" result-image-format="{{imageType}}" result-image="croppedImage"></img-crop>
+          </div>
+        </div>
+        <div class="col s12 m6 valign-wrapper">
+          <img id="result-image" class="valign" ng-src="{{croppedImage}}" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="waves-effect blue white-text btn-flat modal-action modal-close">Cancel</a>
+        <a href="#" class="waves-effect blue white-text btn-flat modal-action modal-close right-10" ng-click="savePicture()">Save</a>
       </div>
     </div>
-    <div class="modal-footer">
-      <a href="#" class="waves-effect blue white-text btn-flat modal-action modal-close">Close</a>
-      <a href="#" class="waves-effect blue white-text btn-flat modal-action modal-close" ng-click="savePicture()">Save</a>
-    </div>
   </div>
-</div>
 </div>

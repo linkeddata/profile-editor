@@ -4,6 +4,7 @@
   <title>Profile Editor</title>
 	<!-- Head -->
   <link rel="stylesheet" href="bower_components/materialize/dist/css/materialize.css" media="screen,projection"/>
+  <link rel="stylesheet" href="bower_components/ngImgCrop/compile/minified/ng-img-crop.css"/>
   <link rel="stylesheet" href="css/style.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
@@ -19,7 +20,7 @@
             <ul class="side-nav blue-grey darken-3" id="left-menu">
               <li class="blue accent-2" ng-show="profile.authenticated"><profile-card></profile-card></li>
               <li ng-show="profile.authenticated">
-                <a href="#/edit/profile" class="white-text valign-wrapper align-left"><i class="mdi-action-account-circle prefix valign inline-block"></i><span class="valign inline-block">Profile</span></a></li>
+                <a href="#/edit/profile" class="white-text valign-wrapper align-left"><i class="mdi-action-account-box prefix valign inline-block"></i><span class="valign inline-block">Profile</span></a></li>
               <li ng-show="profile.authenticated">
                 <a href="#/edit/friends" class="valign-wrapper align-left white-text"><i class="mdi-social-people prefix valign"></i><span class="valign">Friends</span></a></li>
               <li ng-show="profile.authenticated">
@@ -62,6 +63,7 @@
 <script src="bower_components/angularjs/angular.js"></script>
 <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
+<script src="bower_components/ngImgCrop/compile/minified/ng-img-crop.js"></script>
 <!-- Vendor specific deps -->
 <script src="app/vendor/rdflib.js/rdflib.js"></script>
 <script src="app/vendor/common.js"></script>
@@ -74,6 +76,7 @@
 
 <script>
   $( document ).ready(function(){
+    $('.modal-trigger').leanModal();
     $('#toggle-sidenav').sideNav({closeOnClick: true});
     NotifierjsConfig.defaultTimeOut = 1500;
     NotifierjsConfig.position = ["top", "right"];

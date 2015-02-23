@@ -66,9 +66,10 @@ ul.side-nav li a {
 }
 .profile-picture {
 	margin-top: 20px;
-	max-width: 204px;
-	max-height: 204px;
+	width: 204px;
+	height: 204px;
 	cursor: pointer;
+	display: inline-block;
 }
 
 .pick-area {
@@ -76,10 +77,11 @@ ul.side-nav li a {
 }
 .pick-file {
 	position: absolute;
+	left: 2px;
 	bottom: 30px;
 	background: #000;
 	opacity: 0.4;
-	width: 201px;
+	width: 200px;
 }
 .profile-picture a span {
 	color: #fff;
@@ -118,6 +120,17 @@ form {
 	font-weight: 200;
 }
 
+.cropArea {
+  background: #E4E4E4;
+  overflow: hidden;
+  width:200px;
+  height:200px;
+}
+.result-image {
+	width: 200px;
+	height: 200px;
+}
+
 .fixed {
 	position: fixed!important;
 }
@@ -135,7 +148,14 @@ form {
 }
 
 .right-10 {
-	margin-right: 10px;
+	margin-right: 10px!important;
+}
+.pad-right-10 {
+	padding-right: 10px!important;
+}
+
+.w-500 {
+	width: 500px!important;
 }
 
 .btn {
