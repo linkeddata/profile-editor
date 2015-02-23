@@ -40,7 +40,8 @@ angular.module( 'App', [
   $scope.profile.authenticated = false;
 
   $scope.view = function() {
-    $scope.getProfile(webid);
+    $('#toggle-sidenav').sideNav('hide');
+    $state.go('view', {}, {redirect: true});
   };
 
   $scope.getProfile = function(uri) {
@@ -94,8 +95,23 @@ angular.module( 'App', [
           var picture = depic.value;
           $scope.profile.picture = picture;
         }
+        // Emails
+        var emails = g.statementsMatching(webidRes, FOAF('mbox'), undefined);
+        if (emails.length > 0) {
+          emails.forEach(function(email){
+            if (!$scope.profile.emails) {
+              $scope.profile.emails = [];
+            }
+            email = email['object']['value'];
+            if (email.indexOf('mailto:') >= 0) {
+              email = email.slice(7, email.length);
+            }
 
-        var blogs = g.statementsMatching(webidRes, FOAF('weblog'));
+            $scope.profile.emails.push({value: email});
+          });
+        }
+        // Blogs
+        var blogs = g.statementsMatching(webidRes, FOAF('weblog'), undefined);
         if (blogs.length > 0) {
           blogs.forEach(function(blog){
             if (!$scope.profile.blogs) {
@@ -104,8 +120,8 @@ angular.module( 'App', [
             $scope.profile.blogs.push({value: blog['object']['value']});
           });
         }
-
-        var homepages = g.statementsMatching(webidRes, FOAF('homepage'));
+        // Homepages
+        var homepages = g.statementsMatching(webidRes, FOAF('homepage'), undefined);
         if (homepages.length > 0) {
           homepages.forEach(function(homepage){
             if (!$scope.profile.homepages) {
@@ -114,8 +130,8 @@ angular.module( 'App', [
             $scope.profile.homepages.push({value: homepage['object']['value']});
           });
         }
-
-        var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'));
+        // Workpages
+        var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'), undefined);
         console.log(workpages);
         if (workpages.length > 0) {
           workpages.forEach(function(workpage){

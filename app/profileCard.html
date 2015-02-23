@@ -1,5 +1,5 @@
-<div class="profile-card center-align">
-	<div>
+<div class="profile-card center-align" ng-click="view()">
+  <div>
     <img ng-if="profile.picture" class="circle responsive-img" ng-src="{{profile.picture}}" />
     <img ng-if="!profile.picture" class="circle responsive-img" src="images/generic_photo.png" />
   </div>

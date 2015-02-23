@@ -61,7 +61,7 @@ ul.side-nav li a {
 	line-height: 32px;
 }
 .profile-picture {
-	/*top: 50px;*/
+	margin-top: 20px;
 	max-width: 204px;
 	max-height: 204px;
 	cursor: pointer;
@@ -125,8 +125,13 @@ form {
 	justify-content: left;
 }
 
+.right-10 {
+	margin-right: 10px;
+}
+
 .btn {
 	margin-bottom: 0;
+	padding: 0 1rem;
 }
 
 .h3 {
