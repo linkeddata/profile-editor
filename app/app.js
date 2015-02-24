@@ -44,7 +44,7 @@ angular.module( 'App', [
     $state.go('view', {}, {redirect: true});
   };
 
-  $scope.getProfile = function(uri) {
+  $scope.getProfile = function(uri, authenticated) {
     $scope.profile.webid = uri;
 
     var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
@@ -66,10 +66,10 @@ angular.module( 'App', [
         $scope.loginButtonText = "Login";
         $scope.$apply();
       } else {
-        if (xhr && xhr.getResponseHeader('User')) {
-          if (xhr.getResponseHeader('User') == uri) {
-            $scope.profile.authenticated = true;
-          }
+        if (xhr && xhr.getResponseHeader('User') && xhr.getResponseHeader('User') == uri) {
+          $scope.profile.authenticated = true;
+        } else if (authenticated) {
+          $scope.profile.authenticated = true;
         }
         // set time of loading
         $scope.profile.date = Date.now();
@@ -181,7 +181,7 @@ angular.module( 'App', [
       // add dir to local list
       var user = headers('User');
       if (user && user.length > 0 && user.slice(0,4) == 'http') {
-        $scope.getProfile(user);
+        $scope.getProfile(user, true);
         $scope.loginButtonText = 'Done, redirecting...';
       } else {
         Notifier.warning('WebID-TLS authentication failed.');
@@ -251,7 +251,7 @@ angular.module( 'App', [
   var webid = getParam('webid');
   if (webid && webid.length > 0 && !$scope.profile.webid) {
     $scope.webid = webid;
-    $scope.getProfile(webid);
+    $scope.getProfile(webid, false);
   }
 
 })
