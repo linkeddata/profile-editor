@@ -61,7 +61,7 @@ angular.module( 'App', [
         console.log('Warning - profile not found.');
         Notifier.warning('Failed to fetch profile. HTTP '+xhr.status);
         $scope.profile.uri = uri;
-        $scope.profile.name = uri;
+        $scope.profile.fullname = uri;
         $scope.profile.loading = false;
         $scope.loginButtonText = "Login";
         $scope.$apply();
@@ -79,11 +79,17 @@ angular.module( 'App', [
         var first = g.any(webidRes, FOAF('givenName'));
         var last = g.any(webidRes, FOAF('familyName'));
         var nick = g.any(webidRes, FOAF('nick'));
-        // Clean up name
+
         name = (name)?name.value:'';
         first = (first)?first.value:'';
         last = (last)?last.value:'';
         nick = (nick)?nick.value:'';
+
+        $scope.profile.fullname = name;
+        $scope.profile.firstname = first;
+        $scope.profile.lastname = last;
+        $scope.profile.nick = nick;
+
         // Get pictures
         var img = g.any(webidRes, FOAF('img'));
         var depic = g.any(webidRes, FOAF('depiction'));
@@ -95,6 +101,7 @@ angular.module( 'App', [
           var picture = depic.value;
           $scope.profile.picture = picture;
         }
+
         // Emails
         var emails = g.statementsMatching(webidRes, FOAF('mbox'), undefined);
         if (emails.length > 0) {
@@ -110,6 +117,7 @@ angular.module( 'App', [
             $scope.profile.emails.push({value: email});
           });
         }
+
         // Blogs
         var blogs = g.statementsMatching(webidRes, FOAF('weblog'), undefined);
         if (blogs.length > 0) {
@@ -120,6 +128,7 @@ angular.module( 'App', [
             $scope.profile.blogs.push({value: blog['object']['value']});
           });
         }
+
         // Homepages
         var homepages = g.statementsMatching(webidRes, FOAF('homepage'), undefined);
         if (homepages.length > 0) {
@@ -130,10 +139,10 @@ angular.module( 'App', [
             $scope.profile.homepages.push({value: homepage['object']['value']});
           });
         }
+
         // Workpages
         var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'), undefined);
-        console.log(workpages);
-        if (workpages.length > 0) {
+         if (workpages.length > 0) {
           workpages.forEach(function(workpage){
             if (!$scope.profile.workpages) {
               $scope.profile.workpages = [];
@@ -142,11 +151,6 @@ angular.module( 'App', [
           });
         }
 
-        $scope.profile.fullname = name;
-        $scope.profile.firstname = first;
-        $scope.profile.lastname = last;
-        $scope.profile.nick = nick;
-        
         $scope.profile.loading = false;
         $scope.$apply();
 
@@ -260,6 +264,15 @@ angular.module( 'App', [
     return {
       replace : true,
       restrict : 'E',
-      templateUrl: 'app/profileCard.html'
+      templateUrl: 'app/profileCard.tpl.html'
+    }; 
+})
+
+//simple directive to display list of channels
+.directive('spinner',function(){
+    return {
+      replace : true,
+      restrict : 'E',
+      templateUrl: 'app/spinner.tpl.html'
     }; 
 });

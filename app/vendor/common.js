@@ -74,17 +74,15 @@ function parseLinkHeader(header) {
 (function($){
   var config = window.NotifierjsConfig = {
     defaultTimeOut: 5000,
-    position: ["top", "right"],
+    position: "top",
     notificationStyles: {
-      padding: "12px 18px",
+      padding: "12px",
       margin: "0 0 6px 0",
       backgroundColor: "#fff",
       opacity: 1,
       color: "#000",
-      font: "normal 15px 'Droid Sans', sans-serif",
-      borderRadius: "3px",
       boxShadow: "#999 0 0 12px",
-      //width: "300px",
+      width: "100%",
       height: "50px"
     },
     notificationStylesHover: {
@@ -97,8 +95,8 @@ function parseLinkHeader(header) {
   $(function() {
     config.container.css("position", "fixed");
     config.container.css("z-index", 9999);
-    config.container.css(config.position[0], "12px");
-    config.container.css(config.position[1], "12px");
+    config.container.css(config.position, "0");
+    config.container.css("width", "100%");
     config.container.appendTo(document.body);
   });
 
@@ -114,6 +112,7 @@ function parseLinkHeader(header) {
 
   Notifier.notify = function(message, title, iconUrl, timeOut) {
     var notificationElement = getNotificationElement();
+    notificationElement.addClass('valign-wrapper center');
 
     timeOut = timeOut || config.defaultTimeOut;
 
@@ -121,29 +120,27 @@ function parseLinkHeader(header) {
       var iconElement = $("<i>");
       iconElement.attr('class', iconUrl);
       iconElement.addClass('small');
-      iconElement.css({
-        display: "inline-block",
-        verticalAlign: "middle"
-      });
+      iconElement.addClass('valign');
+      iconElement.css("display", "inline-block!important");
       notificationElement.append(iconElement);
     }
 
     var textElement = $("<div/>").css({
-      display: 'inline-block',
-      verticalAlign: 'middle',
       padding: '0 12px'
-    });
+    }).addClass('valign');
 
     if (title) {
       var titleElement = $("<div/>");
       titleElement.append(document.createTextNode(title));
       titleElement.css("font-weight", "bold");
+      titleElement.addClass('valign');
       textElement.append(titleElement);
     }
 
     if (message) {
       var messageElement = $("<div/>");
-      messageElement.addClass("truncate")
+      messageElement.addClass("truncate");
+      messageElement.css("display", "inline-block!important");
       messageElement.append(document.createTextNode(message));
       textElement.append(messageElement);
     }
