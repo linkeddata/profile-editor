@@ -3,7 +3,10 @@
     <div class="row">
     	<h3>Authenticate using WebID-TLS</h3>
     </div>
-    <div class="row">
+  	<div class="row valign-wrapper" ng-show="$parent.profile.loading">
+        <div class="valign right-10">Loading profile </div><spinner class="valign"></spinner>
+    </div>
+    <div class="row" ng-hide="$parent.profile.authenticated || $parent.profile.authenticated">
       <button class="btn waves-effect waves-light blue" type="submit" name="action" ng-click="login()">{{$parent.loginButtonText}}</button>
     </div>
   </form>
