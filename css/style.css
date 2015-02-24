@@ -31,6 +31,8 @@ nav ul li:hover, nav ul li.active {
 }
 ul.side-nav {
 	width: 150px;
+	overflow-y: scroll;
+	overflow-x: hidden;
 }
 
 ul.side-nav li {
