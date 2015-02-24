@@ -90,7 +90,7 @@
 
     <div class="row">
       <div class="input-field col s12" ng-repeat="(id, blog) in profile.blogs track by $index">
-        <a class="prefix" ng-click="deleteEmail(id)"><i class="mdi-action-delete white-text"></i></a>
+        <a class="prefix" ng-click="deleteBlog(id)"><i class="mdi-action-delete white-text"></i></a>
         <input id="blog" type="text" ng-model="blog.value">
         <label for="blog" ng-class="{active: blog.value.length > 0}">Blog</label>
       </div>
