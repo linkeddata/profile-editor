@@ -105,6 +105,12 @@ angular.module( 'App.edit', [
     }
     $scope.profile.emails.push({value: ''});
   };
+  $scope.addBlog = function() {
+    if (!$scope.profile.blogs) {
+      $scope.profile.blogs = [];
+    }
+    $scope.profile.blogs.push({value: ''});
+  };
   $scope.addHomepage = function() {
     if (!$scope.profile.homepages) {
       $scope.profile.homepages = [];
@@ -124,6 +130,9 @@ angular.module( 'App.edit', [
   };
   $scope.deleteEmail = function(id) {
      $scope.profile.emails.splice(id, 1);
+  };
+  $scope.deleteBlog = function(id) {
+     $scope.profile.blogs.splice(id, 1);
   };
   $scope.deleteHomepage = function(id) {
      $scope.profile.homepages.splice(id, 1);
