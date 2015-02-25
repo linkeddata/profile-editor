@@ -16,7 +16,7 @@ angular.module( 'App.view', [
   });
 })
 
-.controller( 'ViewCtrl', function AboutCtrl( $scope, $state, $stateParams ) {
+.controller( 'ViewCtrl', function ViewCtrl( $scope, $state, $stateParams ) {
 
 
 

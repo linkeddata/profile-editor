@@ -3,7 +3,6 @@ angular.module( 'App.edit', [
   'angularFileUpload',
   'ngImgCrop'
 ])
-
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'editProfile', {
     url: '/edit/profile',
@@ -17,18 +16,12 @@ angular.module( 'App.edit', [
   });
 })
 
-.controller( 'EditProfileCtrl', function AboutCtrl( $scope, $upload ) {
+.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $upload ) {
   // blank
   $scope.pictureFile = {};
   // Copy profile object (we compare to limit number of changes later)
-  $scope.profile = ($scope.$parent.profile)?angular.copy($scope.$parent.profile):{};
-
-  if (!$scope.profile.picture) {
-    $scope.profile.picture = "images/generic_photo.png";
-    if ($scope.$parent.profile && $scope.$parent.profile.picture) {
-      $scope.profile.picture = $scope.$parent.profile.picture;
-    }
-  }
+  // $scope.profile = ($scope.$parent.profile)?angular.copy($scope.$parent.profile):{};
+  $scope.profile = $scope.$parent.profile;
 
   $scope.handleFileSelect = function(file) {
     if (file) {
@@ -42,6 +35,13 @@ angular.module( 'App.edit', [
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  $scope.updateProfilePicture = function(url) {
+    console.log(url);
+
+    // 
+    
   };
 
   $scope.dataURItoBlob = function(dataURI) {
@@ -72,17 +72,20 @@ angular.module( 'App.edit', [
     if (file) {
       var newPicURL = '';
       newPicURL = dirname($scope.profile.webid)+'/';
-
+      $scope.uploading = true;
       $upload.upload({
           method: 'POST',
           url: newPicURL,
           withCredentials: true,
           file: file
-      }).progress(function (evt) {
-          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-          console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
       }).success(function (data, status, headers, config) {
-          console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+        $scope.uploading = false;
+        var pic = headers("Location");
+        $scope.updateProfilePicture(pic);
+        Notifier.success('Picture uploaded successfully');
+      }).error(function (data, status, headers, config) {
+        $scope.uploading = false;
+        Notifier.error('Could not upload picture -- HTTP '+status);
       });
     }
   };
@@ -145,19 +148,26 @@ angular.module( 'App.edit', [
     $scope.$parent.login();
   };
 
-  $scope.$watch('profile.fullname', function (newVal, oldVal) {
-    //$scope.upload($scope.files);
-    console.log(newVal);
-    console.log($scope.$parent.profile.fullname);
-    if (newVal != $scope.$parent.profile.fullname) {
-      console.log("Has changed");
+  // Updates
+  
+  // update picture
+  $scope.updateProfilePicture = function(url) {
+    console.log(url);
+    var s = $scope.profile.picture.triple;
+    // 
+    
+  };
+
+  $scope.updateObject = function (property) {
+    if ($scope.profile[property].value != $scope.$parent.profile[property].value) {
+      // update object and also patch graph
+      $scope.$parent.profile[property].updateObject($scope.profile[property].value, true);
     }
-    // $('#picture-cropper').openModal();
-  });
+  };
+
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
     if (newFile != undefined || newFile !== oldFile) {
-      console.log(newFile[0]);
       $scope.originalImage = '';
       $scope.imageName = '';
       $scope.croppedImage = '';
