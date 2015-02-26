@@ -110,7 +110,7 @@ function parseLinkHeader(header) {
 
   var Notifier = window.Notifier = {};
 
-  Notifier.notify = function(message, title, iconUrl, bgcolor, timeOut) {
+  Notifier.notify = function(message, title, iconUrl, txtcolor, bgcolor, timeOut) {
     var notificationElement = getNotificationElement();
     notificationElement.addClass('valign-wrapper center');
 
@@ -123,6 +123,9 @@ function parseLinkHeader(header) {
     if (iconUrl) {
       var iconElement = $("<i>");
       iconElement.attr('class', iconUrl);
+      if (txtcolor) {
+        iconElement.addClass(txtcolor);  
+      }
       iconElement.addClass('small');
       iconElement.addClass('valign');
       iconElement.css("display", "inline-block!important");
@@ -143,7 +146,10 @@ function parseLinkHeader(header) {
 
     if (message) {
       var messageElement = $("<div/>");
-      messageElement.addClass("truncate white-text");
+      messageElement.addClass("truncate");
+      if (txtcolor) {
+        messageElement.addClass(txtcolor);
+      }
       messageElement.css("display", "inline-block!important");
       messageElement.append(document.createTextNode(message));
       textElement.append(messageElement);
@@ -167,13 +173,13 @@ function parseLinkHeader(header) {
     Notifier.notify(message, title, 'mdi-action-info-outline blue-text');
   };
   Notifier.warning = function(message, title) {
-    Notifier.notify(message, title, 'mdi-alert-warning white-text', '#fb8c00');
+    Notifier.notify(message, title, 'mdi-alert-warning', 'white-text', '#fb8c00');
   };
   Notifier.error = function(message, title) {
-    Notifier.notify(message, title, 'mdi-action-highlight-remove white-text', '#e53935', 10000);
+    Notifier.notify(message, title, 'mdi-action-highlight-remove', 'white-text', '#e53935', 10000);
   };
   Notifier.success = function(message, title) {
-    Notifier.notify(message, title, 'mdi-action-done white-text', '#69f0ae');
+    Notifier.notify(message, title, 'mdi-action-done', 'black-text', '#69f0ae');
   };
 
 }(jQuery));
