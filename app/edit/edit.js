@@ -100,48 +100,123 @@ angular.module( 'App.edit', [
     if (!$scope.profile.phones) {
       $scope.profile.phones = [];
     }
-    $scope.profile.phones.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newPhone = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('phone'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.phones.push(newPhone);
   };
   $scope.addEmail = function() {
     if (!$scope.profile.emails) {
       $scope.profile.emails = [];
     }
-    $scope.profile.emails.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newEmail = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('mbox'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.emails.push(newEmail);
   };
   $scope.addBlog = function() {
     if (!$scope.profile.blogs) {
       $scope.profile.blogs = [];
     }
-    $scope.profile.blogs.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newBlog = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('weblog'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.blogs.push(newBlog);
   };
   $scope.addHomepage = function() {
     if (!$scope.profile.homepages) {
       $scope.profile.homepages = [];
     }
-    $scope.profile.homepages.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newHomepage = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('homepage'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.homepages.push(newHomepage);
   };
   $scope.addWorkpage = function() {
     if (!$scope.profile.workpages) {
       $scope.profile.workpages = [];
     }
-    $scope.profile.workpages.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newWorkpage = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('workplaceHomepage'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.workpages.push(newWorkpage);
   };
 
   // Deletes
   $scope.deletePhone = function(id) {
-     $scope.profile.phones.splice(id, 1);
+    $scope.profile.phones[id].value = '';
+    $scope.updateObject($scope.profile.phones[id]);
+    $scope.profile.phones.splice(id, 1);
   };
   $scope.deleteEmail = function(id) {
-     $scope.profile.emails.splice(id, 1);
+    $scope.profile.emails[id].value = '';
+    $scope.updateObject($scope.profile.emails[id]);
+    $scope.profile.emails.splice(id, 1);
   };
   $scope.deleteBlog = function(id) {
-     $scope.profile.blogs.splice(id, 1);
+    $scope.profile.blogs[id].value = '';
+    $scope.updateObject($scope.profile.blogs[id]);
+    $scope.profile.blogs.splice(id, 1);
   };
   $scope.deleteHomepage = function(id) {
-     $scope.profile.homepages.splice(id, 1);
+    $scope.profile.homepages[id].value = '';
+    $scope.updateObject($scope.profile.homepages[id]);
+    $scope.profile.homepages.splice(id, 1);
   };
   $scope.deleteWorkpage = function(id) {
-     $scope.profile.workpages.splice(id, 1);
+    $scope.profile.workpages[id].value = '';
+    $scope.updateObject($scope.profile.workpages[id]);
+    $scope.profile.workpages.splice(id, 1);
   };
 
   $scope.login = function() {
@@ -158,13 +233,16 @@ angular.module( 'App.edit', [
     
   };
 
-  $scope.updateObject = function (property) {
-    if ($scope.profile[property].value != $scope.$parent.profile[property].value) {
+  $scope.updateObject = function (obj) {
+    if (obj.value != obj.prev) {
       // update object and also patch graph
-      $scope.$parent.profile[property].updateObject($scope.profile[property].value, true);
+      obj.updateObject(true);
     }
   };
 
+  $scope.space2dash = function(obj) {
+    obj.value = (!obj.value) ? '' : obj.value.replace(/\s+/g, '-');
+  };
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
     if (newFile != undefined || newFile !== oldFile) {

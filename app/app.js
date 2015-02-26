@@ -4,6 +4,11 @@ var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
 
+// Namespaces
+var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
+
+
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
 // Angular
@@ -40,66 +45,89 @@ angular.module( 'App', [
   $scope.profile.loading = false;
   $scope.authenticated = false;
 
-  // Prepare sparql statements and send PATCH request
-  $scope.patchStatement = function(oldS, newS) {
-    var query = '';
-    var graphURI = '';
-    if (oldS) {
-      var query = "DELETE DATA { " + oldS.toNT() + " } ;\n";
-      if (oldS.why && oldS.why.value.length > 0) {
-        graphURI = oldS.why.value;
-      } else {
-        graphURI = oldS.subject.uri;
+  $scope.ProfileElement = function(s) {
+    this.locked = false;
+    this.failed = false;
+    this.statement = angular.copy(s);
+    this.value = this.prev = '';
+    if (s && s['object']['value']) {
+      var val = s['object']['value']
+      if (val.indexOf('tel:') >= 0) {
+        val = val.slice(4, val.length);
+      } else if (val.indexOf('mailto:') >= 0) {
+        val = val.slice(7, val.length);
       }
-    }
-    if (newS) {
-      query += "INSERT DATA { " + newS.toNT() + " }";
-      if (!oldS && newS && newS.why.value.length > 0) {
-        graphURI = newS.why.value;
-      } else {
-        graphURI = oldS.subject.uri;
-      }
-    }
-    // send PATCH request
-    if (graphURI && graphURI.length > 0) {
-      $http({
-        method: 'PATCH',
-        url: graphURI,
-        headers: {
-          'Content-Type': 'application/sparql-update'
-        },
-        withCredentials: true,
-        data: query
-      }).success(function(data, status, headers) {
-        $scope.saveCredentials();
-        Notifier.success('Profile updated!');
-        console.log('Profile updates!');
-      }).error(function(data, status, headers) {
-        Notifier.error('Could not update profile: HTTP '+status);
-        console.log('Could not update profile: HTTP '+status);
-        console.log(data);
-      });
+      this.value = val;
+      this.prev = val;
     }
   };
 
-
-  var ProfileElement = function(s) {
-    this.statement = angular.copy(s)
-    this.value = s['object']['value'];
-  };
-
-  ProfileElement.prototype.updateObject = function(newVal, update) {
-    if (newVal) {
-      this.value = newVal;
-      var oldTriple = angular.copy(this.statement);
+  $scope.ProfileElement.prototype.updateObject = function(update) {
+    if (!this.failed) {
+      this.prev = angular.copy(this.value);
+    }
+    var oldS = angular.copy(this.statement);
+    if (this.statement) {
       if (this.statement['object']['termType'] == 'literal') {
-        this.statement['object']['value'] = newVal;
+        this.statement['object']['value'] = this.value;
       } else if (this.statement['object']['termType'] == 'symbol') {
-        this.statement['object']['uri'] = newVal;
-        this.statement['object']['value'] = newVal;
+        val = this.value;
+        if (this.statement['predicate'].compareTerm(FOAF('mbox')) == 0) {
+          val = "mailto:"+val;
+        } else if (this.statement['predicate'].compareTerm(FOAF('phone')) == 0) {
+          val = "tel:"+val;
+        }
+        this.statement['object']['uri'] = val;
+        this.statement['object']['value'] = val;
       }
-      if (update) {
-        $scope.patchStatement(oldTriple, this.statement);
+    }
+
+    if (update) {
+      this.locked = true;
+      var query = '';
+      var graphURI = '';
+      if (oldS && oldS['object']['value'].length > 0) {
+        var query = "DELETE DATA { " + oldS.toNT() + " }";
+        if (oldS.why && oldS.why.value.length > 0) {
+          graphURI = oldS.why.value;
+        } else {
+          graphURI = oldS.subject.uri;
+        }
+        // add separator
+        if (this.value.length > 0) {
+          query += " ;\n";
+        }
+      }
+      if (this.value.length > 0) {
+        query += "INSERT DATA { " + this.statement.toNT() + " }";
+        if (!oldS && this.statement && this.statement.why.value.length > 0) {
+          graphURI = this.statement.why.value;
+        } else {
+          graphURI = oldS.subject.uri;
+        }
+      }
+      // send PATCH request
+      if (graphURI && graphURI.length > 0) {
+        var that = this;
+        $http({
+          method: 'PATCH',
+          url: graphURI,
+          headers: {
+            'Content-Type': 'application/sparql-update'
+          },
+          withCredentials: true,
+          data: query
+        }).success(function(data, status, headers) {
+          $scope.saveCredentials();
+          that.locked = false;
+          Notifier.success('Profile updated!');
+        }).error(function(data, status, headers) {
+          that.locked = false;
+          that.failed = true;
+          that.statement = oldS;
+          Notifier.error('Could not update profile: HTTP '+status);
+          console.log(data);
+        });
       }
     }
   };
@@ -108,8 +136,6 @@ angular.module( 'App', [
   $scope.getProfile = function(uri, authenticated) {
     $scope.profile.webid = uri;
 
-    var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-    var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
     var g = $rdf.graph();
     var f = $rdf.fetcher(g, TIMEOUT);
 
@@ -138,28 +164,55 @@ angular.module( 'App', [
         $scope.profile.date = Date.now();
 
         // get info
-        $scope.profile.fullname = new ProfileElement(g.statementsMatching(webidRes, FOAF('name'), undefined)[0]);
-        $scope.profile.firstname = new ProfileElement(g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0]);
-        $scope.profile.lastname = new ProfileElement(g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0]);
-        $scope.profile.nick = new ProfileElement(g.statementsMatching(webidRes, FOAF('nick'), undefined)[0]);
+        // var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
+        // if (!fullname || fullname.length == 0) {
+        //   fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(docURI));
+        // }
+        // $scope.profile.fullname = new ProfileElement(g.statementsMatching(webidRes, FOAF('name'), undefined)[0]);
+        // // Firstname
+        // var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
+        // if (!firstname || firstname.length == 0) {
+        //   firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(docURI));
+        // }
+        // $scope.profile.firstname = new ProfileElement(firstname);
+        // // Lastname
+        // var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
+        // if (!lastname || lastname.length == 0) {
+        //   lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(docURI));
+        // }
+        // $scope.profile.lastname = new ProfileElement(lastname);
+        // // Nickname
+        // var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
+        // if (!nick || nick.length == 0) {
+        //   nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(docURI));
+        // }
+        // $scope.profile.nick = new ProfileElement(nick);
+        $scope.profile.fullname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('name'), undefined)[0]);
+        $scope.profile.firstname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0]);
+        $scope.profile.lastname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0]);
+        $scope.profile.nick = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('nick'), undefined)[0]);
 
         // Get pictures
-        var img = g.statementsMatching(webidRes, FOAF('img'), undefined);
-        
+        var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];        
         // check if profile uses depic instead
-        if (img.length == 0) {
-          var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined);  
-          if (depic.length > 0) {
-            $scope.profile.picture = {
-              statement: $.extend(true, {}, depic[0]),
-              value: depic[0]['object']['value']
-            };
-          }
+        if (img) {
+          $scope.profile.picture = new $scope.ProfileElement(img);
         } else {
-          $scope.profile.picture = {
-              statement: $.extend(true, {}, img[0]),
-              value: img[0]['object']['value']
-            };
+          var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
+          if (depic) {
+            $scope.profile.picture = new $scope.ProfileElement(depic);
+          }
+        }
+
+        // Phones
+        var phones = g.statementsMatching(webidRes, FOAF('phone'), undefined);
+        if (phones.length > 0) {
+          phones.forEach(function(phone){
+            if (!$scope.profile.phone) {
+              $scope.profile.phones = [];
+            }
+            $scope.profile.phones.push(new $scope.ProfileElement(phone));
+          });
         }
 
         // Emails
@@ -169,15 +222,7 @@ angular.module( 'App', [
             if (!$scope.profile.emails) {
               $scope.profile.emails = [];
             }
-            val = email['object']['value'];
-            if (val.indexOf('mailto:') >= 0) {
-              val = val.slice(7, val.length);
-            }
-
-            $scope.profile.emails.push({
-              statement: $.extend(true, {}, email),
-              value: val
-            });
+            $scope.profile.emails.push(new $scope.ProfileElement(email));
           });
         }
 
@@ -188,10 +233,7 @@ angular.module( 'App', [
             if (!$scope.profile.blogs) {
               $scope.profile.blogs = [];
             }
-            $scope.profile.blogs.push({
-              statement: $.extend(true, {}, blog),
-              value: blog['object']['value']
-            });
+            $scope.profile.blogs.push(new $scope.ProfileElement(blog));
           });
         }
 
@@ -202,10 +244,7 @@ angular.module( 'App', [
             if (!$scope.profile.homepages) {
               $scope.profile.homepages = [];
             }
-            $scope.profile.homepages.push({
-              statement: $.extend(true, {}, homepage),
-              value: homepage['object']['value']
-            });
+            $scope.profile.homepages.push(new $scope.ProfileElement(homepage));
           });
         }
 
@@ -216,10 +255,7 @@ angular.module( 'App', [
             if (!$scope.profile.workpages) {
               $scope.profile.workpages = [];
             }
-            $scope.profile.workpages.push({
-              statement: $.extend(true, {}, workpage),
-              value: workpage['object']['value']
-            });
+            $scope.profile.workpages.push(new $scope.ProfileElement(workpage));
           });
         }
 
