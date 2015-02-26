@@ -3,7 +3,6 @@ angular.module( 'App.edit', [
   'angularFileUpload',
   'ngImgCrop'
 ])
-
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'editProfile', {
     url: '/edit/profile',
@@ -17,18 +16,12 @@ angular.module( 'App.edit', [
   });
 })
 
-.controller( 'EditProfileCtrl', function AboutCtrl( $scope, $upload ) {
+.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $upload ) {
   // blank
   $scope.pictureFile = {};
   // Copy profile object (we compare to limit number of changes later)
-  $scope.profile = ($scope.$parent.profile)?angular.copy($scope.$parent.profile):{};
-
-  if (!$scope.profile.picture) {
-    $scope.profile.picture = "images/generic_photo.png";
-    if ($scope.$parent.profile && $scope.$parent.profile.picture) {
-      $scope.profile.picture = $scope.$parent.profile.picture;
-    }
-  }
+  // $scope.profile = ($scope.$parent.profile)?angular.copy($scope.$parent.profile):{};
+  $scope.profile = $scope.$parent.profile;
 
   $scope.handleFileSelect = function(file) {
     if (file) {
@@ -42,6 +35,13 @@ angular.module( 'App.edit', [
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  $scope.updateProfilePicture = function(url) {
+    console.log(url);
+
+    // 
+    
   };
 
   $scope.dataURItoBlob = function(dataURI) {
@@ -72,17 +72,20 @@ angular.module( 'App.edit', [
     if (file) {
       var newPicURL = '';
       newPicURL = dirname($scope.profile.webid)+'/';
-
+      $scope.uploading = true;
       $upload.upload({
           method: 'POST',
           url: newPicURL,
           withCredentials: true,
           file: file
-      }).progress(function (evt) {
-          var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-          console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
       }).success(function (data, status, headers, config) {
-          console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+        $scope.uploading = false;
+        var pic = headers("Location");
+        $scope.updateProfilePicture(pic);
+        Notifier.success('Picture uploaded successfully');
+      }).error(function (data, status, headers, config) {
+        $scope.uploading = false;
+        Notifier.error('Could not upload picture -- HTTP '+status);
       });
     }
   };
@@ -97,67 +100,152 @@ angular.module( 'App.edit', [
     if (!$scope.profile.phones) {
       $scope.profile.phones = [];
     }
-    $scope.profile.phones.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newPhone = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('phone'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.phones.push(newPhone);
   };
   $scope.addEmail = function() {
     if (!$scope.profile.emails) {
       $scope.profile.emails = [];
     }
-    $scope.profile.emails.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newEmail = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('mbox'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.emails.push(newEmail);
   };
   $scope.addBlog = function() {
     if (!$scope.profile.blogs) {
       $scope.profile.blogs = [];
     }
-    $scope.profile.blogs.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newBlog = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('weblog'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.blogs.push(newBlog);
   };
   $scope.addHomepage = function() {
     if (!$scope.profile.homepages) {
       $scope.profile.homepages = [];
     }
-    $scope.profile.homepages.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newHomepage = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('homepage'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.homepages.push(newHomepage);
   };
   $scope.addWorkpage = function() {
     if (!$scope.profile.workpages) {
       $scope.profile.workpages = [];
     }
-    $scope.profile.workpages.push({value: ''});
+    if ($scope.profile.webid.indexOf('#') >= 0) {
+      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    } else {
+      var docURI = $scope.profile.webid;
+    }
+    var newWorkpage = new $scope.$parent.ProfileElement(
+      $rdf.st(
+        $rdf.sym($scope.profile.webid),
+        FOAF('workplaceHomepage'),
+        $rdf.sym(''),
+        $rdf.sym(docURI)
+      )
+    );
+    $scope.profile.workpages.push(newWorkpage);
   };
 
   // Deletes
   $scope.deletePhone = function(id) {
-     $scope.profile.phones.splice(id, 1);
+    $scope.profile.phones[id].value = '';
+    $scope.updateObject($scope.profile.phones[id]);
+    $scope.profile.phones.splice(id, 1);
   };
   $scope.deleteEmail = function(id) {
-     $scope.profile.emails.splice(id, 1);
+    $scope.profile.emails[id].value = '';
+    $scope.updateObject($scope.profile.emails[id]);
+    $scope.profile.emails.splice(id, 1);
   };
   $scope.deleteBlog = function(id) {
-     $scope.profile.blogs.splice(id, 1);
+    $scope.profile.blogs[id].value = '';
+    $scope.updateObject($scope.profile.blogs[id]);
+    $scope.profile.blogs.splice(id, 1);
   };
   $scope.deleteHomepage = function(id) {
-     $scope.profile.homepages.splice(id, 1);
+    $scope.profile.homepages[id].value = '';
+    $scope.updateObject($scope.profile.homepages[id]);
+    $scope.profile.homepages.splice(id, 1);
   };
   $scope.deleteWorkpage = function(id) {
-     $scope.profile.workpages.splice(id, 1);
+    $scope.profile.workpages[id].value = '';
+    $scope.updateObject($scope.profile.workpages[id]);
+    $scope.profile.workpages.splice(id, 1);
   };
 
   $scope.login = function() {
     $scope.$parent.login();
   };
 
-  $scope.$watch('profile.fullname', function (newVal, oldVal) {
-    //$scope.upload($scope.files);
-    console.log(newVal);
-    console.log($scope.$parent.profile.fullname);
-    if (newVal != $scope.$parent.profile.fullname) {
-      console.log("Has changed");
+  // Updates
+  
+  // update picture
+  $scope.updateProfilePicture = function(url) {
+    console.log(url);
+    var s = $scope.profile.picture.triple;
+    // 
+    
+  };
+
+  $scope.updateObject = function (obj) {
+    if (obj.value != obj.prev) {
+      // update object and also patch graph
+      obj.updateObject(true);
     }
-    // $('#picture-cropper').openModal();
-  });
+  };
+
+  $scope.space2dash = function(obj) {
+    obj.value = (!obj.value) ? '' : obj.value.replace(/\s+/g, '-');
+  };
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
     if (newFile != undefined || newFile !== oldFile) {
-      console.log(newFile[0]);
       $scope.originalImage = '';
       $scope.imageName = '';
       $scope.croppedImage = '';

@@ -7,11 +7,12 @@
               accept=".jpg,.jpeg,.png">
               <div ng-file-select ng-model="pictureFile.file" class="relative center pick-area">
                 <div class="valign center valign-wrapper pick-file">
-                  <i class="mdi-image-camera-alt small white-text valign"></i>
+                  <spinner class="valign spinner" ng-show="uploading"></spinner>
+                  <i class="mdi-image-camera-alt small white-text valign" ng-hide="uploading"></i>
                   <span class="valign">Change photo</span>
                 </div>
-                <img ng-src="{{profile.picture}}"/>
-                <img ng-if="profile.picture.length == 0" src="images/generic_photo.png">
+                <img ng-src="{{profile.picture.value}}"/>
+                <img ng-if="!profile.picture" src="images/generic_photo.png">
               </div>
         </div>
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
@@ -23,23 +24,23 @@
       <div class="col s12 m8">
         <div class="row">
           <div class="input-field pad-right-10 col s12 m6">
-            <input id="firstname" type="text" ng-model="profile.firstname">
-            <label for="firstname" ng-class="{active: profile.firstname.length > 0}">First Name</label>
+            <input id="firstname" type="text" ng-model="profile.firstname.value" ng-blur="updateObject(profile.firstname)" ng-disabled="profile.firstname.locked">
+            <label for="firstname" ng-class="{active: profile.firstname.value.length > 0}">First Name{{profile.firstname.locked?'...updating':''}}</label>
           </div>
           <div class="input-field pad-right-10 col s12 m3">
-            <input id="lastname" type="text" ng-model="profile.lastname">
-            <label for="lastname" ng-class="{active: profile.lastname.length > 0}">Last Name</label>
+            <input id="lastname" type="text" ng-model="profile.lastname.value" ng-blur="updateObject(profile.lastname)" ng-disabled="profile.lastname.locked">
+            <label for="lastname" ng-class="{active: profile.lastname.value.length > 0}">Last Name{{profile.lastname.locked?'...updating':''}}</label>
           </div>
           <div class="input-field col s12 m3">
-            <input id="nick" type="text" ng-model="profile.nick">
-            <label for="nick" ng-class="{active: profile.nick.length > 0}">Nickname</label>
+            <input id="nick" type="text" ng-model="profile.nick.value" ng-blur="updateObject(profile.nick)" ng-disabled="profile.nick.locked">
+            <label for="nick" ng-class="{active: profile.nick.value.length > 0}">Nickname{{profile.nick.locked?'...updating':''}}</label>
           </div>
 
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input id="fullname" type="text" ng-model="profile.fullname">
-            <label for="fullname" ng-class="{active: profile.fullname.length > 0}">Full Name</label>
+            <input id="fullname" type="text" ng-model="profile.fullname.value" ng-blur="updateObject(profile.fullname)" ng-disabled="profile.fullname.locked">
+            <label for="fullname" ng-class="{active: profile.fullname.value.length > 0}">Full Name{{profile.fullname.locked?'...updating':''}}</label>
           </div>
         </div>
       </div>
@@ -54,8 +55,8 @@
     <div class="row">
       <div class="input-field col s12" ng-repeat="(id, phone) in profile.phones track by $index">
         <a class="prefix" ng-click="deletePhone(id)"><i class="mdi-action-delete white-text"></i></a>
-        <input id="telephone" type="tel" ng-model="phone.value">
-        <label for="telephone" ng-class="{active: phone.value.length > 0}">Phone</label>
+        <input id="telephone" type="tel" ng-model="phone.value" ng-change="space2dash(phone)" ng-blur="updateObject(phone)" ng-disabled="phone.locked">
+        <label for="telephone" ng-class="{active: phone.value.length > 0}">Phone{{phone.locked?'...updating':''}}</label>
       </div>
       <div class="col s12">
         <a class="btn waves-effect waves-light blue" ng-click="addPhone()"><i class="mdi-content-add left"></i>phone</a>
@@ -71,8 +72,8 @@
     <div class="row">
       <div class="input-field col s12" ng-repeat="(id, email) in profile.emails track by $index">
         <a class="prefix" ng-click="deleteEmail(id)"><i class="mdi-action-delete white-text"></i></a>
-        <input id="email" type="text" ng-model="email.value">
-        <label for="email" ng-class="{active: email.value.length > 0}">Email</label>
+        <input id="email" type="text" ng-model="email.value" ng-blur="updateObject(email)" ng-disabled="email.locked">
+        <label for="email" ng-class="{active: email.value.length > 0}">Email{{email.locked?'...updating':''}}</label>
       </div>
     </div>
     <div class="row">
@@ -91,8 +92,8 @@
     <div class="row">
       <div class="input-field col s12" ng-repeat="(id, blog) in profile.blogs track by $index">
         <a class="prefix" ng-click="deleteBlog(id)"><i class="mdi-action-delete white-text"></i></a>
-        <input id="blog" type="text" ng-model="blog.value">
-        <label for="blog" ng-class="{active: blog.value.length > 0}">Blog</label>
+        <input id="blog" type="text" ng-model="blog.value" ng-blur="updateObject(blog)" ng-disabled="blog.locked">
+        <label for="blog" ng-class="{active: blog.value.length > 0}">Blog{{blog.locked?'...updating':''}}</label>
       </div>
     </div>
     <div class="row">
@@ -103,31 +104,37 @@
 
     <div class="row">
       <div class="col s12">
-        <h4 class="valign-wrapper align-left"><i class="mdi-social-public white-text valign right-10"></i>Homepages</h4>
+        <h4 class="valign-wrapper align-left"><i class="mdi-social-public white-text valign right-10"></i>Personal pages</h4>
       </div>
     </div>
 
     <div class="row">
       <div class="input-field col s12" ng-repeat="(id, homepage) in profile.homepages track by $index">
         <a class="prefix" ng-click="deleteHomepage(id)"><i class="mdi-action-delete white-text"></i></a>
-        <input id="homepage" type="text" ng-model="homepage.value">
-        <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage</label>
+        <input id="homepage" type="text" ng-model="homepage.value" ng-blur="updateObject(homepage)" ng-disabled="homepage.locked">
+        <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage{{homepage.locked?'...updating':''}}</label>
       </div>
       <div class="col s12">
         <a class="btn waves-effect waves-light blue" ng-click="addHomepage()"><i class="mdi-content-add left"></i>homepage</a>
       </div>
 
+      <div class="row">
+        <div class="col s12">
+          <h4 class="valign-wrapper align-left"><i class="mdi-social-public white-text valign right-10"></i>Work pages</h4>
+        </div>
+      </div>
+
       <div class="input-field col s12" ng-repeat="(id, workpage) in profile.workpages track by $index">
         <a class="prefix" ng-click="deleteWorkpage(id)"><i class="mdi-action-delete white-text"></i></a>
-        <input id="workpage" type="text" ng-model="workpage.value">
-        <label for="workpage" ng-class="{active: workpage.value.length > 0}">Work homepage</label>
+        <input id="workpage" type="text" ng-model="workpage.value" ng-blur="updateObject(workpage)" ng-disabled="workpage.locked">
+        <label for="workpage" ng-class="{active: workpage.value.length > 0}">Work homepage{{workpage.locked?'...updating':''}}</label>
       </div>
       <div class="col s12">
         <a class="btn waves-effect waves-light blue" ng-click="addWorkpage()"><i class="mdi-content-add left"></i>workpage</a>
       </div>
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
       <div class="col s12 divider"></div>
       <div class="button-field col s12">
         <br>
@@ -136,7 +143,7 @@
           <i class="mdi-navigation-check right" ng-show="isSubmitOk"></i>
         </button>
       </div>
-    </div>
+    </div> -->
   </form>
   <div ng-hide="profile.webid" class="center">
     <h4>You must prove you own a profile before you can edit it.</h4>

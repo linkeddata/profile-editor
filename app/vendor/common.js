@@ -110,9 +110,13 @@ function parseLinkHeader(header) {
 
   var Notifier = window.Notifier = {};
 
-  Notifier.notify = function(message, title, iconUrl, timeOut) {
+  Notifier.notify = function(message, title, iconUrl, bgcolor, timeOut) {
     var notificationElement = getNotificationElement();
     notificationElement.addClass('valign-wrapper center');
+
+    if (bgcolor) {
+      notificationElement.css("background-color", bgcolor);
+    }
 
     timeOut = timeOut || config.defaultTimeOut;
 
@@ -139,7 +143,7 @@ function parseLinkHeader(header) {
 
     if (message) {
       var messageElement = $("<div/>");
-      messageElement.addClass("truncate");
+      messageElement.addClass("truncate white-text");
       messageElement.css("display", "inline-block!important");
       messageElement.append(document.createTextNode(message));
       textElement.append(messageElement);
@@ -160,16 +164,16 @@ function parseLinkHeader(header) {
   };
 
   Notifier.info = function(message, title) {
-    Notifier.notify(message, title, "mdi-action-info-outline blue-text");
+    Notifier.notify(message, title, 'mdi-action-info-outline blue-text');
   };
   Notifier.warning = function(message, title) {
-    Notifier.notify(message, title, "mdi-alert-warning orange-text");
+    Notifier.notify(message, title, 'mdi-alert-warning white-text', '#fb8c00');
   };
   Notifier.error = function(message, title) {
-    Notifier.notify(message, title, "mdi-action-highlight-remove red-text");
+    Notifier.notify(message, title, 'mdi-action-highlight-remove white-text', '#e53935', 10000);
   };
   Notifier.success = function(message, title) {
-    Notifier.notify(message, title, "mdi-action-done green-text");
+    Notifier.notify(message, title, 'mdi-action-done white-text', '#69f0ae');
   };
 
 }(jQuery));

@@ -19,13 +19,21 @@ footer {
 .nav-wrapper {
 	padding: 0 10px 0 10px;
 }
-
+.navbar-fixed > .progress {
+	position: fixed;
+	margin: 0;
+	z-index: 100;
+}
 nav .brand-logo {
 	position: relative;
 	left: inherit;
 	width: inherit;
 	font-weight: 200;
 }
+.brand-text {
+	display: inline-block!important;
+}
+
 nav ul li:hover, nav ul li.active {
     background-color: rgba(0, 0, 0, 0.3)!important; 
 }
@@ -168,6 +176,10 @@ form {
 .h3 {
 	font-size: 2.1rem;
 	padding: 5px;
+}
+
+.spinner {
+	display: inline-block!important;
 }
 
 /* override label color */

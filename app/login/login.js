@@ -15,7 +15,7 @@ angular.module( 'App.login', [
   });
 })
 
-.controller( 'LoginCtrl', function AboutCtrl( $scope, $location, $state ) {
+.controller( 'LoginCtrl', function LoginCtrl( $scope, $location, $state ) {
   $scope.loginButtonText = 'Login';
 
   $scope.login = function() {
