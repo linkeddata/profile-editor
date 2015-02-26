@@ -169,10 +169,29 @@ angular.module( 'App', [
         $scope.profile.date = Date.now();
 
         // get info
+        var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
+        if (!fullname || fullname.length == 0) {
+          fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(docURI));
+        }
         $scope.profile.fullname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('name'), undefined)[0]);
-        $scope.profile.firstname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0]);
-        $scope.profile.lastname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0]);
-        $scope.profile.nick = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('nick'), undefined)[0]);
+        // Firstname
+        var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
+        if (!firstname || firstname.length == 0) {
+          firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        $scope.profile.firstname = new $scope.ProfileElement(firstname);
+        // Lastname
+        var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
+        if (!lastname || lastname.length == 0) {
+          lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        $scope.profile.lastname = new $scope.ProfileElement(lastname);
+        // Nickname
+        var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
+        if (!nick || nick.length == 0) {
+          nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        $scope.profile.nick = new $scope.ProfileElement(nick);
 
         // Get pictures
         var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];        
@@ -267,7 +286,8 @@ angular.module( 'App', [
     sessionStorage.setItem($scope.appuri, JSON.stringify(app));
     // redirect to view page
     if (redirect) {
-      $state.go('view');
+      // switch to view once it's available
+      $state.go('editProfile');
     }
   };
 
