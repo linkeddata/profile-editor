@@ -7,8 +7,8 @@
               accept=".jpg,.jpeg,.png">
               <div ng-file-select ng-model="pictureFile.file" class="relative center pick-area">
                 <div class="valign center valign-wrapper pick-file">
-                  <spinner class="valign spinner" ng-show="uploading"></spinner>
-                  <i class="mdi-image-camera-alt small white-text valign" ng-hide="uploading"></i>
+                  <spinner class="valign spinner" ng-show="uploading || profile.picture.locked"></spinner>
+                  <i class="mdi-image-camera-alt small white-text valign" ng-hide="uploading || profile.picture.locked"></i>
                   <span class="valign">Change photo</span>
                 </div>
                 <img ng-src="{{profile.picture.value}}"/>

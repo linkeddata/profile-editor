@@ -23,78 +23,6 @@ angular.module( 'App.edit', [
   // $scope.profile = ($scope.$parent.profile)?angular.copy($scope.$parent.profile):{};
   $scope.profile = $scope.$parent.profile;
 
-  $scope.handleFileSelect = function(file) {
-    if (file) {
-      $scope.imageName = file.name;
-      $scope.imageType = file.type;
-      var reader = new FileReader();
-      reader.onload = function (evt) {
-        $scope.$apply(function($scope){
-          $scope.originalImage=evt.target.result;
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  $scope.updateProfilePicture = function(url) {
-    console.log(url);
-
-    // 
-    
-  };
-
-  $scope.dataURItoBlob = function(dataURI) {
-    var data = dataURI.split(',')[1];
-    // var binary = atob(data);
-    var binary;
-    if (dataURI.split(',')[0].indexOf('base64') >= 0)
-        binary = atob(data);
-    else
-        binary = decodeURI(data);
-
-    var buffer = new ArrayBuffer(binary.length);
-    var ia = new Uint8Array(buffer);
-    for (var i = 0; i < binary.length; i++) {
-        ia[i] = binary.charCodeAt(i);
-    }
-    var blob = new Blob([ia], {type: $scope.imageType});
-    var parts = [blob]; 
-
-    var fileName = "picture."+$scope.imageName.split('.')[1];
-
-    return new File(parts, fileName, {
-      type: $scope.imageType
-    });
-  };
-
-  $scope.uploadPicture = function (file) {
-    if (file) {
-      var newPicURL = '';
-      newPicURL = dirname($scope.profile.webid)+'/';
-      $scope.uploading = true;
-      $upload.upload({
-          method: 'POST',
-          url: newPicURL,
-          withCredentials: true,
-          file: file
-      }).success(function (data, status, headers, config) {
-        $scope.uploading = false;
-        var pic = headers("Location");
-        $scope.updateProfilePicture(pic);
-        Notifier.success('Picture uploaded successfully');
-      }).error(function (data, status, headers, config) {
-        $scope.uploading = false;
-        Notifier.error('Could not upload picture -- HTTP '+status);
-      });
-    }
-  };
-
-  $scope.savePicture = function() {
-    var newImg = $scope.dataURItoBlob($scope.croppedImage);
-    $scope.uploadPicture(newImg);
-  };
-
   // Adds
   $scope.addPhone = function() {
     if (!$scope.profile.phones) {
@@ -225,21 +153,82 @@ angular.module( 'App.edit', [
 
   // Updates
   
-  // update picture
-  $scope.updateProfilePicture = function(url) {
-    console.log(url);
-    var s = $scope.profile.picture.triple;
-    // 
-    
+  // update a value and patch profile
+  $scope.updateObject = function (obj) {
+    // update object and also patch graph
+    obj.updateObject(true);
   };
 
-  $scope.updateObject = function (obj) {
-    if (obj.value != obj.prev) {
-      // update object and also patch graph
-      obj.updateObject(true);
+  // update picture
+  $scope.updateProfilePicture = function(url) {
+    $scope.profile.picture.value = url;
+    $scope.updateObject($scope.profile.picture);
+  };
+
+  // select file for picture
+  $scope.handleFileSelect = function(file) {
+    if (file) {
+      $scope.imageName = file.name;
+      $scope.imageType = file.type;
+      var reader = new FileReader();
+      reader.onload = function (evt) {
+        $scope.$apply(function($scope){
+          $scope.originalImage=evt.target.result;
+        });
+      };
+      reader.readAsDataURL(file);
     }
   };
 
+  $scope.dataURItoBlob = function(dataURI) {
+    var data = dataURI.split(',')[1];
+    // var binary = atob(data);
+    var binary;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        binary = atob(data);
+    else
+        binary = decodeURI(data);
+
+    var buffer = new ArrayBuffer(binary.length);
+    var ia = new Uint8Array(buffer);
+    for (var i = 0; i < binary.length; i++) {
+        ia[i] = binary.charCodeAt(i);
+    }
+    var blob = new Blob([ia], {type: $scope.imageType});
+    var parts = [blob]; 
+
+    return new File(parts, $scope.imageName, {
+      type: $scope.imageType
+    });
+  };
+
+  $scope.uploadPicture = function (file) {
+    if (file) {
+      var newPicURL = '';
+      newPicURL = dirname($scope.profile.webid)+'/';
+      $scope.uploading = true;
+      $upload.upload({
+          method: 'POST',
+          url: newPicURL,
+          withCredentials: true,
+          file: file
+      }).success(function (data, status, headers, config) {
+        $scope.uploading = false;
+        var pic = headers("Location");
+        $scope.updateProfilePicture(pic);
+      }).error(function (data, status, headers, config) {
+        $scope.uploading = false;
+        Notifier.error('Could not upload picture -- HTTP '+status);
+      });
+    }
+  };
+
+  $scope.savePicture = function() {
+    var newImg = $scope.dataURItoBlob($scope.croppedImage);
+    $scope.uploadPicture(newImg);
+  };
+
+  // replace white spaces with dashes (for phone numbers)
   $scope.space2dash = function(obj) {
     obj.value = (!obj.value) ? '' : obj.value.replace(/\s+/g, '-');
   };
