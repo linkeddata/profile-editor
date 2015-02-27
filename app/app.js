@@ -21,7 +21,7 @@ angular.module( 'App', [
 ])
 
 .config( function AppConfig ( $stateProvider, $urlRouterProvider ) {
-  //$urlRouterProvider.otherwise( 'view' );
+  $urlRouterProvider.otherwise( 'edit/profile' );
   $stateProvider.state( 'home', {
     url: '/',
     views: {
