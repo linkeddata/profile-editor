@@ -195,9 +195,11 @@ angular.module( 'App.edit', [
         ia[i] = binary.charCodeAt(i);
     }
     var blob = new Blob([ia], {type: $scope.imageType});
+    
     var parts = [blob]; 
 
     return new File(parts, $scope.imageName, {
+      lastModified: new Date(0),
       type: $scope.imageType
     });
   };
