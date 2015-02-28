@@ -34,6 +34,17 @@ function getParam(name) {
   }
 }
 
+function objectPropInArray(list, prop, val) {
+  if (list.length > 0 ) {
+    for (i in list) {
+      if (list[i][prop] === val) {
+        return true
+      }
+    }
+  }
+  return false;  
+}
+
 // unquote string (utility)
 function unquote(value) {
   if (value.charAt(0) == '"' && value.charAt(value.length - 1) == '"') {

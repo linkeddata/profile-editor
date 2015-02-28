@@ -28,17 +28,17 @@ angular.module( 'App.edit', [
     if (!$scope.profile.phones) {
       $scope.profile.phones = [];
     }
-    if ($scope.profile.webid.indexOf('#') >= 0) {
-      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    } else {
-      var docURI = $scope.profile.webid;
-    }
+    // if ($scope.profile.webid.indexOf('#') >= 0) {
+    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    // } else {
+    //   var docURI = $scope.profile.webid;
+    // }
     var newPhone = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
         FOAF('phone'),
         $rdf.sym(''),
-        $rdf.sym(docURI)
+        $rdf.sym('')
       )
     );
     $scope.profile.phones.push(newPhone);
@@ -47,17 +47,17 @@ angular.module( 'App.edit', [
     if (!$scope.profile.emails) {
       $scope.profile.emails = [];
     }
-    if ($scope.profile.webid.indexOf('#') >= 0) {
-      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    } else {
-      var docURI = $scope.profile.webid;
-    }
+    // if ($scope.profile.webid.indexOf('#') >= 0) {
+    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    // } else {
+    //   var docURI = $scope.profile.webid;
+    // }
     var newEmail = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
         FOAF('mbox'),
         $rdf.sym(''),
-        $rdf.sym(docURI)
+        $rdf.sym('')
       )
     );
     $scope.profile.emails.push(newEmail);
@@ -66,17 +66,17 @@ angular.module( 'App.edit', [
     if (!$scope.profile.blogs) {
       $scope.profile.blogs = [];
     }
-    if ($scope.profile.webid.indexOf('#') >= 0) {
-      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    } else {
-      var docURI = $scope.profile.webid;
-    }
+    // if ($scope.profile.webid.indexOf('#') >= 0) {
+    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    // } else {
+    //   var docURI = $scope.profile.webid;
+    // }
     var newBlog = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
         FOAF('weblog'),
         $rdf.sym(''),
-        $rdf.sym(docURI)
+        $rdf.sym('')
       )
     );
     $scope.profile.blogs.push(newBlog);
@@ -85,17 +85,17 @@ angular.module( 'App.edit', [
     if (!$scope.profile.homepages) {
       $scope.profile.homepages = [];
     }
-    if ($scope.profile.webid.indexOf('#') >= 0) {
-      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    } else {
-      var docURI = $scope.profile.webid;
-    }
+    // if ($scope.profile.webid.indexOf('#') >= 0) {
+    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    // } else {
+    //   var docURI = $scope.profile.webid;
+    // }
     var newHomepage = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
         FOAF('homepage'),
         $rdf.sym(''),
-        $rdf.sym(docURI)
+        $rdf.sym('')
       )
     );
     $scope.profile.homepages.push(newHomepage);
@@ -104,17 +104,17 @@ angular.module( 'App.edit', [
     if (!$scope.profile.workpages) {
       $scope.profile.workpages = [];
     }
-    if ($scope.profile.webid.indexOf('#') >= 0) {
-      var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    } else {
-      var docURI = $scope.profile.webid;
-    }
+    // if ($scope.profile.webid.indexOf('#') >= 0) {
+    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
+    // } else {
+    //   var docURI = $scope.profile.webid;
+    // }
     var newWorkpage = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
         FOAF('workplaceHomepage'),
         $rdf.sym(''),
-        $rdf.sym(docURI)
+        $rdf.sym('')
       )
     );
     $scope.profile.workpages.push(newWorkpage);
@@ -156,7 +156,11 @@ angular.module( 'App.edit', [
   // update a value and patch profile
   $scope.updateObject = function (obj) {
     // update object and also patch graph
-    obj.updateObject(true);
+    if (obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+      obj.picker = true;
+    } else {
+      obj.updateObject(true);
+    }
   };
 
   // update picture
@@ -244,4 +248,28 @@ angular.module( 'App.edit', [
       $('#picture-cropper').openModal();
     }
   });
+})
+.directive('pickSource', function () {
+    return {
+        restrict: 'EA',
+        scope: { obj: '='},
+        transclude: true,
+        template: 'Select where to save this new information. <button class="btn blue" ng-click="cancel()">Cancel</button>'+
+        '<ul class="collection">'+
+          '<li class="collection-item" ng-repeat="src in sources">'+
+          '  <a href="" ng-click="setWhy(src)">{{src}}</a>'+
+          '</li>'+
+        '</ul>',
+        link: function($scope, $element, $attrs) {
+          $scope.sources = $scope.$parent.profile.sources;
+          $scope.setWhy = function(uri) {
+            $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
+            $scope.cancel();
+            $scope.$parent.updateObject($scope.obj);
+          }
+          $scope.cancel = function() {
+            $scope.obj.picker = false;
+          }
+        }
+    };
 });

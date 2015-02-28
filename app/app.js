@@ -52,6 +52,7 @@ angular.module( 'App', [
   $scope.ProfileElement = function(s) {
     this.locked = false;
     this.failed = false;
+    this.picker = false;
     this.statement = angular.copy(s);
     this.value = this.prev = '';
     if (s && s['object']['value']) {
@@ -108,7 +109,6 @@ angular.module( 'App', [
         if (this.value.length > 0) {
           query += " ;\n";
         }
-        console.log(oldS);
       }
       if (this.value.length > 0) {
         // should ask the user where the new triple should be saved
@@ -121,7 +121,6 @@ angular.module( 'App', [
           }
         }
       }
-      console.log(query);
 
       // send PATCH request
       if (graphURI && graphURI.length > 0) {
@@ -188,6 +187,13 @@ angular.module( 'App', [
         if (!$scope.profile.date) {
           $scope.profile.date = Date.now();
         }
+        // save docURI to list of sources
+        if (!$scope.profile.sources) {
+          $scope.profile.sources = [];
+        }
+        if ($scope.profile.sources.indexOf(docURI) < 0) {
+          $scope.profile.sources.push(docURI);
+        }
 
         // try to fetch additional data from sameAs, seeAlso and preferenceFile
         if (!extended) {
@@ -216,7 +222,7 @@ angular.module( 'App', [
         // get info
         var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
         if (!fullname || fullname['object']['value'].length == 0) {
-          fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(docURI));
+          fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(''));
         }
         if (!$scope.profile.fullname) {
           $scope.profile.fullname = new $scope.ProfileElement(fullname);
@@ -224,7 +230,7 @@ angular.module( 'App', [
         // Firstname
         var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
         if (!firstname || firstname['object']['value'].length == 0) {
-          firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(docURI));
+          firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(''));
         }
         if (!$scope.profile.firstname) {
           $scope.profile.firstname = new $scope.ProfileElement(firstname);
@@ -232,7 +238,7 @@ angular.module( 'App', [
         // Lastname
         var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
         if (!lastname || lastname['object']['value'].length == 0) {
-          lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(docURI));
+          lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(''));
         }
         if (!$scope.profile.lastname) {
           $scope.profile.lastname = new $scope.ProfileElement(lastname);
@@ -240,7 +246,7 @@ angular.module( 'App', [
         // Nickname
         var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
         if (!nick || nick['object']['value'].length == 0) {
-          nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(docURI));
+          nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(''));
         }
         if (!$scope.profile.nick) {
           $scope.profile.nick = new $scope.ProfileElement(nick);
@@ -259,7 +265,7 @@ angular.module( 'App', [
           }
         }
         if (!pic || pic['object']['value'].length == 0) {
-          pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(docURI));
+          pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(''));
         }
         if (!$scope.profile.picture) {
           $scope.profile.picture = new $scope.ProfileElement(pic);
