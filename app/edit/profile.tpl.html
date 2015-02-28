@@ -15,6 +15,7 @@
                 <img ng-if="!profile.picture" src="images/generic_photo.png">
               </div>
         </div>
+        <div pick-source obj="profile.picture" ng-show="profile.picture.picker"></div>
         <div ng-no-file-drop>File Drag/Drop is not supported for this browser</div>
       </div>
 
@@ -26,14 +27,17 @@
           <div class="input-field pad-right-10 col s12 m6">
             <input id="firstname" type="text" ng-model="profile.firstname.value" ng-blur="updateObject(profile.firstname)" ng-disabled="profile.firstname.locked">
             <label for="firstname" ng-class="{active: profile.firstname.value.length > 0}">First Name{{profile.firstname.locked?'...updating':''}}</label>
+            <div pick-source obj="profile.firstname" ng-show="profile.firstname.picker"></div>
           </div>
           <div class="input-field pad-right-10 col s12 m3">
             <input id="lastname" type="text" ng-model="profile.lastname.value" ng-blur="updateObject(profile.lastname)" ng-disabled="profile.lastname.locked">
             <label for="lastname" ng-class="{active: profile.lastname.value.length > 0}">Last Name{{profile.lastname.locked?'...updating':''}}</label>
+            <div pick-source obj="profile.lastname" ng-show="profile.lastname.picker"></div>
           </div>
           <div class="input-field col s12 m3">
             <input id="nick" type="text" ng-model="profile.nick.value" ng-blur="updateObject(profile.nick)" ng-disabled="profile.nick.locked">
             <label for="nick" ng-class="{active: profile.nick.value.length > 0}">Nickname{{profile.nick.locked?'...updating':''}}</label>
+            <div pick-source obj="profile.nick" ng-show="profile.nick.picker"></div>
           </div>
 
         </div>
@@ -41,6 +45,7 @@
           <div class="input-field col s12">
             <input id="fullname" type="text" ng-model="profile.fullname.value" ng-blur="updateObject(profile.fullname)" ng-disabled="profile.fullname.locked">
             <label for="fullname" ng-class="{active: profile.fullname.value.length > 0}">Full Name{{profile.fullname.locked?'...updating':''}}</label>
+            <div pick-source obj="profile.fullname" ng-show="profile.fullname.picker"></div>
           </div>
         </div>
       </div>
@@ -57,6 +62,7 @@
         <a class="prefix" ng-click="deletePhone(id)"><i class="mdi-action-delete white-text"></i></a>
         <input id="telephone" type="tel" ng-model="phone.value" ng-change="space2dash(phone)" ng-blur="updateObject(phone)" ng-disabled="phone.locked">
         <label for="telephone" ng-class="{active: phone.value.length > 0}">Phone{{phone.locked?'...updating':''}}</label>
+        <div pick-source obj="phone" ng-show="phone.picker"></div>
       </div>
       <div class="col s12">
         <a class="btn waves-effect waves-light blue" ng-click="addPhone()"><i class="mdi-content-add left"></i>phone</a>
@@ -74,6 +80,7 @@
         <a class="prefix" ng-click="deleteEmail(id)"><i class="mdi-action-delete white-text"></i></a>
         <input id="email" type="text" ng-model="email.value" ng-blur="updateObject(email)" ng-disabled="email.locked">
         <label for="email" ng-class="{active: email.value.length > 0}">Email{{email.locked?'...updating':''}}</label>
+        <div pick-source obj="email" ng-show="email.picker"></div>
       </div>
     </div>
     <div class="row">
@@ -94,6 +101,7 @@
         <a class="prefix" ng-click="deleteBlog(id)"><i class="mdi-action-delete white-text"></i></a>
         <input id="blog" type="text" ng-model="blog.value" ng-blur="updateObject(blog)" ng-disabled="blog.locked">
         <label for="blog" ng-class="{active: blog.value.length > 0}">Blog{{blog.locked?'...updating':''}}</label>
+        <div pick-source obj="blog" ng-show="blog.picker"></div>
       </div>
     </div>
     <div class="row">
@@ -113,6 +121,7 @@
         <a class="prefix" ng-click="deleteHomepage(id)"><i class="mdi-action-delete white-text"></i></a>
         <input id="homepage" type="text" ng-model="homepage.value" ng-blur="updateObject(homepage)" ng-disabled="homepage.locked">
         <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage{{homepage.locked?'...updating':''}}</label>
+        <div pick-source obj="homepage" ng-show="homepage.picker"></div>
       </div>
       <div class="col s12">
         <a class="btn waves-effect waves-light blue" ng-click="addHomepage()"><i class="mdi-content-add left"></i>homepage</a>
@@ -128,6 +137,7 @@
         <a class="prefix" ng-click="deleteWorkpage(id)"><i class="mdi-action-delete white-text"></i></a>
         <input id="workpage" type="text" ng-model="workpage.value" ng-blur="updateObject(workpage)" ng-disabled="workpage.locked">
         <label for="workpage" ng-class="{active: workpage.value.length > 0}">Work homepage{{workpage.locked?'...updating':''}}</label>
+        <div pick-source obj="workpage" ng-show="workpage.picker"></div>
       </div>
       <div class="col s12">
         <a class="btn waves-effect waves-light blue" ng-click="addWorkpage()"><i class="mdi-content-add left"></i>workpage</a>
