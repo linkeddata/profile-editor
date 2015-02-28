@@ -4,10 +4,14 @@ var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
 
+var __profile;
+
 // Namespaces
 var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+var RDFS = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
 var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
-
+var OWL = $rdf.Namespace("http://www.w3.org/2002/07/owl#");
+var SPACE = $rdf.Namespace("http://www.w3.org/ns/pim/space#");
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
@@ -93,24 +97,32 @@ angular.module( 'App', [
       var graphURI = '';
       if (oldS && oldS['object']['value'].length > 0) {
         var query = "DELETE DATA { " + oldS.toNT() + " }";
-        if (oldS.why && oldS.why.value.length > 0) {
-          graphURI = oldS.why.value;
+        if (oldS['why'] && oldS['why']['value'].length > 0) {
+          graphURI = oldS['why']['value'];
+          console.log("Setting to why value"+graphURI);
         } else {
-          graphURI = oldS.subject.uri;
+          graphURI = oldS['subject']['value'];
+          console.log("Setting to subject value"+graphURI);
         }
         // add separator
         if (this.value.length > 0) {
           query += " ;\n";
         }
+        console.log(oldS);
       }
       if (this.value.length > 0) {
+        // should ask the user where the new triple should be saved
         query += "INSERT DATA { " + this.statement.toNT() + " }";
-        if (!oldS && this.statement && this.statement.why.value.length > 0) {
-          graphURI = this.statement.why.value;
-        } else {
-          graphURI = oldS.subject.uri;
+        if (graphURI.length == 0) {
+          if (this.statement && this.statement['why']['value'].length > 0) {
+            graphURI = this.statement['why']['value'];
+          } else {
+            graphURI = this.statement['subject']['value'];
+          }
         }
       }
+      console.log(query);
+
       // send PATCH request
       if (graphURI && graphURI.length > 0) {
         var that = this;
@@ -137,15 +149,22 @@ angular.module( 'App', [
     }
   };
 
-
-  $scope.getProfile = function(uri, authenticated) {
-    $scope.profile.webid = uri;
-
+  // Load a user's profile
+  // string uri  - URI of resource containing profile information
+  // bool authenticated - whether the user was previously authenticated or now
+  // bool extended - whether it loads an extended profile document
+  $scope.getProfile = function(uri, authenticated, extended) {
+    if (!$scope.profile) {
+      $scope.profile = {};
+    }
+    if (!$scope.profile.webid || $scope.profile.webid.length == 0) {
+      $scope.profile.webid = uri;
+    }
     var g = $rdf.graph();
     var f = $rdf.fetcher(g, TIMEOUT);
 
     var docURI = (uri.indexOf('#') >= 0)?uri.slice(0, uri.indexOf('#')):uri;
-    var webidRes = $rdf.sym(uri);
+    var webidRes = $rdf.sym($scope.profile.webid);
     $scope.profile.loading = true;
     if (authenticated) {
       $scope.authenticated = true;
@@ -166,50 +185,90 @@ angular.module( 'App', [
           $scope.profile.owner = true;
         }
         // set time of loading
-        $scope.profile.date = Date.now();
+        if (!$scope.profile.date) {
+          $scope.profile.date = Date.now();
+        }
 
-        // get info
-        var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
-        if (!fullname || fullname.length == 0) {
-          fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(docURI));
-        }
-        $scope.profile.fullname = new $scope.ProfileElement(g.statementsMatching(webidRes, FOAF('name'), undefined)[0]);
-        // Firstname
-        var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
-        if (!firstname || firstname.length == 0) {
-          firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(docURI));
-        }
-        $scope.profile.firstname = new $scope.ProfileElement(firstname);
-        // Lastname
-        var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
-        if (!lastname || lastname.length == 0) {
-          lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(docURI));
-        }
-        $scope.profile.lastname = new $scope.ProfileElement(lastname);
-        // Nickname
-        var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
-        if (!nick || nick.length == 0) {
-          nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(docURI));
-        }
-        $scope.profile.nick = new $scope.ProfileElement(nick);
-
-        // Get pictures
-        var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];        
-        // check if profile uses depic instead
-        if (img) {
-          $scope.profile.picture = new $scope.ProfileElement(img);
-        } else {
-          var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
-          if (depic) {
-            $scope.profile.picture = new $scope.ProfileElement(depic);
+        // try to fetch additional data from sameAs, seeAlso and preferenceFile
+        if (!extended) {
+          var sameAs = g.statementsMatching(webidRes, OWL('sameAs'), undefined);
+          if (sameAs.length > 0) {
+            sameAs.forEach(function(same){
+              $scope.getProfile(same['object']['value'], false, true);
+            });
+          }
+          var seeAlso = g.statementsMatching(webidRes, OWL('seeAlso'), undefined);
+          if (seeAlso.length > 0) {
+            seeAlso.forEach(function(see){
+              $scope.getProfile(see['object']['value'], false, true);
+            });
+          }
+          var prefs = g.statementsMatching(webidRes, SPACE('preferencesFile'), undefined);
+          if (prefs.length > 0) {
+            prefs.forEach(function(pref){
+              if (pref['object']['value']) {
+                $scope.getProfile(pref['object']['value'], false, true);
+              }
+            });
           }
         }
 
+        // get info
+        var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
+        if (!fullname || fullname['object']['value'].length == 0) {
+          fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        if (!$scope.profile.fullname) {
+          $scope.profile.fullname = new $scope.ProfileElement(fullname);
+        }
+        // Firstname
+        var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
+        if (!firstname || firstname['object']['value'].length == 0) {
+          firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        if (!$scope.profile.firstname) {
+          $scope.profile.firstname = new $scope.ProfileElement(firstname);
+        }
+        // Lastname
+        var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
+        if (!lastname || lastname['object']['value'].length == 0) {
+          lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        if (!$scope.profile.lastname) {
+          $scope.profile.lastname = new $scope.ProfileElement(lastname);
+        }
+        // Nickname
+        var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
+        if (!nick || nick['object']['value'].length == 0) {
+          nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(docURI));
+        }
+        if (!$scope.profile.nick) {
+          $scope.profile.nick = new $scope.ProfileElement(nick);
+        }
+
+        // Get profile picture
+        var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];
+        var pic;
+        if (img) {
+          pic = img;
+        } else {
+          // check if profile uses depic instead
+          var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
+          if (depic) {
+            pic = depic;
+          }
+        }
+        if (!pic || pic['object']['value'].length == 0) {
+          pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(docURI));
+        }
+        if (!$scope.profile.picture) {
+          $scope.profile.picture = new $scope.ProfileElement(pic);
+        }
         // Phones
         var phones = g.statementsMatching(webidRes, FOAF('phone'), undefined);
         if (phones.length > 0) {
           phones.forEach(function(phone){
-            if (!$scope.profile.phone) {
+            if (!$scope.profile.phones) {
               $scope.profile.phones = [];
             }
             $scope.profile.phones.push(new $scope.ProfileElement(phone));
@@ -263,6 +322,8 @@ angular.module( 'App', [
         $scope.profile.loading = false;
         $scope.$apply();
 
+        // debug
+        __profile = $scope.profile;
         if (authenticated) {
           $scope.loginButtonText = "Login";
           var authUser = ($scope.profile.fullname.value)?" as "+$scope.profile.fullname.value:"";  
@@ -301,6 +362,7 @@ angular.module( 'App', [
       // add dir to local list
       var user = headers('User');
       if (user && user.length > 0 && user.slice(0,4) == 'http') {
+        $scope.profile.webid = user;
         $scope.getProfile(user, true);
         $scope.loginButtonText = 'Logged in';
       } else {
