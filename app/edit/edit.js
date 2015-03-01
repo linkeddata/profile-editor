@@ -147,6 +147,11 @@ angular.module( 'App.edit', [
     $scope.profile.workpages.splice(id, 1);
   };
 
+  $scope.deletePicture = function() {
+    $scope.profile.picture.value = '';
+    $scope.updateObject($scope.profile.picture);
+  };
+
   $scope.login = function() {
     $scope.$parent.login();
   };
@@ -154,19 +159,13 @@ angular.module( 'App.edit', [
   // Updates
   
   // update a value and patch profile
-  $scope.updateObject = function (obj) {
+  $scope.updateObject = function (obj, force) {
     // update object and also patch graph
     if (obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
       obj.picker = true;
     } else {
-      obj.updateObject(true);
+      obj.updateObject(true, force);
     }
-  };
-
-  // update picture
-  $scope.updateProfilePicture = function(url) {
-    $scope.profile.picture.value = url;
-    $scope.updateObject($scope.profile.picture);
   };
 
   // select file for picture
@@ -221,7 +220,8 @@ angular.module( 'App.edit', [
       }).success(function (data, status, headers, config) {
         $scope.uploading = false;
         var pic = headers("Location");
-        $scope.updateProfilePicture(pic);
+        $scope.profile.picture.value = pic;
+        $scope.updateObject($scope.profile.picture, true);
       }).error(function (data, status, headers, config) {
         $scope.uploading = false;
         Notifier.error('Could not upload picture -- HTTP '+status);
@@ -240,10 +240,10 @@ angular.module( 'App.edit', [
   };
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
-    if (newFile != undefined || newFile !== oldFile) {
+    if (newFile != undefined) {
       $scope.originalImage = '';
       $scope.imageName = '';
-      $scope.croppedImage = '';
+      $scope.croppedImage = '2';
       $scope.handleFileSelect(newFile[0]);
       $('#picture-cropper').openModal();
     }
@@ -251,17 +251,19 @@ angular.module( 'App.edit', [
 })
 .directive('pickSource', function () {
     return {
-        restrict: 'EA',
-        scope: { obj: '='},
+        restrict: 'AE',
+        scope: {
+          obj: '='
+        },
         transclude: true,
         template: 'Select where to save this new information. <button class="btn blue" ng-click="cancel()">Cancel</button>'+
         '<ul class="collection">'+
-          '<li class="collection-item" ng-repeat="src in sources">'+
+          '<li class="collection-item truncate" ng-repeat="src in $parent.profile.sources">'+
           '  <a href="" ng-click="setWhy(src)">{{src}}</a>'+
           '</li>'+
         '</ul>',
         link: function($scope, $element, $attrs) {
-          $scope.sources = $scope.$parent.profile.sources;
+          $element.addClass('pick-source');
           $scope.setWhy = function(uri) {
             $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
             $scope.cancel();
