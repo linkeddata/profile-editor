@@ -186,6 +186,9 @@ form {
 	padding: 10px;
 }
 
+.break-word {
+	word-wrap: break-word;
+}
 .spinner {
 	display: inline-block!important;
 }
