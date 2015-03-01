@@ -175,6 +175,10 @@ form {
 	width: 500px!important;
 }
 
+.dotted {
+    border-bottom: 1px dotted #fff;
+}
+
 .btn {
 	margin-bottom: 0;
 	padding: 0 1rem;
