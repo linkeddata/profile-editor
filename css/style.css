@@ -129,7 +129,10 @@ ul.side-nav li a {
 form {
 	font-weight: 200;
 }
-
+.pick-source {
+	position:absolute;
+	z-index: 10;
+}
 .cropArea {
   background: #E4E4E4;
   overflow: hidden;

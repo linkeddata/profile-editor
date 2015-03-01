@@ -4,8 +4,6 @@ var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
 
-var __profile;
-
 // Namespaces
 var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 var RDFS = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
@@ -67,9 +65,9 @@ angular.module( 'App', [
     }
   };
 
-  $scope.ProfileElement.prototype.updateObject = function(update) {
+  $scope.ProfileElement.prototype.updateObject = function(update, force) {
     // do not update if value hasn't changed
-    if (this.value == this.prev) {
+    if (this.value == this.prev && !force) {
       return;
     }
 
@@ -100,10 +98,8 @@ angular.module( 'App', [
         var query = "DELETE DATA { " + oldS.toNT() + " }";
         if (oldS['why'] && oldS['why']['value'].length > 0) {
           graphURI = oldS['why']['value'];
-          console.log("Setting to why value"+graphURI);
         } else {
           graphURI = oldS['subject']['value'];
-          console.log("Setting to subject value"+graphURI);
         }
         // add separator
         if (this.value.length > 0) {
@@ -151,8 +147,8 @@ angular.module( 'App', [
   // Load a user's profile
   // string uri  - URI of resource containing profile information
   // bool authenticated - whether the user was previously authenticated or now
-  // bool extended - whether it loads an extended profile document
-  $scope.getProfile = function(uri, authenticated, extended) {
+  // bool loadMore - whether it loads extended profile documents
+  $scope.getProfile = function(uri, authenticated, loadMore) {
     if (!$scope.profile) {
       $scope.profile = {};
     }
@@ -196,7 +192,7 @@ angular.module( 'App', [
         }
 
         // try to fetch additional data from sameAs, seeAlso and preferenceFile
-        if (!extended) {
+        if (!loadMore) {
           var sameAs = g.statementsMatching(webidRes, OWL('sameAs'), undefined);
           if (sameAs.length > 0) {
             sameAs.forEach(function(same){
@@ -329,7 +325,6 @@ angular.module( 'App', [
         $scope.$apply();
 
         // debug
-        __profile = $scope.profile;
         if (authenticated) {
           $scope.loginButtonText = "Login";
           var authUser = ($scope.profile.fullname.value)?" as "+$scope.profile.fullname.value:"";  
@@ -349,7 +344,6 @@ angular.module( 'App', [
       },
       authenticated: $scope.authenticated
     };
-    $scope.profile.loading = false;
     sessionStorage.setItem($scope.appuri, JSON.stringify(app));
     // redirect to view page
     if (redirect) {
