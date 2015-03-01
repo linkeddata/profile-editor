@@ -27,6 +27,9 @@
               <a href="#/edit/profile" class="white-text valign-wrapper align-left"><i class="mdi-action-account-box prefix valign inline-block"></i><span class="valign inline-block">Personal profile</span></a></li>
             <li ng-show="authenticated">
               <a href="#/edit/friends" class="valign-wrapper align-left white-text"><i class="mdi-social-people prefix valign"></i><span class="valign">Add/Remove friends</span></a></li>
+            <li ng-show="authenticated">
+              <a href="#/share" class="valign-wrapper align-left white-text"><i class="mdi-social-share prefix valign"></i><span class="valign">Share my WebID</span></a></li>
+              
             <!-- <li ng-show="authenticated">
               <a href="#/edit/publications" class="valign-wrapper align-left white-text"><i class="mdi-social-school prefix valign"></i><span class="valign">Publications</span></a></li>
             <li ng-show="authenticated">
@@ -54,7 +57,7 @@
       <div class="footer-inner center">
         <p>
           &copy; 2015
-          | <a href="https://github.com/linkeddata/profile-editor/issues" target="_blank" class="white-text"><i class="mdi-action-bug-report"></i> Issue tracker</a>
+          | <a href="https://github.com/linkeddata/profile-editor/issues" target="_blank" class="white-text"><i class="mdi-action-info-outline"></i> Issue tracker</a>
           | <a href="https://github.com/linkeddata/profile-editor" target="_blank" class="white-text">GitHub</a>
         </p>
       </div>
@@ -68,6 +71,8 @@
 <script src="bower_components/angularjs/angular.js"></script>
 <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
+<script src="bower_components/qrcode-generator/js/qrcode.js"></script>
+<script src="bower_components/angular-qrcode/qrcode.js"></script>
 <script src="bower_components/ngImgCrop/compile/minified/ng-img-crop.js"></script>
 <!-- Vendor specific deps -->
 <script src="app/vendor/rdflib.js/rdflib.js"></script>
@@ -78,6 +83,7 @@
 <script src="app/login/login.js"></script>
 <script src="app/edit/edit.js"></script>
 <script src="app/view/view.js"></script>
+<script src="app/share/share.js"></script>
 
 <script>
   $( document ).ready(function(){

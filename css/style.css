@@ -181,6 +181,11 @@ form {
 	padding: 5px;
 }
 
+.qrcode {
+	background: #fff;
+	padding: 10px;
+}
+
 .spinner {
 	display: inline-block!important;
 }
