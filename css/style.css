@@ -38,7 +38,7 @@ nav ul li:hover, nav ul li.active {
     background-color: rgba(0, 0, 0, 0.3)!important; 
 }
 ul.side-nav {
-	width: 150px;
+	width: 200px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
