@@ -1,0 +1,35 @@
+<div class="row">
+	<div ng-if="profile.webid" class="col s12">
+    <div class="col s12 center">
+      <h4 class="valign-wrapper"><i class="mdi-content-link white-text valign right-10"></i>WebID link</h4>
+    </div>
+    <div class="col s12 center">
+      <div class="row"> 
+        <h5><a href="{{profile.webid}}" target="_blank" class="white-text">{{profile.webid}}</a></h5>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12 m6 center">
+        <div class="col s12 center">
+          <h4 class="valign-wrapper"><i class="mdi-content-select-all white-text valign right-10"></i>Direct link</h4>
+        </div>
+        <div class="col s12 center">
+          <qrcode ng-if="webidQr.version > 0" version="{{webidQr.version}}" error-correction-level="{{webidQr.level}}" size="{{webidQr.size}}" data="{{webidQr.uri}}"></qrcode>
+          <div ng-show="qr.version == 0">Could not generate QR code. WebID is too long ({{webidQr.uri.length}} chars).</div>
+        </div>
+      </div>
+
+      <div class="col s12 m6 center">
+        <div class="col s12 center">
+          <h4 class="valign-wrapper"><i class="mdi-content-select-all white-text valign right-10"></i>Viewer-enabled link</h4>
+        </div>
+        <div class="col s12 center">
+          <qrcode ng-if="viewerQr.version > 0" version="{{viewerQr.version}}" error-correction-level="{{viewerQr.level}}" size="{{viewerQr.size}}" data="{{viewerQr.uri}}"></qrcode>
+          <div ng-show="viewerQr.version == 0">Could not generate QR code. Link is too long ({{viewerQr.uri.length}} chars).</div>
+        </div>
+      </div>
+    </div>
+
+	</div>
+</div>

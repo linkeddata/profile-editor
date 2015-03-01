@@ -19,6 +19,7 @@ angular.module( 'App', [
   'App.login',
   'App.view',
   'App.edit',
+  'App.share',
   'ui.router'
 ])
 
@@ -39,7 +40,7 @@ angular.module( 'App', [
 })
 
 .controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state ) {
-  $scope.appuri = window.location.hostname+window.location.pathname;
+  $scope.appuri = window.location.host+window.location.pathname;
   $scope.loginButtonText = 'Login';
   $scope.webid = '';
 
