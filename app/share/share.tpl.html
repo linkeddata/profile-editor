@@ -12,20 +12,28 @@
     <div class="row">
       <div class="col s12 m6 center">
         <div class="col s12 center">
-          <h4 class="valign-wrapper"><i class="mdi-content-select-all white-text valign right-10"></i>Direct link</h4>
+          <h4>
+            <a href="{{webidQr.uri}}" class="valign-wrapper white-text" target="_blank"><i class="mdi-content-select-all white-text valign right-10"></i><span class="dotted">Direct link</span></a>
+          </h4>
         </div>
         <div class="col s12 center">
-          <qrcode ng-if="webidQr.version > 0" version="{{webidQr.version}}" error-correction-level="{{webidQr.level}}" size="{{webidQr.size}}" data="{{webidQr.uri}}"></qrcode>
+          <a href="{{webidQr.uri}}" class="valign-wrapper white-text" target="_blank">
+            <qrcode ng-if="webidQr.version > 0" version="{{webidQr.version}}" error-correction-level="{{webidQr.level}}" size="{{webidQr.size}}" data="{{webidQr.uri}}" href="{{webidQr.uri}}"></qrcode>
+          </a>
           <div ng-show="qr.version == 0">Could not generate QR code. WebID is too long ({{webidQr.uri.length}} chars).</div>
         </div>
       </div>
 
       <div class="col s12 m6 center">
         <div class="col s12 center">
-          <h4 class="valign-wrapper"><i class="mdi-content-select-all white-text valign right-10"></i>Viewer-enabled link</h4>
+          <h4>
+            <a href="//{{viewerQr.uri}}" class="valign-wrapper white-text"><i class="mdi-content-select-all white-text valign right-10"></i><span class="dotted">Viewer link</span></a>
+          </h4>
         </div>
         <div class="col s12 center">
-          <qrcode ng-if="viewerQr.version > 0" version="{{viewerQr.version}}" error-correction-level="{{viewerQr.level}}" size="{{viewerQr.size}}" data="{{viewerQr.uri}}"></qrcode>
+          <a href="//{{viewerQr.uri}}" class="valign-wrapper white-text">
+            <qrcode ng-if="viewerQr.version > 0" version="{{viewerQr.version}}" error-correction-level="{{viewerQr.level}}" size="{{viewerQr.size}}" data="{{viewerQr.uri}}"></qrcode>
+          </a>
           <div ng-show="viewerQr.version == 0">Could not generate QR code. Link is too long ({{viewerQr.uri.length}} chars).</div>
         </div>
       </div>
