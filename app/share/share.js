@@ -19,7 +19,7 @@ angular.module( 'App.share', [
 
 .controller( 'ShareCtrl', function ViewCtrl( $scope, $state, $stateParams ) {
   $scope.profile = $scope.$parent.profile;
-  var viewerURI = $scope.$parent.appuri+'?webid='+encodeURIComponent($scope.profile.webid);
+  var viewerURI = $scope.$parent.appuri+'?webid='+encodeURIComponent($scope.profile.webid)+'#';
   // compute version based on WebID length
   $scope.getQRparams = function(uri) {
     var l = uri.length;
@@ -43,7 +43,8 @@ angular.module( 'App.share', [
       uri: uri,
       version: v,
       level: 'M',
-      size: 250
+      size: 250,
+      margin: 15
     };
   };
 
