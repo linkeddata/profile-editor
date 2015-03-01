@@ -38,7 +38,7 @@ nav ul li:hover, nav ul li.active {
     background-color: rgba(0, 0, 0, 0.3)!important; 
 }
 ul.side-nav {
-	width: 200px;
+	width: 230px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -52,16 +52,17 @@ ul.side-nav li {
 
 ul.side-nav li a {
 	width: 100%;
+	font-size: 1.2rem;
 	padding: 0;
 	font-weight: 200;
 	cursor: pointer;
 }
 
 #toggle-sidenav {
-	margin-right: 50px;
+	padding: 0 20px 0 10px;
 	position: relative;
-	left: 10px;
 	cursor: pointer;
+	font-size: 32px;
 }
 
 .page-title {
@@ -73,6 +74,9 @@ ul.side-nav li a {
 	color: #fff;
 	line-height: 32px;
 	cursor: pointer;
+}
+.profile-card img {
+	width: 80%;
 }
 .profile-picture {
 	margin-top: 20px;
