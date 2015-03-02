@@ -81,7 +81,7 @@ ul.side-nav li a {
     border: 3px solid #fff;
 }
 
-.profile-card-background {
+.grad-bg {
 	background: rgb(48,126,221);
     background: -moz-linear-gradient(-45deg,  rgba(48,126,221,1) 0%, rgba(242,92,137,1) 100%);
     background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(48,126,221,1)), color-stop(100%,rgba(242,92,137,1)));
@@ -93,7 +93,7 @@ ul.side-nav li a {
 }
 .user-name {
 	width:100%;
-	height: 40px;
+	height: 50px;
 	font-size: 1.2rem;
 	background: #111F28;
 }
@@ -121,10 +121,61 @@ ul.side-nav li a {
 	color: #fff;
 }
 .profile-picture img {
-	width: 200px;
-	max-height: 200px;
+	max-width: 200px;
+	height: auto;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.profile-large-bg {
+	width: auto;
+	height: 200px;
+}
+.profile-large-pic {
+	margin: -130px 10px 0 20px;
+    width: 175px;
+}
+.profile-large-pic img {
+	max-width: 200px;
+	height: auto;
+    border: 6px solid rgba(255,255,255,0.7);
+    border-radius: 3px;
+}
+
+.profile-large-name {
+	margin-left: 210px;
+	margin-top: -80px;
+	color: #434343;
+}
+.profile-large-name h4 {
+	margin: 1rem 0 0.2rem 0;
+}
+
+@media only screen and (max-width : 601px) {
+	.profile-large-name {
+		text-align: center;
+		margin: 0px 0px 10px 0px!important;
+	}
+}
+
+
+.profile-large {
+	border-radius: 4px;
+	background: #EAEBEC;
+	padding-bottom: 20px;
+	overflow: hidden;
+	min-height: 300px;
+}
+.profile-large .row:after {
+	clear:none;
+}
+
+.bg-drop {
+	width: 100%;
+}
+
+.img-border {
+    border: 3px solid #fff;
 }
 
 .drop-box:hover {
