@@ -17,7 +17,7 @@ angular.module( 'App.view', [
 })
 
 .controller( 'ViewCtrl', function ViewCtrl( $scope, $state, $stateParams ) {
-
+  $scope.profile = $scope.$parent.profile;
 
 
 });

@@ -70,14 +70,34 @@ ul.side-nav li a {
 }
 
 .profile-card {
-	padding: 10px;
+	padding-top: 10px;
 	color: #fff;
 	line-height: 32px;
 	cursor: pointer;
 }
 .profile-card img {
-	width: 80%;
+	width: 70%;
+	border-radius: 50%;
+    border: 3px solid #fff;
 }
+
+.profile-card-background {
+	background: rgb(48,126,221);
+    background: -moz-linear-gradient(-45deg,  rgba(48,126,221,1) 0%, rgba(242,92,137,1) 100%);
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,rgba(48,126,221,1)), color-stop(100%,rgba(242,92,137,1)));
+    background: -webkit-linear-gradient(-45deg,  rgba(48,126,221,1) 0%,rgba(242,92,137,1) 100%);
+    background: -o-linear-gradient(-45deg,  rgba(48,126,221,1) 0%,rgba(242,92,137,1) 100%);
+    background: -ms-linear-gradient(-45deg,  rgba(48,126,221,1) 0%,rgba(242,92,137,1) 100%);
+    background: linear-gradient(135deg,  rgba(48,126,221,1) 0%,rgba(242,92,137,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#307edd', endColorstr='#f25c89',GradientType=1 );
+}
+.user-name {
+	width:100%;
+	height: 40px;
+	font-size: 1.2rem;
+	background: #111F28;
+}
+
 .profile-picture {
 	margin-top: 20px;
 	width: 204px;
