@@ -133,11 +133,13 @@ ul.side-nav li a {
 }
 .profile-large-pic {
 	margin: -130px 10px 0 20px;
-    width: 175px;
+    width: auto;
+    height: 200px;
+
 }
 .profile-large-pic img {
-	max-width: 200px;
-	height: auto;
+	max-width: auto;
+	max-height: 200px;
     border: 6px solid rgba(255,255,255,0.7);
     border-radius: 3px;
 }
