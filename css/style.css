@@ -58,6 +58,10 @@ ul.side-nav li a {
 	cursor: pointer;
 }
 
+.show-link {
+	text-decoration: underline;
+}
+
 .pointer {
 	cursor: pointer;
 }
@@ -135,13 +139,19 @@ ul.side-nav li a {
 	width: auto;
 	height: 200px;
 }
-.profile-large-pic {
+.profile-large-bg img {
+	max-height: 200px;
+	width: auto;
+	overflow: hidden;
+}
+
+.profile-large-avatar {
 	margin: -130px 10px 0 20px;
     width: auto;
     height: 200px;
 
 }
-.profile-large-pic img {
+.profile-large-avatar img {
 	max-width: auto;
 	max-height: 200px;
     border: 3px solid rgba(255,255,255,0.8);
@@ -168,9 +178,6 @@ ul.side-nav li a {
 	background-color: #EAEBEC;
 	color: #434343;
 }
-.card-panel a, a:visited {
-	color: #434343;
-}
 .card-panel a:hover {
 	text-decoration: underline;
 }
@@ -187,6 +194,9 @@ ul.side-nav li a {
 
 .card-panel .row {
 	margin: 0 10px 10px 10px;
+}
+.profile-viewer a, a:visited {
+	color: #434343;
 }
 
 .profile-large {
