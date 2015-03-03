@@ -3,7 +3,6 @@ var PROXY = "https://rww.io/proxy?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
-var __profiles;
 // Namespaces
 var RDF = $rdf.Namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 var RDFS = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
@@ -25,7 +24,8 @@ angular.module( 'App', [
 ])
 
 .config( function AppConfig ( $stateProvider, $urlRouterProvider ) {
-  $urlRouterProvider.otherwise( 'edit/profile' );
+  $urlRouterProvider.otherwise( 'view' );
+  $urlRouterProvider.when('/?', '/view?');
   $stateProvider.state( 'home', {
     url: '/',
     views: {
@@ -40,14 +40,14 @@ angular.module( 'App', [
 .run( function run () {
 })
 
-.controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state ) {
+.controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state, $stateParams ) {
   $scope.appuri = window.location.host+window.location.pathname;
   $scope.loginButtonText = 'Login';
   $scope.webid = '';
 
   $scope.currLoc = $location.$$path;
-  if (!$scope.profile) {
-    $scope.profile = [];
+  if (!$scope.profiles) {
+    $scope.profiles = [];
   }
   
   $scope.authenticated = false;
@@ -165,17 +165,6 @@ angular.module( 'App', [
     if (!$scope.profiles[webid].webid || $scope.profiles[webid].webid.length == 0) {
       $scope.profiles[webid].webid = webid;
     }
-    // don't refetch if serving from cache
-    // if ($scope.profiles[uri].date) {
-    //   // 5 mins cache
-    //   var _date = $scope.profiles[uri].date + 1000 * 60 * 5;
-    //   if (Date.now() <= _date) {
-    //     console.log("Loading from cache");
-    //     return;
-    //   } else {
-    //     console.log("Cache expired, refetching..");
-    //   }
-    // }
 
     var g = $rdf.graph();
     var f = $rdf.fetcher(g, TIMEOUT);
@@ -368,7 +357,13 @@ angular.module( 'App', [
         }
 
         $scope.profiles[webid].loading = false;
-        __profiles = $scope.profiles;
+
+        //@@TODO FIX THIS
+        if ($scope.authenticated == webid) {
+          $scope.profile = $scope.profiles[webid];
+          $scope.saveCredentials($scope.authenticated);
+        }
+
         $scope.$apply();
 
         // debug
@@ -391,7 +386,6 @@ angular.module( 'App', [
       authenticated: $scope.authenticated
     };
     sessionStorage.setItem($scope.appuri, JSON.stringify(app));
-    $scope.profile = $scope.profiles[uri];
     // redirect to view page
     if (redirect) {
       // switch to view once it's available
@@ -443,8 +437,9 @@ angular.module( 'App', [
     $scope.profiles = [];
     $scope.profile = {};
     $scope.webid = undefined;
-    $scope.authenticated = undefined;
-    $state.go('view', {}, {redirect: true});
+    $scope.authenticated = false;
+    window.location = '#/view';
+    $state.reload();
   };
 
   // clear sessionStorage
@@ -454,7 +449,6 @@ angular.module( 'App', [
 
   $scope.view = function(mine) {
     $('#toggle-sidenav').sideNav('hide');
-    console.log("Mine? "+mine);
     $state.go('view', {'mine': mine}, {reload: true});
   }
   $scope.editProfile = function() {
@@ -498,7 +492,7 @@ angular.module( 'App', [
   }
 
   var webid = getParam('webid');
-  if (webid && webid.length > 0 && !$scope.profile[webid]) {
+  if (webid && webid.length > 0 && !$scope.profiles[webid]) {
     $scope.webid = webid;
     $scope.getProfile(webid, false);
   }
@@ -522,7 +516,6 @@ angular.module( 'App', [
 })
 .directive('bgImage', function () {
   return function (scope, element, attrs) {
-    console.log(attrs);
     element.css({
       'background-image': 'url(' + attrs.bgImage + ')',
       'background-size': 'cover',
