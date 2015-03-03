@@ -16,7 +16,8 @@ angular.module( 'App.edit', [
   });
 })
 
-.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $upload ) {
+.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $upload ) {
+  $scope.$parent.currLoc = $state.current.url;
   // blank
   $scope.pictureFile = {};
   // Copy profile object (we compare to limit number of changes later)

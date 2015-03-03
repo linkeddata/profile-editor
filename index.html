@@ -19,7 +19,16 @@
       <nav>
         <div class="nav-wrapper blue-grey darken-4">
           <div data-activates="left-menu" id="toggle-sidenav" class="left"><i class="mdi-navigation-menu"></i></div>
-          <div class="brand-logo valign-wrapper"><div class="valign brand-text">{{pageTitle}}<small ng-show="profile.loading"> ...loading</small></div></div>
+          <div class="brand-logo valign-wrapper">
+            <div class="valign brand-text">
+              {{pageTitle}}
+              <small ng-show="profile.loading"> ...loading</small>
+            </div>
+          </div>
+          <div class="action valign right right-10">
+              <div class="valign-wrapper pointer" ng-show="currLoc == '/edit/profile'" ng-click="view()"><i class="mdi-action-done valign right-10"></i>View</div>
+              <div class="valign-wrapper pointer" ng-show="profile.owner && currLoc == '/view'" ng-click="editProfile()"><i class="mdi-editor-mode-edit right-10"></i>Edit</div>
+          </div>
           
           <ul class="side-nav blue-grey darken-3" id="left-menu">
             <li class="blue accent-2" ng-show="authenticated"><profile-card></profile-card></li>

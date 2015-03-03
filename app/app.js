@@ -44,6 +44,8 @@ angular.module( 'App', [
   $scope.loginButtonText = 'Login';
   $scope.webid = '';
 
+  $scope.currLoc = $location.$$path;
+
   $scope.profile = {};
   $scope.profile.loading = false;
   $scope.authenticated = false;
@@ -419,6 +421,10 @@ angular.module( 'App', [
   $scope.view = function() {
     $('#toggle-sidenav').sideNav('hide');
     $state.go('view', {}, {redirect: true});
+  }
+  $scope.editProfile = function() {
+    $('#toggle-sidenav').sideNav('hide');
+    $state.go('editProfile', {}, {redirect: true});
   }
 
   $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){

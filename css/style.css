@@ -58,6 +58,10 @@ ul.side-nav li a {
 	cursor: pointer;
 }
 
+.pointer {
+	cursor: pointer;
+}
+
 #toggle-sidenav {
 	padding: 0 20px 0 10px;
 	position: relative;
