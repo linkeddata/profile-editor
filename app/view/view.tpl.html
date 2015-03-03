@@ -1,7 +1,7 @@
 <div class="row">
   <div ng-if="profile.webid">
     <!-- Main card -->
-    <div class="col s12 m12 profile-large">
+    <div class="row s12 m12 profile-large">
       <div class="grad-bg profile-large-bg col s12"><img ng-if="profile.background.value" /></div>
       <div class="row s12">
         <div class="profile-large-pic center col s12 m4">
@@ -17,8 +17,145 @@
       </div>
     </div>
 
+    <div class="row center s12">
+      <!-- Name -->
+      <div class="col s12 m6">
+        <div class="card-panel c-p-l">
+          <div class="row left-align">
+            <div class="col s12">
+              <h5 class="valign-wrapper align-left">
+                <i class="mdi-action-account-box valign right-10"></i>
+                <strong>Basic information</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="row left-align" ng-if="profile.fullname.value">
+            <div class="col s4">
+              <strong>Full</strong>
+            </div>
+            <div class="col s8">
+              {{profile.fullname.value}}
+            </div>
+          </div>
+          <div class="row left-align" ng-if="profile.firstname.value">
+            <div class="col s4">
+              <strong>First</strong>
+            </div>
+            <div class="col s8">
+              {{profile.firstname.value}}
+            </div>
+          </div>
+          <div class="row left-align" ng-if="profile.lastname.value">
+            <div class="col s4">
+              <strong>Last</strong>
+            </div>
+            <div class="col s8">
+              {{profile.lastname.value}}
+            </div>
+          </div>
+          <div class="row left-align" ng-if="profile.nick.value">
+            <div class="col s4">
+              <strong>Nick</strong>
+            </div>
+            <div class="col s8">
+              {{profile.nick.value}}
+            </div>
+          </div>
+          <div class="row left-align" ng-if="profile.gender.value">
+            <div class="col s4">
+              <strong>Gender</strong>
+            </div>
+            <div class="col s8">
+              {{profile.gender.value}}
+            </div>
+          </div>
+        </div>
+        <!-- Phones -->
+        <div class="card-panel c-p-l" ng-if="profile.phones.length > 0">
+          <div class="row left-align">
+            <div class="col s12">
+              <h5 class="valign-wrapper align-left">
+                <i class="mdi-communication-phone valign right-10"></i>
+                <strong>Phone numbers</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="row left-align" ng-repeat="(id, phone) in profile.phones track by $index">
+            <div class="col s12">
+              {{phone.value}}
+            </div>
+          </div>
+        </div>
+        <!-- Emails -->
+        <div class="card-panel c-p-r" ng-if="profile.emails.length > 0">
+          <div class="row left-align">
+            <div class="col s12">
+              <h5 class="valign-wrapper align-left">
+                <i class="mdi-communication-email valign right-10"></i>
+                <strong>Email addresses</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="row left-align" ng-repeat="(id, email) in profile.emails track by $index">
+            <div class="col s12">
+              {{email.value}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Right column -->
+      <div class="col s12 m6">
+        <!-- Blogs -->
+        <div class="card-panel c-p-r" ng-if="profile.blogs.length > 0">
+          <div class="row left-align">
+            <div class="col s12">
+              <h5 class="valign-wrapper align-left">
+                <i class="mdi-maps-rate-review valign right-10"></i>
+                <strong>Blogs</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="row left-align" ng-repeat="(id, blog) in profile.blogs track by $index">
+            <div class="col s12">
+              <i class="mdi-content-link valign right-10"></i><a href="{{blog.value}}" target="_blank">{{blog.value}}</a>
+            </div>
+          </div>
+        </div>
+        <!-- Homepages -->
+        <div class="card-panel c-p-r" ng-if="profile.homepages.length > 0">
+          <div class="row left-align">
+            <div class="col s12">
+              <h5 class="valign-wrapper align-left">
+                <i class="mdi-social-public valign right-10"></i>
+                <strong>Personal homepages</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="row left-align" ng-repeat="(id, homepage) in profile.homepages track by $index">
+            <div class="col s12">
+              <i class="mdi-content-link valign right-10"></i><a href="{{homepage.value}}" target="_blank">{{homepage.value}}</a>
+            </div>
+          </div>
+        </div>
+        <!-- Workpages -->
+        <div class="card-panel c-p-r" ng-if="profile.workpages.length > 0">
+          <div class="row left-align">
+            <div class="col s12">
+              <h5 class="valign-wrapper align-left">
+                <i class="mdi-social-public valign right-10"></i>
+                <strong>Work homepages</strong>
+              </h5>
+            </div>
+          </div>
+          <div class="row left-align" ng-repeat="(id, workpage) in profile.workpages track by $index">
+            <div class="col s12">
+              <i class="mdi-content-link valign right-10"></i><a href="{{workpage.value}}" target="_blank">{{workpage.value}}</a>
+            </div>
+          </div>
+        </div>
 
-
+      </div>
+    </div>
   </div>
 
   <div ng-if="!profile.webid">
