@@ -416,6 +416,11 @@ angular.module( 'App', [
     sessionStorage.removeItem($scope.appuri);
   };
 
+  $scope.view = function() {
+    $('#toggle-sidenav').sideNav('hide');
+    $state.go('view', {}, {redirect: true});
+  }
+
   $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     if (angular.isDefined(toState.data.pageTitle)) {
       $scope.pageTitle = toState.data.pageTitle;
