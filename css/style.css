@@ -140,7 +140,7 @@ ul.side-nav li a {
 .profile-large-pic img {
 	max-width: auto;
 	max-height: 200px;
-    border: 6px solid rgba(255,255,255,0.7);
+    border: 3px solid rgba(255,255,255,0.8);
     border-radius: 3px;
 }
 
@@ -159,7 +159,31 @@ ul.side-nav li a {
 		margin: 0px 0px 10px 0px!important;
 	}
 }
+.card-panel {
+	margin-bottom: 10px!important;
+	background-color: #EAEBEC;
+	color: #434343;
+}
+.card-panel a, a:visited {
+	color: #434343;
+}
+.card-panel a:hover {
+	text-decoration: underline;
+}
+.c-p-l {
+	width: 98%;
+	margin: 0 auto;
+	/*margin-right: 5px!important;*/
+}
+.c-p-r {
+	width: 98%;
+	margin: 0 auto;
+	/*margin-left: 5px!important;*/
+}
 
+.card-panel .row {
+	margin: 0 10px 10px 10px;
+}
 
 .profile-large {
 	border-radius: 4px;

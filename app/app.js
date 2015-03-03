@@ -169,8 +169,14 @@ angular.module( 'App', [
     f.nowOrWhenFetched(docURI,undefined,function(ok, body, xhr) {
       if (!ok) {
         console.log('Warning - profile not found.');
-        Notifier.error('Failed to fetch profile. HTTP '+xhr.status);
-        $scope.profile.fullname = uri;
+        var extra = '';
+        if (loadMore) {
+          extra = 'additional';
+        }
+        Notifier.error('Failed to fetch '+extra+' profile '+uri+'. HTTP '+xhr.status);
+        if (!$scope.profile.fullname) {
+          $scope.profile.fullname = uri;
+        }
         $scope.profile.loading = false;
         $scope.loginButtonText = "Login";
         $scope.$apply();
@@ -217,107 +223,115 @@ angular.module( 'App', [
         }
 
         // get info
-        var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
-        if (!fullname || fullname['object']['value'].length == 0) {
-          fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(''));
-        }
         if (!$scope.profile.fullname) {
+          var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
+          if (!fullname || fullname['object']['value'].length == 0) {
+            fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(''));
+          }        
           $scope.profile.fullname = new $scope.ProfileElement(fullname);
         }
         // Firstname
-        var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
-        if (!firstname || firstname['object']['value'].length == 0) {
-          firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(''));
-        }
         if (!$scope.profile.firstname) {
+          var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
+          if (!firstname || firstname['object']['value'].length == 0) {
+            firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(''));
+          }
           $scope.profile.firstname = new $scope.ProfileElement(firstname);
         }
         // Lastname
-        var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
-        if (!lastname || lastname['object']['value'].length == 0) {
-          lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(''));
-        }
         if (!$scope.profile.lastname) {
+          var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
+          if (!lastname || lastname['object']['value'].length == 0) {
+            lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(''));
+          }
           $scope.profile.lastname = new $scope.ProfileElement(lastname);
         }
         // Nickname
-        var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
-        if (!nick || nick['object']['value'].length == 0) {
-          nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(''));
-        }
         if (!$scope.profile.nick) {
+          var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
+          if (!nick || nick['object']['value'].length == 0) {
+            nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(''));
+          }
           $scope.profile.nick = new $scope.ProfileElement(nick);
+        }
+        // Gender
+        if (!$scope.profile.gender) {
+          var gender = g.statementsMatching(webidRes, FOAF('gender'), undefined)[0];
+          if (!gender || gender['object']['value'].length == 0) {
+            gender = $rdf.st(webidRes, FOAF('gender'), $rdf.lit(''), $rdf.sym(''));
+          }
+          $scope.profile.gender = new $scope.ProfileElement(gender);
         }
 
         // Get profile picture
-        var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];
-        var pic;
-        if (img) {
-          pic = img;
-        } else {
-          // check if profile uses depic instead
-          var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
-          if (depic) {
-            pic = depic;
-          }
-        }
-        if (!pic || pic['object']['value'].length == 0) {
-          pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(''));
-        }
         if (!$scope.profile.picture) {
+          var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];
+          var pic;
+          if (img) {
+            pic = img;
+          } else {
+            // check if profile uses depic instead
+            var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
+            if (depic) {
+              pic = depic;
+            }
+          }
+          if (!pic || pic['object']['value'].length == 0) {
+            pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(''));
+          }
           $scope.profile.picture = new $scope.ProfileElement(pic);
         }
         // Phones
+        if (!$scope.profile.phones) {
+          $scope.profile.phones = [];
+        }
         var phones = g.statementsMatching(webidRes, FOAF('phone'), undefined);
         if (phones.length > 0) {
           phones.forEach(function(phone){
-            if (!$scope.profile.phones) {
-              $scope.profile.phones = [];
-            }
             $scope.profile.phones.push(new $scope.ProfileElement(phone));
           });
         }
 
         // Emails
+        if (!$scope.profile.emails) {
+          $scope.profile.emails = [];
+        }
         var emails = g.statementsMatching(webidRes, FOAF('mbox'), undefined);
         if (emails.length > 0) {
           emails.forEach(function(email){
-            if (!$scope.profile.emails) {
-              $scope.profile.emails = [];
-            }
             $scope.profile.emails.push(new $scope.ProfileElement(email));
           });
         }
 
         // Blogs
+        if (!$scope.profile.blogs) {
+          $scope.profile.blogs = [];
+        }
         var blogs = g.statementsMatching(webidRes, FOAF('weblog'), undefined);
         if (blogs.length > 0) {
           blogs.forEach(function(blog){
-            if (!$scope.profile.blogs) {
-              $scope.profile.blogs = [];
-            }
             $scope.profile.blogs.push(new $scope.ProfileElement(blog));
           });
         }
 
         // Homepages
+        if (!$scope.profile.homepages) {
+          $scope.profile.homepages = [];
+        }
         var homepages = g.statementsMatching(webidRes, FOAF('homepage'), undefined);
         if (homepages.length > 0) {
           homepages.forEach(function(homepage){
-            if (!$scope.profile.homepages) {
-              $scope.profile.homepages = [];
-            }
             $scope.profile.homepages.push(new $scope.ProfileElement(homepage));
           });
         }
 
         // Workpages
+        if (!$scope.profile.workpages) {
+          $scope.profile.workpages = [];
+        }
         var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'), undefined);
          if (workpages.length > 0) {
           workpages.forEach(function(workpage){
-            if (!$scope.profile.workpages) {
-              $scope.profile.workpages = [];
-            }
             $scope.profile.workpages.push(new $scope.ProfileElement(workpage));
           });
         }
