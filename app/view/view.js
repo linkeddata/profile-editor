@@ -31,6 +31,7 @@ angular.module( 'App.view', [
       $scope.$parent.getProfile(webid, false);
     }
     $scope.profile = $scope.$parent.profiles[webid];
+    $location.path("/view").search({'webid': webid}).replace();
     $scope.form = {};
   }
 

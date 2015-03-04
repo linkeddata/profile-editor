@@ -17,7 +17,7 @@ angular.module( 'App.edit', [
   });
 })
 
-.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $upload, $stateParams ) {
+.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $location, $upload, $stateParams ) {
   $scope.$parent.currLoc = $state.current.name;
   // blank
   $scope.form = {};
@@ -228,6 +228,7 @@ angular.module( 'App.edit', [
       $scope.$parent.getProfile(webid, false, false);
     }
     $scope.profile = $scope.$parent.profiles[webid];
+    $location.path("/edit/profile").search({'webid': webid}).replace();
     console.log($scope.profile);
   }
 
