@@ -1,9 +1,9 @@
-<div class="profile-card grad-bg center-align" ng-click="view()">
+<div class="profile-card grad-bg center-align" ng-click="view(true)">
   <div class="">
-    <img ng-if="profile.picture.value" class="circle responsive-img" ng-src="{{profile.picture.value}}" alt="Picture of {{profile.fullname.value}}" />
-    <img ng-if="!profile.picture.value" class="circle responsive-img" src="images/generic_photo.png" alt="Picture of {{profile.fullname.value}}" />
+    <img ng-show="profile.picture.value" class="circle responsive-img" ng-src="{{profile.picture.value}}" alt="Picture of {{profile.fullname.value}}" />
+    <img ng-hide="profile.picture.value" class="circle responsive-img" src="images/generic_photo.png" alt="Picture of {{profile.fullname.value}}" />
   </div>
-  <div class="user-name valign-wrapper">
+  <div class="user-name valign-wrapper" ng-show="profile.fullname.value">
     <span class="truncate valign">{{profile.fullname.value}}</span>
   </div>
 </div>

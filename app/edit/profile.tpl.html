@@ -1,5 +1,9 @@
 <div class="row">
-  <div ng-if="profile.webid" class="col s12">
+  <div class="row valign-wrapper" ng-show="profile.webid && profile.loading">
+      <div class="valign right-10">Loading profile </div>
+      <spinner class="valign"></spinner>
+  </div>
+  <div ng-if="profile.webid && !sprofile.loading" class="col s12">
     <div class="row">
       <div class="col s12 m4 center">
         <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
@@ -148,9 +152,24 @@
     </div>
 
   </div>
-  <div ng-hide="profile.webid" class="center">
-    <h4>You must prove you own a profile before you can edit it.</h4>
-    <a class="waves-effect waves-light btn blue valign" ng-click="login()">{{$parent.loginButtonText}}</a>
+  
+  <div ng-if="!profile.webid">
+    <form>
+      <div class="col s12">
+        <div class="row center">
+          <h4>Edit a WebID or <a href="#/login" class="white-text show-link">login</a> to edit your profile.</h4>
+        </div>
+        <div class="row">
+          <div class="input-field">
+            <input id="profile" type="text" ng-model="form.webid">
+            <label for="profile" ng-class="{active: form.webid.length > 0}">WebID</label>
+          </div>
+        </div>
+        <div class="row center">
+          <button class="btn waves-effect waves-light blue" ng-click="editProfile()" type="submit">Edit</button>
+        </div>
+      </div>
+    </form>
   </div>
 
   <div class="modal s12 m3" id="picture-cropper">

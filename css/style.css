@@ -58,6 +58,14 @@ ul.side-nav li a {
 	cursor: pointer;
 }
 
+.show-link {
+	text-decoration: underline;
+}
+
+.pointer {
+	cursor: pointer;
+}
+
 #toggle-sidenav {
 	padding: 0 20px 0 10px;
 	position: relative;
@@ -131,14 +139,20 @@ ul.side-nav li a {
 	width: auto;
 	height: 200px;
 }
-.profile-large-pic {
+.profile-large-bg img {
+	max-height: 200px;
+	width: auto;
+	overflow: hidden;
+}
+
+.profile-large-avatar {
 	margin: -130px 10px 0 20px;
     width: auto;
     height: 200px;
 
 }
-.profile-large-pic img {
-	max-width: auto;
+.profile-large-avatar img {
+	max-width: 200px;
 	max-height: 200px;
     border: 3px solid rgba(255,255,255,0.8);
     border-radius: 3px;
@@ -146,7 +160,7 @@ ul.side-nav li a {
 
 .profile-large-name {
 	margin-left: 210px;
-	margin-top: -80px;
+	margin-top: -70px;
 	color: #434343;
 }
 .profile-large-name h4 {
@@ -162,9 +176,6 @@ ul.side-nav li a {
 .card-panel {
 	margin-bottom: 10px!important;
 	background-color: #EAEBEC;
-	color: #434343;
-}
-.card-panel a, a:visited {
 	color: #434343;
 }
 .card-panel a:hover {
@@ -183,6 +194,9 @@ ul.side-nav li a {
 
 .card-panel .row {
 	margin: 0 10px 10px 10px;
+}
+.profile-viewer a, a:visited {
+	color: #434343;
 }
 
 .profile-large {

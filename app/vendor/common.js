@@ -190,7 +190,7 @@ function parseLinkHeader(header) {
     Notifier.notify(message, title, 'mdi-action-highlight-remove', 'white-text', '#e53935', 10000);
   };
   Notifier.success = function(message, title) {
-    Notifier.notify(message, title, 'mdi-action-done', 'black-text', '#69f0ae');
+    Notifier.notify(message, title, 'mdi-action-done', 'white-text', '#64dd17');
   };
 
 }(jQuery));

@@ -19,7 +19,7 @@ angular.module( 'App.login', [
   $scope.loginButtonText = 'Login';
 
   $scope.login = function() {
-    $scope.$parent.login();
+    $scope.$parent.login(true);
   };
 
 });
