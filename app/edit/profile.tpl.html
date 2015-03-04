@@ -7,7 +7,7 @@
     <!-- Top section -->
     <div class="row s12 m12 profile-large">
       <!-- Background -->
-      <div class="btn change-bg white black-text valign" ng-file-select ng-model="bgFile.file"><spinner class="valign spinner right-10" ng-show="profile.bgpicture.uploading"></spinner>Upload background</div>
+      <div class="btn change-bg white black-text valign" ng-file-select accept="image/*" ng-model="bgFile.file"><spinner class="valign spinner right-10" ng-show="profile.bgpicture.uploading"></spinner>Upload background</div>
       <div pick-source obj="profile.bgpicture" ng-show="profile.bgpicture.picker"></div>
       <div class="grad-bg profile-large-bg center col s12">
           <div bg-image ng-if="profile.bgpicture.value" bg="profile.bgpicture"></div>
@@ -17,7 +17,7 @@
         <div class="profile-large-avatar valign-wrapper center col s12 m3">
           <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
-              accept=".jpg,.jpeg,.png">
+              ng-accept=".jpg,.jpeg,.png">
               <div ng-file-select ng-model="pictureFile.file" class="relative center valign-wrapper pick-area">
                 <div ng-if="profile.picture.value" class="valign center valign-wrapper pick-file">
                   <spinner class="valign spinner" ng-show="profile.picture.uploading"></spinner>
