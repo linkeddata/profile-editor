@@ -17,7 +17,7 @@
         <div class="profile-large-avatar valign-wrapper center col s12 m3">
           <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
-              ng-accept=".jpg,.jpeg,.png" ng-capture="camera">
+              ng-accept="'.jpg,.jpeg,.png'" ng-capture="camera">
               <div ng-file-select ng-model="pictureFile.file" class="relative center valign-wrapper pick-area">
                 <div ng-if="profile.picture.value" class="valign center valign-wrapper pick-file">
                   <spinner class="valign spinner" ng-show="profile.picture.uploading"></spinner>
