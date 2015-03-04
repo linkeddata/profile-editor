@@ -202,9 +202,7 @@ ul.side-nav li a {
 	background-color: #EAEBEC;
 	color: #434343;
 }
-.card-panel a:hover {
-	text-decoration: underline;
-}
+
 .c-p-l {
 	width: 98%;
 	margin: 0 auto;
@@ -364,13 +362,38 @@ form {
   animation: fill-unfill-rotate 5332ms cubic-bezier(0.4, 0.0, 0.2, 1) infinite both;
 }
 
+.arrow-box {
+	border: 2px solid #ccc;
+}
+.arrow-box:after, .arrow-box:before {
+	bottom: 100%;
+	left: 30%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+}
+
+.arrow-box:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-bottom-color: #fff;
+	border-width: 13px;
+	margin-left: -13px;
+}
+.arrow-box:before {
+	border-color: rgba(67, 67, 67, 0);
+	border-bottom-color: #ccc;
+	border-width: 16px;
+	margin-left: -16px;
+}
 
 /* override label color */
 .input-field a {
 	cursor: pointer;
 }
 .input-field label {
-	color: #fff;
+	color: #434343;
 }
 /* label focus color */
 .input-field input:focus + label {

@@ -138,7 +138,7 @@ angular.module( 'App.edit', [
   // update a value and patch profile
   $scope.updateObject = function (obj, force) {
     // update object and also patch graph
-    if (obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+    if (obj.value.length > 0 && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
       obj.picker = true;
     } else {
       obj.updateObject(true, force);
@@ -277,6 +277,7 @@ angular.module( 'App.edit', [
           '<button class="btn blue" ng-click="cancel()">Cancel</button>',
         link: function($scope, $element, $attrs) {
           $element.addClass('pick-source');
+          $element.addClass('arrow-box');
           $scope.setWhy = function(uri) {
             $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
             $scope.cancel();

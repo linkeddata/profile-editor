@@ -158,7 +158,6 @@ angular.module( 'App', [
   // bool authenticated - whether the user was previously authenticated or now
   // string forWebID - whether it loads extended profile documents for a given WebID
   $scope.getProfile = function(uri, authenticated, redirect, forWebID) {
-    console.log(uri, authenticated, redirect, forWebID);
     if (!$scope.profiles) {
       $scope.profiles = [];
     }
@@ -494,12 +493,6 @@ angular.module( 'App', [
       sessionStorage.removeItem($scope.appuri);
     }
   }
-
-  // var webid = getParam('webid');
-  // if (webid && webid.length > 0 && !$scope.profiles[webid]) {
-  //   $scope.webid = webid;
-  //   $scope.getProfile(webid, false);
-  // }
 })
 //simple directive to display list of channels
 .directive('profileCard',function(){
