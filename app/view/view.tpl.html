@@ -8,7 +8,7 @@
     <!-- Main card -->
     <div class="row s12 m12 profile-large">
       <div class="grad-bg profile-large-bg col s12">
-        <div ng-if="profile.bgpicture.value" bg-image="{{profile.bgpicture.value}}"></div>
+        <div bg-image ng-if="profile.bgpicture.value" bg="profile.bgpicture"></div>
       </div>
       <div class="row s12">
         <div class="profile-large-avatar valign-wrapper center col s12 m3">
@@ -19,7 +19,7 @@
           <h4 class="">
             {{profile.fullname.value}}
           </h4>
-          <span>{{profile.webid}}</span>
+          <span><i class="mdi-content-link valign right-10"></i><a href="{{profile.webid}}" target="_blank">{{profile.webid}}</a></span>
         </div>
       </div>
     </div>

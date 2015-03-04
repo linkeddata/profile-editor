@@ -1,5 +1,5 @@
 // Globals
-var PROXY = "https://rww.io/proxy?uri={uri}";
+var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
@@ -54,6 +54,7 @@ angular.module( 'App', [
 
   $scope.ProfileElement = function(s) {
     this.locked = false;
+    this.uploading = false;
     this.failed = false;
     this.picker = false;
     this.statement = angular.copy(s);
@@ -136,11 +137,13 @@ angular.module( 'App', [
           data: query
         }).success(function(data, status, headers) {
           that.locked = false;
+          that.uploading = false;
           // refresh cache timer
           $scope.profile.date = Date.now();
           Notifier.success('Profile updated!');
         }).error(function(data, status, headers) {
           that.locked = false;
+          that.uploading = false;
           that.failed = true;
           that.statement = oldS;
           Notifier.error('Could not update profile: HTTP '+status);
@@ -516,14 +519,24 @@ angular.module( 'App', [
     }; 
 })
 .directive('bgImage', function () {
-  return function (scope, element, attrs) {
-    element.css({
-      'background-image': 'url(' + attrs.bgImage + ')',
-      'background-size': 'cover',
-      'background-repeat': 'no-repeat',
-      'background-position': 'center center',
-      'width': '100%',
-      'height': '100%'
-    });
+  return {
+        restrict: 'AE',
+        transclude: true,
+        scope: {
+          bg: '='
+        },
+        link: function($scope, $element, $attrs) {
+          console.log("BG: "+$scope.bg.value);
+          $scope.$watch('bg.value', function (newVal, oldVal) {
+            $element.css({
+              'background-image': 'url(' + newVal + ')',
+              'background-size': 'cover',
+              'background-repeat': 'no-repeat',
+              'background-position': 'center center',
+              'width': '100%',
+              'height': '100%'
+            });
+          });
+        }
   };
 });
