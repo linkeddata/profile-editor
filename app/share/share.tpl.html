@@ -1,5 +1,5 @@
 <div class="row">
-	<div ng-show="viewerURI" class="col s12">
+	<div ng-show="webid" class="col s12">
     <div class="col s12 center">
       <h4>WebID link</h4>
     </div>
@@ -35,7 +35,7 @@
       </div>
     </div>
 	</div>
-  <div class="row" ng-show="!viewerURI">
+  <div class="row" ng-hide="webid">
     <div class="col s12 center">
       <h5>You must be authenticated in order to share you WebID.</h5>
       <div><button class="btn blue" type="submit" name="action" ng-click="login()">{{$parent.loginButtonText}}</button></div>

@@ -56,7 +56,7 @@ angular.module( 'App.share', [
     $scope.viewerQr = $scope.getQRparams($scope.viewerURI);
   }
 
-  if ($scope.profile && $scope.profile.webid) {
+  if ($stateParams['webid'] || ($scope.profile && $scope.profile.webid)) {
     $scope.showQR();
   }
 
