@@ -6,7 +6,7 @@ angular.module( 'App.share', [
 
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'share', {
-    url: '/share',
+    url: '/share?webid',
     views: {
       "main": {
         controller: 'ShareCtrl',
@@ -49,8 +49,10 @@ angular.module( 'App.share', [
   };
 
   $scope.showQR = function() {
-    $scope.viewerURI = $scope.$parent.appuri+'#/view?webid='+encodeURIComponent($scope.profile.webid);
-    $scope.webidQr = $scope.getQRparams($scope.profile.webid);
+    var webid = ($stateParams['webid'])?$stateParams['webid']:$scope.profile.webid;
+    $scope.webid = webid;
+    $scope.viewerURI = $scope.$parent.appuri+'#/view?webid='+encodeURIComponent(webid);
+    $scope.webidQr = $scope.getQRparams(webid);
     $scope.viewerQr = $scope.getQRparams($scope.viewerURI);
   }
 
@@ -59,7 +61,6 @@ angular.module( 'App.share', [
   }
 
   $scope.$watch('profile.webid', function (newValue, oldValue) {
-    console.log(newValue);
     if (newValue != undefined) {
       $scope.showQR();
     }
