@@ -107,23 +107,25 @@ ul.side-nav li a {
 }
 
 .profile-picture {
-	margin-top: 20px;
-	width: 204px;
-	height: 204px;
 	cursor: pointer;
 	display: inline-block;
+}
+.profile-picture:hover {
+	border: 3px solid #fff;
+	border-radius: 5px;
 }
 
 .pick-area {
 	height: 200px;
 }
+
 .pick-file {
 	position: absolute;
 	display: inline-block!important;
-	bottom: 30px;
+	bottom: 40px;
 	background: #000;
 	opacity: 0.4;
-	width: 200px;
+	width: 201px;
 }
 .profile-picture a span {
 	color: #fff;
@@ -154,8 +156,10 @@ ul.side-nav li a {
 .profile-large-avatar img {
 	max-width: 200px;
 	max-height: 200px;
-    border: 3px solid rgba(255,255,255,0.8);
     border-radius: 3px;
+}
+.white-border {
+	border: 3px solid rgba(255,255,255,0.8);
 }
 
 .profile-large-name {
@@ -218,11 +222,9 @@ ul.side-nav li a {
     border: 3px solid #fff;
 }
 
-.drop-box:hover {
-   border: 2px solid #fff;
-}
 .dragover {
 	border: 2px solid #fff;
+	border-radius: 3px;
 }
 #left-menu li a {
 	margin-left: 10px;
