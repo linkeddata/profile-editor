@@ -270,9 +270,9 @@ angular.module( 'App.edit', [
           obj: '='
         },
         transclude: true,
-        template: '<div class="left col s12"><h5>Save in:</h5></div>'+
+        template: '<div class="left col s12"><h5>Add to profile:</h5></div>'+
           '<div class="valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">'+
-          '  <i class="mdi-content-link valign right-10"></i><a href="" ng-click="setWhy(src)">{{src}}</a>'+
+          '  <i class="mdi-file-folder-shared valign right-10"></i><a href="" ng-click="setWhy(src)">{{src}}</a>'+
           '</div><br/>'+
           '<button class="btn blue" ng-click="cancel()">Cancel</button>',
         link: function($scope, $element, $attrs) {
