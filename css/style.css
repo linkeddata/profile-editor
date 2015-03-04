@@ -120,7 +120,12 @@ ul.side-nav li a {
 	bottom: 40px;
 	background: #000;
 	opacity: 0.5;
-	width: 201px;
+	left:3px;
+	right:3px;
+	/*width: 100%;*/
+}
+.pick-file:hover {
+	opacity: 0.6;
 }
 .profile-picture a span {
 	color: #fff;
@@ -130,11 +135,11 @@ ul.side-nav li a {
 	height: auto;
 	margin-left: auto;
 	margin-right: auto;
-}
-.pick-area img:hover {
-	z-index: 10;
 	border: 3px solid #fff;
 	border-radius: 5px;
+}
+.pick-area img:hover {
+	border: 3px solid #fff;
 }
 
 .profile-large {
