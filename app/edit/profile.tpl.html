@@ -27,11 +27,18 @@
       </div>
     </div> -->
 
+      
+
+
+
     <!-- Main card -->
     <div class="row s12 m12 profile-large">
-      <div class="grad-bg profile-large-bg col s12">
-        <div ng-if="profile.bgpicture.value" bg-image="{{profile.bgpicture.value}}"></div>
+      <!-- Background -->
+      <div class="btn change-bg white black-text valign" ng-file-select ng-model="bgFile.file"><spinner class="valign spinner right-10" ng-show="profile.bgpicture.uploading"></spinner>Change background</div>
+      <div class="grad-bg profile-large-bg center col s12">
+          <div bg-image ng-if="profile.bgpicture.value" bg="profile.bgpicture"></div>
       </div>
+      <!-- Avatar -->
       <div class="row s12">
         <div class="profile-large-avatar valign-wrapper center col s12 m3">
           <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
@@ -39,7 +46,7 @@
               accept=".jpg,.jpeg,.png">
               <div ng-file-select ng-model="pictureFile.file" class="relative center valign-wrapper pick-area">
                 <div ng-if="profile.picture.value" class="valign center valign-wrapper pick-file">
-                  <spinner class="valign spinner" ng-show="uploading || profile.picture.locked"></spinner>
+                  <spinner class="valign spinner" ng-show="profile.picture.uploading"></spinner>
                   <i class="mdi-image-camera-alt small white-text valign" ng-hide="uploading || profile.picture.locked"></i>
                   <span class="valign">Change photo</span>
                 </div>
@@ -47,11 +54,6 @@
                 <img ng-if="!profile.picture.value || profile.picture.value.length == 0" src="images/generic_photo.png">
               </div>
           </div>
-
-
-
-        <!--   <img ng-if="profile.picture.value" class="" ng-src="{{profile.picture.value}}" />
-          <img ng-if="!profile.picture.value" class="responsive-img" src="images/generic_photo.png" /> -->
         </div>
         <div class="profile-large-name right col s12 m9">
           <h4 class="">

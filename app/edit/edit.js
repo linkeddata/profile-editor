@@ -1,4 +1,3 @@
-var __profile;
 angular.module( 'App.edit', [
   'ui.router',
   'angularFileUpload',
@@ -22,9 +21,9 @@ angular.module( 'App.edit', [
   // blank
   $scope.form = {};
   $scope.pictureFile = {};
+  $scope.bgFile = {};
 
   $scope.profile = {};
-  __profile = $scope.$parent.profile;
 
   // Adds
   $scope.addPhone = function() {
@@ -185,21 +184,21 @@ angular.module( 'App.edit', [
     });
   };
 
-  $scope.uploadPicture = function (file) {
-    if (file) {
+  $scope.uploadPicture = function (obj, file) {
+    if (obj && file) {
       var newPicURL = '';
       newPicURL = dirname($scope.profile.webid)+'/';
-      $scope.uploading = true;
+      obj.uploading = true;
       $upload.upload({
           method: 'POST',
           url: newPicURL,
           withCredentials: true,
           file: file
       }).success(function (data, status, headers, config) {
-        $scope.uploading = false;
         var pic = headers("Location");
-        $scope.profile.picture.value = pic;
-        $scope.updateObject($scope.profile.picture, true);
+        obj.value = pic;
+        console.log("Setting value to "+obj.value);
+        $scope.updateObject(obj, true);
       }).error(function (data, status, headers, config) {
         $scope.uploading = false;
         Notifier.error('Could not upload picture -- HTTP '+status);
@@ -209,7 +208,7 @@ angular.module( 'App.edit', [
 
   $scope.savePicture = function() {
     var newImg = $scope.dataURItoBlob($scope.croppedImage);
-    $scope.uploadPicture(newImg);
+    $scope.uploadPicture($scope.profile.picture, newImg);
   };
 
   // replace white spaces with dashes (for phone numbers)
@@ -258,6 +257,11 @@ angular.module( 'App.edit', [
       $('#picture-cropper').openModal();
     }
   });
+  $scope.$watch('bgFile.file', function (newFile, oldFile) {
+    if (newFile != undefined) {
+      $scope.uploadPicture($scope.profile.bgpicture, newFile[0]);
+    }
+  });
 })
 .directive('pickSource', function () {
     return {
@@ -266,12 +270,11 @@ angular.module( 'App.edit', [
           obj: '='
         },
         transclude: true,
-        template: 'Select where to save this new information. <button class="btn blue" ng-click="cancel()">Cancel</button>'+
-        '<ul class="collection">'+
-          '<li class="collection-item truncate" ng-repeat="src in $parent.profile.sources">'+
-          '  <a href="" ng-click="setWhy(src)">{{src}}</a>'+
-          '</li>'+
-        '</ul>',
+        template: '<div class="left col s12"><h5>Save in:</h5></div>'+
+          '<div class="valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">'+
+          '  <i class="mdi-content-link valign right-10"></i><a href="" ng-click="setWhy(src)">{{src}}</a>'+
+          '</div><br/>'+
+          '<button class="btn blue" ng-click="cancel()">Cancel</button>',
         link: function($scope, $element, $attrs) {
           $element.addClass('pick-source');
           $scope.setWhy = function(uri) {

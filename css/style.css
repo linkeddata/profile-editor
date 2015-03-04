@@ -110,10 +110,6 @@ ul.side-nav li a {
 	cursor: pointer;
 	display: inline-block;
 }
-.profile-picture:hover {
-	border: 3px solid #fff;
-	border-radius: 5px;
-}
 
 .pick-area {
 	height: 200px;
@@ -124,7 +120,7 @@ ul.side-nav li a {
 	display: inline-block!important;
 	bottom: 40px;
 	background: #000;
-	opacity: 0.4;
+	opacity: 0.5;
 	width: 201px;
 }
 .profile-picture a span {
@@ -136,7 +132,23 @@ ul.side-nav li a {
 	margin-left: auto;
 	margin-right: auto;
 }
+.pick-area img:hover {
+	z-index: 10;
+	border: 3px solid #fff;
+	border-radius: 5px;
+}
 
+.profile-large {
+	position: relative;
+	border-radius: 4px;
+	background: #EAEBEC;
+	padding-bottom: 20px;
+	overflow: hidden;
+	min-height: 300px;
+}
+.profile-large .row:after {
+	clear:none;
+}
 .profile-large-bg {
 	width: auto;
 	height: 200px;
@@ -146,7 +158,6 @@ ul.side-nav li a {
 	width: auto;
 	overflow: hidden;
 }
-
 .profile-large-avatar {
 	margin: -130px 10px 0 20px;
     width: auto;
@@ -170,7 +181,16 @@ ul.side-nav li a {
 .profile-large-name h4 {
 	margin: 1rem 0 0.2rem 0;
 }
-
+.change-bg {
+	position: absolute;
+	border-radius: 0 2px 0 2px!important;
+	right: 0;
+	opacity: 0.8;
+	vertical-align: top;
+}
+.change-bg:hover {
+	opacity: 1;
+}
 @media only screen and (max-width : 601px) {
 	.profile-large-name {
 		text-align: center;
@@ -201,17 +221,6 @@ ul.side-nav li a {
 }
 .profile-viewer a, a:visited {
 	color: #434343;
-}
-
-.profile-large {
-	border-radius: 4px;
-	background: #EAEBEC;
-	padding-bottom: 20px;
-	overflow: hidden;
-	min-height: 300px;
-}
-.profile-large .row:after {
-	clear:none;
 }
 
 .bg-drop {
@@ -247,8 +256,23 @@ form {
 	font-weight: 200;
 }
 .pick-source {
+	background-color: #fff;
+	color: #434343;
 	position:absolute;
 	z-index: 10;
+	padding: 10px;
+	width: 300px;
+}
+.pick-source div {
+	min-height: 20px;
+}
+.pick-source h5 {
+	margin: 0rem 0 0.656rem 0;
+}
+.pick-source button {
+	position: absolute;
+	top: 5px;
+	right: 5px;
 }
 .cropArea {
   background: #E4E4E4;
