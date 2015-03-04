@@ -519,7 +519,6 @@ angular.module( 'App', [
           bg: '='
         },
         link: function($scope, $element, $attrs) {
-          console.log("BG: "+$scope.bg.value);
           $scope.$watch('bg.value', function (newVal, oldVal) {
             $element.css({
               'background-image': 'url(' + newVal + ')',
