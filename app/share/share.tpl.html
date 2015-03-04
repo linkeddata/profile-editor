@@ -1,11 +1,11 @@
 <div class="row">
-	<div ng-if="profile.webid" class="col s12">
+	<div ng-show="profile.webid" class="col s12">
     <div class="col s12 center">
-      <h4 class="valign-wrapper"><i class="mdi-content-link white-text valign right-10"></i>WebID link</h4>
+      <h4>WebID link</h4>
     </div>
     <div class="col s12 center">
       <div class="row"> 
-        <h5 class="break-word"><a href="{{profile.webid}}" target="_blank" class="white-text">{{profile.webid}}</a></h5>
+        <h5 class="break-word valign-wrapper"><i class="mdi-content-link white-text valign right-10"></i><a href="{{profile.webid}}" target="_blank" class="white-text dotted valign">{{profile.webid}}</a></h5>
       </div>
     </div>
 
@@ -34,6 +34,11 @@
         </div>
       </div>
     </div>
-
 	</div>
+  <div class="row" ng-show="!profile.webid">
+    <div class="col s12 center">
+      <h5>You must be authenticated in order to share you WebID.</h5>
+      <div><button class="btn blue" type="submit" name="action" ng-click="login()">{{$parent.loginButtonText}}</button></div>
+    </div>
+  </div>
 </div>

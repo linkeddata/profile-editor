@@ -13,42 +13,56 @@ angular.module( 'App.share', [
         templateUrl: 'app/share/share.tpl.html'
       }
     },
-    data:{ pageTitle: 'Share profile' }
+    data:{ pageTitle: 'Share WebID' }
   });
 })
 
 .controller( 'ShareCtrl', function ViewCtrl( $scope, $state, $stateParams ) {
-  $scope.profile = $scope.$parent.profile;
-  var viewerURI = $scope.$parent.appuri+'#/view?webid='+encodeURIComponent($scope.profile.webid);
   // compute version based on WebID length
   $scope.getQRparams = function(uri) {
-    var l = uri.length;
-    var v;
-    switch (true) {
-      case (l < 62):
-        v = 4;
-        break;
-      case (l >= 62 && l < 122):
-        v = 7;
-        break;
-      case (l >= 122 && l < 213):
-        v = 14;
-        break;
-      default:
-        // too big
-        v = 0;
-        break;
+    if (uri) {
+      var l = uri.length;
+      var v;
+      switch (true) {
+        case (l < 62):
+          v = 4;
+          break;
+        case (l >= 62 && l < 122):
+          v = 7;
+          break;
+        case (l >= 122 && l < 213):
+          v = 14;
+          break;
+        default:
+          // too big
+          v = 0;
+          break;
+      }
+      return {
+        uri: uri,
+        version: v,
+        level: 'M',
+        size: 250,
+        margin: 15
+      };
     }
-    return {
-      uri: uri,
-      version: v,
-      level: 'M',
-      size: 250,
-      margin: 15
-    };
   };
 
-  $scope.webidQr = $scope.getQRparams($scope.profile.webid);
-  $scope.viewerQr = $scope.getQRparams(viewerURI);
+  $scope.showQR = function() {
+    $scope.viewerURI = $scope.$parent.appuri+'#/view?webid='+encodeURIComponent($scope.profile.webid);
+    $scope.webidQr = $scope.getQRparams($scope.profile.webid);
+    $scope.viewerQr = $scope.getQRparams($scope.viewerURI);
+  }
 
+  if ($scope.profile && $scope.profile.webid) {
+    $scope.showQR();
+  }
+
+  $scope.$watch('profile.webid', function (newValue, oldValue) {
+    console.log(newValue);
+    if (newValue != undefined) {
+      $scope.showQR();
+    }
+  });
+  
 });
