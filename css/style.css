@@ -185,7 +185,7 @@ ul.side-nav li a {
 	position: absolute;
 	border-radius: 0 2px 0 2px!important;
 	right: 0;
-	opacity: 0.8;
+	opacity: 0.9;
 	vertical-align: top;
 }
 .change-bg:hover {
@@ -200,7 +200,7 @@ ul.side-nav li a {
 .card-panel {
 	margin-bottom: 10px!important;
 	background-color: #EAEBEC;
-	color: #434343;
+	color: #000;
 }
 
 .c-p-l {
