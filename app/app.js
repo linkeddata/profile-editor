@@ -49,7 +49,7 @@ angular.module( 'App', [
   if (!$scope.profiles) {
     $scope.profiles = [];
   }
-  
+  $scope.profile = {};
   $scope.authenticated = false;
 
   $scope.ProfileElement = function(s) {
@@ -154,7 +154,8 @@ angular.module( 'App', [
   // string uri  - URI of resource containing profile information
   // bool authenticated - whether the user was previously authenticated or now
   // string forWebID - whether it loads extended profile documents for a given WebID
-  $scope.getProfile = function(uri, authenticated, forWebID) {
+  $scope.getProfile = function(uri, authenticated, redirect, forWebID) {
+    console.log(uri, authenticated, redirect, forWebID);
     if (!$scope.profiles) {
       $scope.profiles = [];
     }
@@ -213,20 +214,20 @@ angular.module( 'App', [
           var sameAs = g.statementsMatching(webidRes, OWL('sameAs'), undefined);
           if (sameAs.length > 0) {
             sameAs.forEach(function(same){
-              $scope.getProfile(same['object']['value'], false, webid);
+              $scope.getProfile(same['object']['value'], false, false, webid);
             });
           }
           var seeAlso = g.statementsMatching(webidRes, OWL('seeAlso'), undefined);
           if (seeAlso.length > 0) {
             seeAlso.forEach(function(see){
-              $scope.getProfile(see['object']['value'], false, webid);
+              $scope.getProfile(see['object']['value'], false, false, webid);
             });
           }
           var prefs = g.statementsMatching(webidRes, SPACE('preferencesFile'), undefined);
           if (prefs.length > 0) {
             prefs.forEach(function(pref){
               if (pref['object']['value']) {
-                $scope.getProfile(pref['object']['value'], false, webid);
+                $scope.getProfile(pref['object']['value'], false, false, webid);
               }
             });
           }
@@ -371,7 +372,7 @@ angular.module( 'App', [
           $scope.loginButtonText = "Login";
           var authUser = ($scope.profiles[webid].fullname.value)?" as "+$scope.profiles[webid].fullname.value:"";  
           Notifier.success('Authenticated'+authUser);
-          $scope.saveCredentials($scope.authenticated, true);
+          $scope.saveCredentials($scope.authenticated, redirect);
         }
       }
     });
@@ -393,7 +394,7 @@ angular.module( 'App', [
     }
   };
 
-  $scope.login = function() {
+  $scope.login = function(redirect) {
     $scope.loginButtonText = 'Loggin in...';
     $http({
       method: 'HEAD',
@@ -406,7 +407,7 @@ angular.module( 'App', [
         if (!$scope.webid) {
           $scope.webid = user;
         }
-        $scope.getProfile(user, true);
+        $scope.getProfile(user, true, redirect);
         $scope.loginButtonText = 'Logged in';
       } else {
         Notifier.warning('WebID-TLS authentication failed.');
@@ -447,9 +448,9 @@ angular.module( 'App', [
     sessionStorage.removeItem($scope.appuri);
   };
 
-  $scope.view = function(mine) {
+  $scope.view = function() {
     $('#toggle-sidenav').sideNav('hide');
-    $state.go('view', {'mine': mine}, {reload: true});
+    $state.go('view');
   }
   $scope.editProfile = function() {
     $('#toggle-sidenav').sideNav('hide');
@@ -491,11 +492,11 @@ angular.module( 'App', [
     }
   }
 
-  var webid = getParam('webid');
-  if (webid && webid.length > 0 && !$scope.profiles[webid]) {
-    $scope.webid = webid;
-    $scope.getProfile(webid, false);
-  }
+  // var webid = getParam('webid');
+  // if (webid && webid.length > 0 && !$scope.profiles[webid]) {
+  //   $scope.webid = webid;
+  //   $scope.getProfile(webid, false);
+  // }
 })
 //simple directive to display list of channels
 .directive('profileCard',function(){

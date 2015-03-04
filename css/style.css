@@ -152,7 +152,7 @@ ul.side-nav li a {
 
 }
 .profile-large-avatar img {
-	max-width: auto;
+	max-width: 200px;
 	max-height: 200px;
     border: 3px solid rgba(255,255,255,0.8);
     border-radius: 3px;

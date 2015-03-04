@@ -1,3 +1,4 @@
+var __profile;
 angular.module( 'App.edit', [
   'ui.router',
   'angularFileUpload',
@@ -5,7 +6,7 @@ angular.module( 'App.edit', [
 ])
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'editProfile', {
-    url: '/edit/profile',
+    url: '/edit/profile?webid',
     views: {
       "main": {
         controller: 'EditProfileCtrl',
@@ -16,24 +17,20 @@ angular.module( 'App.edit', [
   });
 })
 
-.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $upload ) {
+.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $upload, $stateParams ) {
   $scope.$parent.currLoc = $state.current.name;
   // blank
+  $scope.form = {};
   $scope.pictureFile = {};
-  // Copy profile object (we compare to limit number of changes later)
-  // $scope.profile = ($scope.$parent.profile)?angular.copy($scope.$parent.profile):{};
-  $scope.profile = $scope.$parent.profile;
+
+  $scope.profile = {};
+  __profile = $scope.$parent.profile;
 
   // Adds
   $scope.addPhone = function() {
     if (!$scope.profile.phones) {
       $scope.profile.phones = [];
     }
-    // if ($scope.profile.webid.indexOf('#') >= 0) {
-    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    // } else {
-    //   var docURI = $scope.profile.webid;
-    // }
     var newPhone = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
@@ -48,11 +45,6 @@ angular.module( 'App.edit', [
     if (!$scope.profile.emails) {
       $scope.profile.emails = [];
     }
-    // if ($scope.profile.webid.indexOf('#') >= 0) {
-    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    // } else {
-    //   var docURI = $scope.profile.webid;
-    // }
     var newEmail = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
@@ -67,11 +59,6 @@ angular.module( 'App.edit', [
     if (!$scope.profile.blogs) {
       $scope.profile.blogs = [];
     }
-    // if ($scope.profile.webid.indexOf('#') >= 0) {
-    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    // } else {
-    //   var docURI = $scope.profile.webid;
-    // }
     var newBlog = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
@@ -86,11 +73,6 @@ angular.module( 'App.edit', [
     if (!$scope.profile.homepages) {
       $scope.profile.homepages = [];
     }
-    // if ($scope.profile.webid.indexOf('#') >= 0) {
-    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    // } else {
-    //   var docURI = $scope.profile.webid;
-    // }
     var newHomepage = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
@@ -105,11 +87,6 @@ angular.module( 'App.edit', [
     if (!$scope.profile.workpages) {
       $scope.profile.workpages = [];
     }
-    // if ($scope.profile.webid.indexOf('#') >= 0) {
-    //   var docURI = $scope.profile.webid.slice(0, $scope.profile.webid.indexOf('#'));
-    // } else {
-    //   var docURI = $scope.profile.webid;
-    // }
     var newWorkpage = new $scope.$parent.ProfileElement(
       $rdf.st(
         $rdf.sym($scope.profile.webid),
@@ -154,7 +131,7 @@ angular.module( 'App.edit', [
   };
 
   $scope.login = function() {
-    $scope.$parent.login();
+    $scope.$parent.login(false);
   };
 
   // Updates
@@ -239,6 +216,37 @@ angular.module( 'App.edit', [
   $scope.space2dash = function(obj) {
     obj.value = (!obj.value) ? '' : obj.value.replace(/\s+/g, '-');
   };
+
+  $scope.editProfile = function(webid) {
+    if (!$scope.$parent.profiles) {
+      $scope.$parent.profiles = [];
+    }
+    var webid = (webid)?webid:$scope.form.webid;
+    if (!$scope.$parent.profiles[webid]) {
+      console.log("No profile exists for "+webid);
+      $scope.$parent.profiles[webid] = {};
+      $scope.$parent.getProfile(webid, false, false);
+    }
+    $scope.profile = $scope.$parent.profiles[webid];
+    console.log($scope.profile);
+  }
+
+  if (!$scope.profile.webid) {
+    if ($stateParams['webid']) {
+      var webid = $scope.form.webid = $stateParams['webid'];
+      // check if it's the authenticated user
+      if ($scope.$parent.profile && $scope.$parent.profile.webid == webid) {
+        $scope.profile = $scope.$parent.profile;
+      } else if ($scope.$parent.profiles[webid] && $scope.$parent.profiles[webid].webid == webid) {
+        // load previous existing profile
+        $scope.profile = $scope.$parent.profiles[webid];
+      } else {
+        $scope.editProfile(webid);
+      }
+    } else {
+      $scope.profile = $scope.$parent.profile;
+    }
+  }
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
     if (newFile != undefined) {
