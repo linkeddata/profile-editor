@@ -26,8 +26,8 @@
             </div>
           </div>
           <div class="action valign right right-10">
-              <div class="valign-wrapper pointer" ng-show="currLoc == 'editProfile'" ng-click="view()"><i class="mdi-action-done valign right-10"></i>View</div>
-              <div class="valign-wrapper pointer" ng-show="authenticated && profile.webid == webid && currLoc == 'view'" ng-click="editProfile()"><i class="mdi-editor-mode-edit right-10"></i>Edit</div>
+              <div class="valign-wrapper pointer" ng-show="toLoc == '/view'" ng-click="switchTo()"><i class="mdi-action-done valign right-10"></i>View</div>
+              <div class="valign-wrapper pointer" ng-show="authenticated == toWebID && toLoc == '/edit/profile'" ng-click="switchTo()"><i class="mdi-editor-mode-edit right-10"></i>Edit</div>
           </div>
           
           <ul class="side-nav blue-grey darken-3" id="left-menu">

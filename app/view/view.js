@@ -17,8 +17,6 @@ angular.module( 'App.view', [
 })
 
 .controller( 'ViewCtrl', function ViewCtrl( $scope, $location, $state, $stateParams ) {
-  $scope.$parent.currLoc = $state.current.name;
-  
   $scope.form = {};
 
   $scope.viewProfile = function(webid) {
@@ -31,9 +29,11 @@ angular.module( 'App.view', [
       $scope.$parent.getProfile(webid, false);
     }
     $scope.profile = $scope.$parent.profiles[webid];
+    $scope.$parent.toWebID = $scope.profile.webid;
+    $scope.$parent.toLoc = '/edit/profile';
     $location.path("/view").search({'webid': webid}).replace();
     $scope.form = {};
-  }
+  };
 
   if ($stateParams['webid']) {
     var webid = $stateParams['webid'];
@@ -47,4 +47,6 @@ angular.module( 'App.view', [
       $scope.viewProfile(webid);
     }
   }
+  $scope.$parent.toWebID = $scope.profile.webid;
+  $scope.$parent.toLoc = '/edit/profile';
 });
