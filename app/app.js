@@ -450,7 +450,6 @@ angular.module( 'App', [
   };
 
   $scope.switchTo = function() {
-    console.log($scope.toLoc, $scope.toWebID)
     if ($scope.toLoc && $scope.toWebID) {
       $location.path($scope.toLoc).search({'webid': $scope.toWebID}).replace();
     }
