@@ -243,6 +243,10 @@ ul.side-nav li a {
 	border: 2px solid #fff;
 	border-radius: 3px;
 }
+#picture-cropper {
+	max-width: 500px;
+}
+
 #left-menu li a {
 	margin-left: 10px;
 }
