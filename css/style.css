@@ -122,7 +122,8 @@ ul.side-nav li a {
 	opacity: 0.5;
 	left:3px;
 	right:3px;
-	/*width: 100%;*/
+	min-width: 100px;
+	min-height: 100px;
 }
 .pick-file:hover {
 	opacity: 0.6;
@@ -189,7 +190,7 @@ ul.side-nav li a {
 	position: absolute;
 	border-radius: 0 2px 0 2px!important;
 	right: 0;
-	opacity: 0.9;
+	opacity: 0.8;
 	vertical-align: top;
 }
 .change-bg:hover {
