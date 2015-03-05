@@ -24,14 +24,14 @@
           <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
               ng-accept="'.jpg,.jpeg,.png'" ng-capture="camera">
-              <div ng-file-select ng-model="pictureFile.file" class="relative center valign-wrapper">
+              <div ng-file-select ng-model="pictureFile.file" accept="image/*" ng-multiple="false" ng-capture="camera" class="relative center valign-wrapper">
                 <div class="valign center valign-wrapper pick-file">
                   <spinner class="valign spinner" ng-show="profile.picture.uploading"></spinner>
                   <i class="mdi-image-camera-alt small white-text valign" ng-hide="uploading || profile.picture.locked"></i>
                   <span class="valign">Change photo</span>
                 </div>
                 <img ng-if="profile.picture.value" ng-src="{{profile.picture.value}}"/>
-                <img ng-if="!profile.picture.value || profile.picture.value.length == 0" src="images/generic_photo.png">
+                  <img ng-if="!profile.picture.value || profile.picture.value.length == 0" src="images/generic_photo.png">
               </div>
           </div>
           <div pick-source obj="profile.picture" ng-show="profile.picture.picker"></div>
