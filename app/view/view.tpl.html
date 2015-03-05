@@ -19,7 +19,7 @@
           <h4 class="">
             {{profile.fullname.value}}
           </h4>
-          <span><i class="mdi-content-link valign right-10"></i><a href="{{profile.webid}}" class="black-text" target="_blank">{{profile.webid}}</a></span>
+          <div class="truncate"><i class="mdi-content-link valign right-10"></i><a href="{{profile.webid}}" class="black-text" target="_blank" title="{{profile.webid}}">{{profile.webid}}</a></div>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
             <div class="col s4">
               <strong>Full name</strong>
             </div>
-            <div class="col s8">
+            <div class="col s8 truncate">
               {{profile.fullname.value}}
             </div>
           </div>
@@ -48,7 +48,7 @@
             <div class="col s4">
               <strong>First name</strong>
             </div>
-            <div class="col s8">
+            <div class="col s8 truncate">
               {{profile.firstname.value}}
             </div>
           </div>
@@ -56,7 +56,7 @@
             <div class="col s4">
               <strong>Last name</strong>
             </div>
-            <div class="col s8">
+            <div class="col s8 truncate">
               {{profile.lastname.value}}
             </div>
           </div>
@@ -64,7 +64,7 @@
             <div class="col s4">
               <strong>Nick</strong>
             </div>
-            <div class="col s8">
+            <div class="col s8 truncate">
               {{profile.nick.value}}
             </div>
           </div>
@@ -72,7 +72,7 @@
             <div class="col s4">
               <strong>Gender</strong>
             </div>
-            <div class="col s8">
+            <div class="col s8 truncate">
               {{profile.gender.value}}
             </div>
           </div>
@@ -88,7 +88,7 @@
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, phone) in profile.phones track by $index">
-            <div class="col s12">
+            <div class="col s12 truncate">
               {{phone.value}}
             </div>
           </div>
@@ -104,7 +104,7 @@
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, email) in profile.emails track by $index">
-            <div class="col s12">
+            <div class="col s12 truncate">
               {{email.value}}
             </div>
           </div>
@@ -123,8 +123,8 @@
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, blog) in profile.blogs track by $index">
-            <div class="col s12">
-              <i class="mdi-content-link valign right-10"></i><a href="{{blog.value}}" target="_blank">{{blog.value}}</a>
+            <div class="col s12 truncate">
+              <i class="mdi-content-link valign right-10"></i><a href="{{blog.value}}" target="_blank" title="{{blog.value}}">{{blog.value}}</a>
             </div>
           </div>
         </div>
@@ -139,8 +139,8 @@
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, homepage) in profile.homepages track by $index">
-            <div class="col s12">
-              <i class="mdi-content-link valign right-10"></i><a href="{{homepage.value}}" target="_blank">{{homepage.value}}</a>
+            <div class="col s12 truncate">
+              <i class="mdi-content-link valign right-10"></i><a href="{{homepage.value}}" target="_blank" title="{{homepage.value}}">{{homepage.value}}</a>
             </div>
           </div>
         </div>
@@ -155,8 +155,8 @@
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, workpage) in profile.workpages track by $index">
-            <div class="col s12">
-              <i class="mdi-content-link valign right-10"></i><a href="{{workpage.value}}" target="_blank">{{workpage.value}}</a>
+            <div class="col s12 truncate">
+              <i class="mdi-content-link valign right-10"></i><a href="{{workpage.value}}" target="_blank" title="{{workpage.value}}">{{workpage.value}}</a>
             </div>
           </div>
         </div>
