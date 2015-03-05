@@ -45,7 +45,6 @@ angular.module( 'App', [
   $scope.loginButtonText = 'Login';
   $scope.webid = '';
 
-  $scope.currLoc = $location.$$path;
   if (!$scope.profiles) {
     $scope.profiles = [];
   }
@@ -450,13 +449,27 @@ angular.module( 'App', [
     sessionStorage.removeItem($scope.appuri);
   };
 
-  $scope.view = function() {
-    $('#toggle-sidenav').sideNav('hide');
-    $state.go('view');
+  $scope.switchTo = function() {
+    console.log($scope.toLoc, $scope.toWebID)
+    if ($scope.toLoc && $scope.toWebID) {
+      $location.path($scope.toLoc).search({'webid': $scope.toWebID}).replace();
+    }
   }
-  $scope.editProfile = function() {
+  $scope.view = function(webid) {
     $('#toggle-sidenav').sideNav('hide');
-    $state.go('editProfile', {}, {redirect: true});
+    if (webid) {
+      $location.path('/view').search({'webid': webid}).replace();
+    } else {
+      $location.path('/view').replace();  
+    }
+  }
+  $scope.editProfile = function(webid) {
+    $('#toggle-sidenav').sideNav('hide');
+    if (webid) {
+      $location.path('/edit/profile').search({'webid': webid}).replace();
+    } else {
+      $location.path('/edit/profile').replace();  
+    }
   }
 
   $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){

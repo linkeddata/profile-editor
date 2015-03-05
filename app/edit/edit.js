@@ -17,7 +17,6 @@ angular.module( 'App.edit', [
 })
 
 .controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $location, $upload, $stateParams ) {
-  $scope.$parent.currLoc = $state.current.name;
   // blank
   $scope.form = {};
   $scope.pictureFile = {};
@@ -227,6 +226,8 @@ angular.module( 'App.edit', [
       $scope.$parent.getProfile(webid, false, false);
     }
     $scope.profile = $scope.$parent.profiles[webid];
+    $scope.$parent.toWebID = $scope.profile.webid;
+    $scope.$parent.toLoc = '/view';
     $location.path("/edit/profile").search({'webid': webid}).replace();
     console.log($scope.profile);
   }
@@ -247,6 +248,8 @@ angular.module( 'App.edit', [
       $scope.profile = $scope.$parent.profile;
     }
   }
+  $scope.$parent.toWebID = $scope.profile.webid;
+  $scope.$parent.toLoc = '/view';
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
     if (newFile != undefined) {
