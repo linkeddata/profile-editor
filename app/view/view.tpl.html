@@ -15,8 +15,10 @@
       <!-- Avatar -->
       <div class="row s12">
         <div class="profile-large-avatar valign-wrapper center col s12 m4">
-          <img ng-if="profile.picture.value" class="white-border" ng-src="{{profile.picture.value}}" />
-          <img ng-if="!profile.picture.value" class="white-border" src="images/generic_photo.png" />
+          <div class="profile-picture">
+            <img ng-if="profile.picture.value" class="white-border" ng-src="{{profile.picture.value}}" />
+            <img ng-if="!profile.picture.value" class="white-border" src="images/generic_photo.png" />
+          </div>
         </div>
         <!-- Name -->
         <div class="profile-large-name right col s12 m8">

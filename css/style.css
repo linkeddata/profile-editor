@@ -106,14 +106,16 @@ ul.side-nav li a {
 }
 
 .profile-picture {
-	cursor: pointer;
 	display: inline-block;
+	max-height: 200px;
+	max-width: 200px;
 	min-width: 100px;
 	min-height: 100px;
-}
-
-.pick-area {
-	height: 200px;
+	background-image: url('../images/generic_photo.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 6px;
 }
 
 .pick-file {
@@ -176,7 +178,6 @@ ul.side-nav li a {
 .profile-large-avatar img {
 	max-width: 200px;
 	max-height: 200px;
-    border-radius: 3px;
 }
 .white-border {
 	border: 3px solid rgba(255,255,255,0.8);
