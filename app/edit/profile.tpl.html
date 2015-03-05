@@ -20,7 +20,7 @@
       </div>
       <!-- Avatar -->
       <div class="row s12">
-        <div class="profile-large-avatar valign-wrapper center col s12 m3">
+        <div class="profile-large-avatar valign-wrapper center col s12 m4">
           <div ng-file-drop ng-model="pictureFile.file" class="drop-box valign-wrapper center profile-picture" 
               drag-over-class="dragover" ng-multiple="false" allow-dir="false"
               ng-accept="'.jpg,.jpeg,.png'" ng-capture="camera">
@@ -36,7 +36,8 @@
           </div>
           <div pick-source obj="profile.picture" ng-show="profile.picture.picker"></div>
         </div>
-        <div class="profile-large-name right col s12 m9">
+        <!-- Name -->
+        <div class="profile-large-name right col s12 m8">
           <h4 class="">
             {{profile.fullname.value}}
           </h4>

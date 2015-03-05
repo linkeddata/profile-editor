@@ -7,17 +7,19 @@
   </div>
 
   <div ng-if="profile.webid && !profile.loading" class="col s12">
-    <!-- Main card -->
+    <!-- Background -->
     <div class="row s12 m12 profile-large">
       <div class="grad-bg profile-large-bg col s12">
         <div bg-image ng-if="profile.bgpicture.value" bg="profile.bgpicture"></div>
       </div>
+      <!-- Avatar -->
       <div class="row s12">
-        <div class="profile-large-avatar valign-wrapper center col s12 m3">
+        <div class="profile-large-avatar valign-wrapper center col s12 m4">
           <img ng-if="profile.picture.value" class="white-border" ng-src="{{profile.picture.value}}" />
           <img ng-if="!profile.picture.value" class="white-border" src="images/generic_photo.png" />
         </div>
-        <div class="profile-large-name right col s12 m9">
+        <!-- Name -->
+        <div class="profile-large-name right col s12 m8">
           <h4 class="">
             {{profile.fullname.value}}
           </h4>
