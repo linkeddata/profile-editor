@@ -174,13 +174,13 @@ angular.module( 'App.edit', [
         ia[i] = binary.charCodeAt(i);
     }
     var blob = new Blob([ia], {type: $scope.imageType});
-    
-    var parts = [blob]; 
 
-    return new File(parts, $scope.imageName, {
-      lastModified: new Date(0),
-      type: $scope.imageType
-    });
+    return blob;
+    // new File is not supported by Safari for now
+    // return new File([blob.buffer], $scope.imageName, {
+    //   lastModified: new Date(0),
+    //   type: $scope.imageType
+    // });
   };
 
   $scope.uploadPicture = function (obj, file) {
@@ -192,7 +192,8 @@ angular.module( 'App.edit', [
           method: 'POST',
           url: newPicURL,
           withCredentials: true,
-          file: file
+          file: file,
+          fileName: $scope.imageName
       }).success(function (data, status, headers, config) {
         var pic = headers("Location");
         obj.value = pic;
