@@ -108,6 +108,8 @@ ul.side-nav li a {
 .profile-picture {
 	cursor: pointer;
 	display: inline-block;
+	min-width: 100px;
+	min-height: 100px;
 }
 
 .pick-area {
@@ -123,6 +125,7 @@ ul.side-nav li a {
 	left:3px;
 	right:3px;
 	min-width: 100px;
+	min-height: 50px;
 }
 .pick-file:hover {
 	opacity: 0.6;
@@ -131,6 +134,8 @@ ul.side-nav li a {
 	color: #fff;
 }
 .profile-picture img {
+	min-width: 150px;
+	min-height: 150px;
 	max-width: 200px;
 	height: auto;
 	margin-left: auto;
@@ -190,7 +195,7 @@ ul.side-nav li a {
 	border-radius: 0 2px 0 2px!important;
 	right: 0;
 	opacity: 0.8;
-	vertical-align: top;
+	min-width: 150px;
 }
 .change-bg:hover {
 	opacity: 1;
