@@ -123,7 +123,6 @@ ul.side-nav li a {
 	left:3px;
 	right:3px;
 	min-width: 100px;
-	min-height: 100px;
 }
 .pick-file:hover {
 	opacity: 0.6;
