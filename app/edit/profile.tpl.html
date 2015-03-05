@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="row s12 center" ng-show="profile.webid && profile.loading">
+  <div class="row s12 center" ng-hide="profile.webid && !profile.loading">
       <div class="row s12 center">
         <spinner class="white-text"></spinner>
       </div>
@@ -10,7 +10,10 @@
     <!-- Top section -->
     <div class="row s12 m12 profile-large">
       <!-- Background -->
-      <div class="btn change-bg white black-text" ng-file-select accept="image/*" ng-multiple="false" ng-capture="camera" ng-model="bgFile.file"><spinner class="spinner right-10" ng-show="profile.bgpicture.uploading"></spinner>Change image</div>
+      <div class="btn change-bg white black-text valign-wrapper" ng-file-select accept="image/*" ng-multiple="false" ng-capture="camera" ng-model="bgFile.file">
+        <spinner class="spinner right-10 left valign" ng-show="profile.bgpicture.uploading"></spinner>
+        <div class="left valign">Change image</div>
+      </div>
       <div pick-source obj="profile.bgpicture" ng-show="profile.bgpicture.picker"></div>
       <div class="grad-bg profile-large-bg center col s12">
           <div bg-image ng-if="profile.bgpicture.value" bg="profile.bgpicture"></div>
