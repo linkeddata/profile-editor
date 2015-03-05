@@ -1,8 +1,11 @@
 <div class="row">
-  <div class="row valign-wrapper" ng-show="profile.webid && profile.loading">
-      <div class="valign right-10">Loading profile </div>
-      <spinner class="valign"></spinner>
+  <div class="row s12 center" ng-show="profile.webid && profile.loading">
+      <div class="row s12 center">
+        <spinner class="white-text"></spinner>
+      </div>
+      <div class="row s12 white-text center">Loading profile...</div>
   </div>
+
   <div ng-if="profile.webid && !profile.loading" class="col s12">
     <!-- Top section -->
     <div class="row s12 m12 profile-large">
