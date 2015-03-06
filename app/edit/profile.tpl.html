@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="row s12 center" ng-hide="profile.webid && !profile.loading">
+  <div class="row s12 center" ng-if="profile.webid" ng-hide="profile.webid && !profile.loading">
       <div class="row s12 center">
         <spinner class="white-text"></spinner>
       </div>

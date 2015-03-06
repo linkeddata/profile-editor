@@ -20,6 +20,7 @@ angular.module( 'App', [
   'App.view',
   'App.edit',
   'App.share',
+  'App.crypto',
   'ui.router'
 ])
 
