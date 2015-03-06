@@ -39,11 +39,12 @@
             <li class="blue accent-2" ng-show="authenticated"><profile-card></profile-card></li>
             <li ng-show="authenticated">
               <a href="#/edit/profile" class="white-text valign-wrapper align-left"><i class="mdi-action-account-box prefix valign inline-block"></i><span class="valign inline-block">Edit profile</span></a></li>
-            <li ng-show="authenticated">
-              <a href="#/edit/friends" class="valign-wrapper align-left white-text"><i class="mdi-social-people prefix valign"></i><span class="valign">Add/Remove friends</span></a></li>
+            <!-- <li ng-show="authenticated">
+              <a href="#/edit/friends" class="valign-wrapper align-left white-text"><i class="mdi-social-people prefix valign"></i><span class="valign">Add/Remove friends</span></a></li> -->
             <li ng-show="authenticated">
               <a href="#/share" class="valign-wrapper align-left white-text"><i class="mdi-social-share prefix valign"></i><span class="valign">Share my WebID</span></a></li>
-              
+            <!-- <li ng-show="authenticated" class="bottom-dots">
+              <a href="#/certificates" class="valign-wrapper align-left white-text"><i class="mdi-action-wallet-membership prefix valign align-left"></i><span class="valign">Certificates</span></a></li> -->
             <!-- <li ng-show="authenticated">
               <a href="#/edit/publications" class="valign-wrapper align-left white-text"><i class="mdi-social-school prefix valign"></i><span class="valign">Publications</span></a></li>
             <li ng-show="authenticated">
@@ -98,7 +99,7 @@
 <script src="app/edit/edit.js"></script>
 <script src="app/view/view.js"></script>
 <script src="app/share/share.js"></script>
-<script src="app/crypto/crypto.js"></script>
+<script src="app/certificates/certificates.js"></script>
 
 <script>
   $( document ).ready(function(){
