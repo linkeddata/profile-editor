@@ -137,7 +137,7 @@ angular.module( 'App.edit', [
   // update a value and patch profile
   $scope.updateObject = function (obj, force) {
     // update object and also patch graph
-    if (obj.value.length > 0 && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+    if (obj.value && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
       obj.picker = true;
     } else {
       obj.updateObject(true, force);
@@ -147,7 +147,7 @@ angular.module( 'App.edit', [
   // select file for picture
   $scope.handleFileSelect = function(file) {
     if (file) {
-      $scope.imageName = file.name;
+      $scope.pictureName = file.name;
       $scope.imageType = file.type;
       var reader = new FileReader();
       reader.onload = function (evt) {
@@ -177,14 +177,14 @@ angular.module( 'App.edit', [
 
     return blob;
     // new File is not supported by Safari for now
-    // return new File([blob.buffer], $scope.imageName, {
+    // return new File([blob.buffer], $scope.pictureName, {
     //   lastModified: new Date(0),
     //   type: $scope.imageType
     // });
   };
 
-  $scope.uploadPicture = function (obj, file) {
-    if (obj && file) {
+  $scope.uploadPicture = function (obj, file, filename) {
+    if (obj && file && filename) {
       var newPicURL = '';
       newPicURL = dirname($scope.profile.webid)+'/';
       obj.uploading = true;
@@ -193,11 +193,10 @@ angular.module( 'App.edit', [
           url: newPicURL,
           withCredentials: true,
           file: file,
-          fileName: $scope.imageName
+          fileName: filename
       }).success(function (data, status, headers, config) {
         var pic = headers("Location");
         obj.value = pic;
-        console.log("Setting value to "+obj.value);
         $scope.updateObject(obj, true);
       }).error(function (data, status, headers, config) {
         $scope.uploading = false;
@@ -208,7 +207,7 @@ angular.module( 'App.edit', [
 
   $scope.savePicture = function() {
     var newImg = $scope.dataURItoBlob($scope.croppedImage);
-    $scope.uploadPicture($scope.profile.picture, newImg);
+    $scope.uploadPicture($scope.profile.picture, newImg, $scope.pictureName);
   };
 
   // replace white spaces with dashes (for phone numbers)
@@ -263,7 +262,8 @@ angular.module( 'App.edit', [
   });
   $scope.$watch('bgFile.file', function (newFile, oldFile) {
     if (newFile != undefined) {
-      $scope.uploadPicture($scope.profile.bgpicture, newFile[0]);
+      console.log(newFile);
+      $scope.uploadPicture($scope.profile.bgpicture, newFile[0], newFile[0].name);
     }
   });
 })

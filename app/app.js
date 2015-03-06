@@ -1,4 +1,5 @@
 // Globals
+var __profile;
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
@@ -11,6 +12,7 @@ var OWL = $rdf.Namespace("http://www.w3.org/2002/07/owl#");
 var SPACE = $rdf.Namespace("http://www.w3.org/ns/pim/space#");
 var UI = $rdf.Namespace("http://www.w3.org/ns/ui#");
 var DCT = $rdf.Namespace("http://purl.org/dc/terms/");
+var CERT = $rdf.Namespace("http://www.w3.org/ns/auth/cert#");
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
@@ -21,7 +23,7 @@ angular.module( 'App', [
   'App.view',
   'App.edit',
   'App.share',
-  'App.crypto',
+  'App.certificates',
   'ui.router'
 ])
 
@@ -78,7 +80,7 @@ angular.module( 'App', [
       return;
     }
 
-    if (!this.failed) {
+    if (!this.failed && this.value) {
       this.prev = angular.copy(this.value);
     }
     var oldS = angular.copy(this.statement);
@@ -360,9 +362,29 @@ angular.module( 'App', [
           $scope.profiles[webid].workpages = [];
         }
         var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'), undefined);
-         if (workpages.length > 0) {
+        if (workpages.length > 0) {
           workpages.forEach(function(workpage){
             $scope.profiles[webid].workpages.push(new $scope.ProfileElement(workpage));
+          });
+        }
+
+        // Certificates
+        if (!$scope.profiles[webid].certs) {
+          $scope.profiles[webid].certs = [];
+        }
+        var certRefs = g.statementsMatching(webidRes, CERT('key'), undefined);
+        if (certRefs.length > 0) {
+          certRefs.forEach(function(cRef){
+            var e = g.statementsMatching(cRef['object'], CERT('exponent'), undefined)[0];
+            var m = g.statementsMatching(cRef['object'], CERT('modulus'), undefined)[0];
+            if (e && m) {
+              var cert = {
+                e: new $scope.ProfileElement(e),
+                m: new $scope.ProfileElement(m)
+              };
+              // console.log(cert);
+              $scope.profiles[webid].certs.push(cert);
+            }
           });
         }
 
@@ -371,6 +393,7 @@ angular.module( 'App', [
         //@@TODO FIX THIS
         if ($scope.authenticated == webid) {
           $scope.profile = $scope.profiles[webid];
+          __profile = $scope.profile;
           $scope.saveCredentials($scope.authenticated);
         }
 
