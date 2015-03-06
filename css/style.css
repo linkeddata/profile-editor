@@ -273,6 +273,7 @@ form {
 	z-index: 10;
 	padding: 10px;
 	width: 300px;
+	font-size: 16px;
 }
 .pick-source div {
 	min-height: 20px;
@@ -324,7 +325,7 @@ form {
 }
 
 .dotted {
-    border-bottom: 1px dotted #fff;
+    border-bottom: 1px dotted;
 }
 
 .btn {

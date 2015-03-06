@@ -10,6 +10,7 @@ var FOAF = $rdf.Namespace("http://xmlns.com/foaf/0.1/");
 var OWL = $rdf.Namespace("http://www.w3.org/2002/07/owl#");
 var SPACE = $rdf.Namespace("http://www.w3.org/ns/pim/space#");
 var UI = $rdf.Namespace("http://www.w3.org/ns/ui#");
+var DCT = $rdf.Namespace("http://purl.org/dc/terms/");
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
@@ -202,13 +203,19 @@ angular.module( 'App', [
           $scope.profiles[webid].date = Date.now();
         }
         // save docURI to list of sources
+        var docName = g.statementsMatching($rdf.sym(docURI), DCT('title'), undefined)[0];
+        if (docName) {
+          docName = docName['object']['value'];
+        } else {
+          docName = docURI;
+        }
         if (!$scope.profiles[webid].sources) {
           $scope.profiles[webid].sources = [];
-        } //@@@TODO
+        }
         if (forWebID && $scope.profiles[forWebID].sources.indexOf(docURI) < 0) {
-          $scope.profiles[forWebID].sources.push(docURI);
+          $scope.profiles[forWebID].sources.push({uri: docURI, name: docName});
         } else if ($scope.profiles[webid].sources.indexOf(docURI) < 0) {
-          $scope.profiles[webid].sources.push(docURI);
+          $scope.profiles[webid].sources.push({uri: docURI, name: docName});
         }
 
         // try to fetch additional data from sameAs, seeAlso and preferenceFile
