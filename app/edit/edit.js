@@ -135,14 +135,30 @@ angular.module( 'App.edit', [
   // Updates
   
   // update a value and patch profile
-  $scope.updateObject = function (obj, force) {
+  $scope.updateObject = function (obj, force, picture, bgpicture) {
     // update object and also patch graph
     if (obj.value && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
-      obj.picker = true;
+      $scope.locationPicker = obj;
+      $('#location-picker').openModal();
     } else {
       obj.updateObject(true, force);
     }
   };
+
+  $scope.setWhy = function(uri) {
+    $scope.locationPicker.statement.why.uri = $scope.locationPicker.statement.why.value = uri;
+    $('#location-picker').closeModal();
+    console.log($scope.locationPicker.statement);
+    if ($scope.locationPicker.statement.predicate == FOAF('img') || 
+          $scope.locationPicker.statement.predicate == FOAF('depiction')) {
+      $scope.savePicture();
+    } else if ($scope.locationPicker.statement.predicate == UI('backgroundImage')) {
+      $scope.saveBackground();
+    } else {
+      // $scope.$parent.updateObject($scope.obj);
+    }
+    $scope.locationPicker = {};
+  }
 
   // select file for picture
   $scope.handleFileSelect = function(file) {
@@ -176,7 +192,7 @@ angular.module( 'App.edit', [
     var blob = new Blob([ia], {type: $scope.imageType});
 
     return blob;
-    // new File is not supported by Safari for now
+    // new File() is not supported by Safari for now
     // return new File([blob.buffer], $scope.pictureName, {
     //   lastModified: new Date(0),
     //   type: $scope.imageType
@@ -186,11 +202,11 @@ angular.module( 'App.edit', [
   $scope.uploadPicture = function (obj, file, filename) {
     if (obj && file && filename) {
       var newPicURL = '';
-      newPicURL = dirname($scope.profile.webid)+'/';
+      newPicContainer = dirname(obj.statement.why.value)+'/';
       obj.uploading = true;
       $upload.upload({
           method: 'POST',
-          url: newPicURL,
+          url: newPicContainer,
           withCredentials: true,
           file: file,
           fileName: filename
@@ -207,8 +223,21 @@ angular.module( 'App.edit', [
 
   $scope.savePicture = function() {
     var newImg = $scope.dataURItoBlob($scope.croppedImage);
-    $scope.uploadPicture($scope.profile.picture, newImg, $scope.pictureName);
+    if ($scope.profile.picture.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+      $scope.locationPicker = $scope.profile.picture;
+      $('#location-picker').openModal();
+    } else {
+      $scope.uploadPicture($scope.profile.picture, newImg, $scope.pictureName);
+    }
   };
+  $scope.saveBackground = function() {
+    if ($scope.profile.bgpicture.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+      $scope.locationPicker = $scope.profile.bgpicture;
+      $('#location-picker').openModal();
+    } else {
+      $scope.uploadPicture($scope.profile.bgpicture, $scope.bgFile.file[0], $scope.bgFile.file[0].name);
+    }
+  }
 
   // replace white spaces with dashes (for phone numbers)
   $scope.space2dash = function(obj) {
@@ -262,34 +291,43 @@ angular.module( 'App.edit', [
   });
   $scope.$watch('bgFile.file', function (newFile, oldFile) {
     if (newFile != undefined) {
-      console.log(newFile);
-      $scope.uploadPicture($scope.profile.bgpicture, newFile[0], newFile[0].name);
+      $scope.saveBackground();
     }
   });
-})
-.directive('pickSource', function () {
-    return {
-        restrict: 'AE',
-        scope: {
-          obj: '='
-        },
-        transclude: true,
-        template: '<div class="left row s12"><h5>Add to profile:</h5></div>'+
-          '<div class="row s12 valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">'+
-          '  <i class="mdi-file-folder-shared valign right-10"></i><a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>'+
-          '</div>'+
-          '<button class="btn blue" ng-click="cancel()">Cancel</button>',
-        link: function($scope, $element, $attrs) {
-          $element.addClass('pick-source');
-          $element.addClass('arrow-box');
-          $scope.setWhy = function(uri) {
-            $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
-            $scope.cancel();
-            $scope.$parent.updateObject($scope.obj);
-          }
-          $scope.cancel = function() {
-            $scope.obj.picker = false;
-          }
-        }
-    };
 });
+
+// .directive('pickSource', function () {
+//     return {
+//         restrict: 'AE',
+//         scope: {
+//           obj: '='
+//         },
+//         transclude: true,
+//         template: '<div class="left row s12"><h5>Add to profile:</h5></div>'+
+//           '<div class="row s12 valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">'+
+//           '  <i class="mdi-file-folder-shared valign right-10"></i><a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>'+
+//           '</div>'+
+//           '<button class="btn blue" ng-click="cancel()">Cancel</button>',
+//         link: function($scope, $element, $attrs) {
+//           $element.addClass('pick-source');
+//           $element.addClass('arrow-box');
+//           $scope.setWhy = function(uri) {
+//             $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
+//             console.log("Set Why to:"+uri);
+//             console.log($scope.obj.statement['why']);
+//             $scope.cancel();
+//             console.log($attrs.avatar, $attrs.bgpicture)
+//             if ($attrs.avatar) {
+//               $scope.$parent.savePicture();
+//             } else if ($attrs.bgpicture) {
+//               $scope.$parent.saveBackground();
+//             } else {
+//               $scope.$parent.updateObject($scope.obj);
+//             }
+//           }
+//           $scope.cancel = function() {
+//             $scope.obj.picker = false;
+//           }
+//         }
+//     };
+// });

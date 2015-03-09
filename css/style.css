@@ -12,6 +12,11 @@ footer {
 	padding-top: 20px;
 }
 
+.modal {
+	color: #434343;
+	font-size: 20px;
+}
+
 .row .col {
 	padding:0px;
 }
@@ -329,7 +334,6 @@ form {
 .break-word {
 	word-wrap: break-word;
 }
-
 
 .grad-bg {
 	background: rgb(48,126,221);
