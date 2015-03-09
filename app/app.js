@@ -1,5 +1,6 @@
 // Globals
-var __profile;
+var __kb;
+var __profile, __profiles;
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
@@ -51,9 +52,13 @@ angular.module( 'App', [
 
   if (!$scope.profiles) {
     $scope.profiles = [];
+    __profiles = $scope.profiles;
   }
   $scope.profile = {};
   $scope.authenticated = false;
+
+  // global knowledge base
+  $scope.kb = new $rdf.graph();
 
   $scope.ProfileElement = function(s) {
     this.locked = false;
@@ -73,6 +78,10 @@ angular.module( 'App', [
       this.prev = val;
     }
   };
+
+  // $scope.ProfileElement.prototype.updateSubject = function(update, force) {
+
+  // };
 
   $scope.ProfileElement.prototype.updateObject = function(update, force) {
     // do not update if value hasn't changed
@@ -129,31 +138,86 @@ angular.module( 'App', [
 
       // send PATCH request
       if (graphURI && graphURI.length > 0) {
-        var that = this;
-        $http({
-          method: 'PATCH',
-          url: graphURI,
-          headers: {
-            'Content-Type': 'application/sparql-update'
-          },
-          withCredentials: true,
-          data: query
-        }).success(function(data, status, headers) {
-          that.locked = false;
-          that.uploading = false;
-          // refresh cache timer
-          $scope.profile.date = Date.now();
-          Notifier.success('Profile updated!');
-        }).error(function(data, status, headers) {
-          that.locked = false;
-          that.uploading = false;
-          that.failed = true;
-          that.statement = oldS;
-          Notifier.error('Could not update profile: HTTP '+status);
-          console.log(data);
-        });
+        $scope.sendSPARQLPatch(graphURI, query, this, oldS);
       }
     }
+  };
+
+  $scope.ProfileElement.prototype.deleteSubject = function (send) {
+    this.locked = true;
+    var query = '';
+    var graphURI = '';
+    var oldS = angular.copy(this.statement);
+    if (oldS['why'] && oldS['why']['value'].length > 0) {
+      graphURI = oldS['why']['value'];
+    } else {
+      graphURI = oldS['subject']['value'];
+    }
+    $scope.profile.sources.forEach(function (src) {
+      // Delete outgoing arcs with the same subject
+      var needle = oldS['object']['value'];
+      var out = $scope.kb.statementsMatching($rdf.sym(needle), undefined, undefined, $rdf.sym(src.uri));
+      // Also delete incoming arcs
+      var inc = $scope.kb.statementsMatching(undefined, undefined, $rdf.sym(needle), $rdf.sym(src.uri));
+      for (i in out) {
+        var s = out[i];
+        // check type?
+        if (s['object'].termType == 'literal') {
+          var o = $rdf.lit(s['object']['value']);
+        } else if (s['object'].termType == 'symbol') {
+          var o = $rdf.sym(s['object']['value']);
+        }
+        statement = new $rdf.st(
+          s['subject'],
+          s['predicate'],
+          o,
+          s['why']
+        );
+        query += 'DELETE DATA { ' + statement.toNT() + " }";
+        if (i < out.length - 1 || inc.length > 0) {
+          query +=  " ;\n";
+        }
+      };
+      
+      for (i in inc) {
+        var s = inc[i];
+        // check type?
+        query += 'DELETE DATA { ' + s.toNT() + " }";
+        if (i < inc.length - 1) {
+          query += " ;\n";
+        }
+      };
+    });
+    // Send patch to server
+    if (query.length > 0 && send) {
+      $scope.sendSPARQLPatch(graphURI, query, this);
+    }
+    return query;
+  };
+
+  $scope.sendSPARQLPatch = function (uri, query, obj, oldStatement) {
+    $http({
+      method: 'PATCH',
+      url: uri,
+      headers: {
+        'Content-Type': 'application/sparql-update'
+      },
+      withCredentials: true,
+      data: query
+    }).success(function(data, status, headers) {
+      obj.locked = false;
+      obj.uploading = false;
+      Notifier.success('Profile updated!');
+    }).error(function(data, status, headers) {
+      obj.locked = false;
+      obj.uploading = false;
+      obj.failed = true;
+      if (oldStatement) {
+        obj.statement = oldStatement;
+      }
+      Notifier.error('Could not update profile: HTTP '+status);
+      console.log(data);
+    });
   };
 
   // Load a user's profile
@@ -163,8 +227,12 @@ angular.module( 'App', [
   $scope.getProfile = function(uri, authenticated, redirect, forWebID) {
     if (!$scope.profiles) {
       $scope.profiles = [];
+      __profiles = $scope.profiles;
     }
+
     var webid = (forWebID)?forWebID:uri;
+    console.log("WEBID: "+webid, uri, authenticated, redirect, forWebID);
+
     if (!$scope.profiles[webid]) {
       $scope.profiles[webid] = {};
     }
@@ -245,15 +313,15 @@ angular.module( 'App', [
         }
 
         // get info
-        if (!$scope.profiles[webid].fullname) {
+        if (!$scope.profiles[webid].fullname || $scope.profiles[webid].fullname.value.length == 0) {
           var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
           if (!fullname || fullname['object']['value'].length == 0) {
             fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(''));
-          }        
+          }
           $scope.profiles[webid].fullname = new $scope.ProfileElement(fullname);
         }
         // Firstname
-        if (!$scope.profiles[webid].firstname) {
+        if (!$scope.profiles[webid].firstname || $scope.profiles[webid].firstname.value.length == 0) {
           var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
           if (!firstname || firstname['object']['value'].length == 0) {
             firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(''));
@@ -261,7 +329,7 @@ angular.module( 'App', [
           $scope.profiles[webid].firstname = new $scope.ProfileElement(firstname);
         }
         // Lastname
-        if (!$scope.profiles[webid].lastname) {
+        if (!$scope.profiles[webid].lastname || $scope.profiles[webid].lastname.value.length == 0) {
           var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
           if (!lastname || lastname['object']['value'].length == 0) {
             lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(''));
@@ -269,7 +337,7 @@ angular.module( 'App', [
           $scope.profiles[webid].lastname = new $scope.ProfileElement(lastname);
         }
         // Nickname
-        if (!$scope.profiles[webid].nick) {
+        if (!$scope.profiles[webid].nick || $scope.profiles[webid].nick.value.length == 0) {
           var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
           if (!nick || nick['object']['value'].length == 0) {
             nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(''));
@@ -277,7 +345,7 @@ angular.module( 'App', [
           $scope.profiles[webid].nick = new $scope.ProfileElement(nick);
         }
         // Gender
-        if (!$scope.profiles[webid].gender) {
+        if (!$scope.profiles[webid].gender || $scope.profiles[webid].gender.value.length == 0) {
           var gender = g.statementsMatching(webidRes, FOAF('gender'), undefined)[0];
           if (!gender || gender['object']['value'].length == 0) {
             gender = $rdf.st(webidRes, FOAF('gender'), $rdf.lit(''), $rdf.sym(''));
@@ -286,7 +354,7 @@ angular.module( 'App', [
         }
 
         // Get profile picture
-        if (!$scope.profiles[webid].picture) {
+        if (!$scope.profiles[webid].picture || $scope.profiles[webid].picture.value.length == 0) {
           var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];
           var pic;
           if (img) {
@@ -305,7 +373,7 @@ angular.module( 'App', [
         }
 
         // Background image
-        if (!$scope.profiles[webid].bgpicture) {
+        if (!$scope.profiles[webid].bgpicture || $scope.profiles[webid].bgpicture.value.length == 0) {
           var bgpic = g.statementsMatching(webidRes, UI('backgroundImage'), undefined)[0];
           if (!bgpic || bgpic['object']['value'].length == 0) {
             bgpic = $rdf.st(webidRes, UI('backgroundImage'), $rdf.sym(''), $rdf.sym(''));
@@ -375,25 +443,34 @@ angular.module( 'App', [
         var certRefs = g.statementsMatching(webidRes, CERT('key'), undefined);
         if (certRefs.length > 0) {
           certRefs.forEach(function(cRef){
+            var c = g.statementsMatching(cRef['object'], RDFS('comment'), undefined)[0];
+            var d = g.statementsMatching(cRef['object'], DCT('modified'), undefined)[0];
             var e = g.statementsMatching(cRef['object'], CERT('exponent'), undefined)[0];
             var m = g.statementsMatching(cRef['object'], CERT('modulus'), undefined)[0];
             if (e && m) {
               var cert = {
-                e: new $scope.ProfileElement(e),
-                m: new $scope.ProfileElement(m)
+                key: new $scope.ProfileElement(cRef),
+                comment: new $scope.ProfileElement(c), 
+                modified: new $scope.ProfileElement(d),
+                exponent: new $scope.ProfileElement(e),
+                modulus: new $scope.ProfileElement(m)
               };
-              // console.log(cert);
               $scope.profiles[webid].certs.push(cert);
             }
           });
         }
 
+        // Done, now add statements to knowledge base
+        g.statementsMatching(undefined, undefined, undefined, $rdf.sym(docURI)).forEach(function(statement) {
+          $scope.kb.add(statement['subject'], statement['predicate'], statement['object'], statement['why']);
+        });
+        __kb = $scope.kb;
+
         $scope.profiles[webid].loading = false;
 
-        //@@TODO FIX THIS
         if ($scope.authenticated == webid) {
           $scope.profile = $scope.profiles[webid];
-          __profile = $scope.profile;
+          __profile = $scope.profiles;
           $scope.saveCredentials($scope.authenticated);
         }
 

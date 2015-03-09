@@ -29,6 +29,26 @@ angular.module( 'App.certificates', [
 .controller( 'CertsCtrl', function CertsCtrl( $scope, $location, $state ) {
 
 
+  // update a value and patch profile
+  $scope.updateObject = function (cert, force) {
+    // Iterate through the object
+    // // update object and also patch graph
+    // if (obj.value && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+    //   obj.picker = true;
+    // } else {
+    //   obj.updateObject(true, force);
+    // }
+  };
+
+  $scope.deleteCert = function(id) {
+    $scope.profile.certs[id].key.deleteSubject(true);
+    $scope.profile.certs.splice(id, 1);
+  };
+
+  $scope.fixHexa = function(obj) {
+    obj.value = (!obj.value) ? '' : obj.value.replace(/[\r\n\t\s:]+/g, '');
+  };
+
 })
 
 .controller( 'CertNewCtrl', function CertNewCtrl( $scope, $location, $http, $state ) {
