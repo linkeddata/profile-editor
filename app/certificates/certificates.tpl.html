@@ -1,3 +1,81 @@
 <div class="row">
-
+  <div class="row s12 center" ng-if="profile.webid" ng-hide="profile.webid && !profile.loading">
+      <div class="row s12 center">
+        <spinner class="white-text"></spinner>
+      </div>
+      <div class="row s12 white-text center">Loading profile...</div>
+  </div>
+  <div class="col s12 center" ng-show="profile.certs && profile.certs.length == 0">
+    <h5>The profile does not contain any certificates.</h5>
+  </div>
+	<div class="card-panel" ng-show="profile.certs.length > 0">
+    <div class="row left-align">
+      <div class="col s12">
+        <h5 class="valign-wrapper align-left">
+          <i class="mdi-action-wallet-membership valign right-10"></i>
+          <strong>Certificates</strong>
+        </h5>
+      </div>
+    </div>
+    <div class="row left-align" ng-repeat="(id, cert) in profile.certs track by $index">
+      <div ng-hide="cert.edit">
+        <div class="row s12">
+          <div class="col s12 m3">Key URI</div>
+          <div class="col s12 m9 break-word"><a href="{{cert.key.value}}" target="_blank" class="blue-text dotted" title="Key uri for {{cert.key.value}}">{{cert.key.value}}</a></div>
+        </div>
+        <div class="row s12" ng-if="cert.comment.value">
+          <div class="col s12 m3">Comment</div>
+          <div class="col s12 m9 break-word">{{cert.comment.value}}</div>
+        </div>
+        <div class="row s12" ng-if="cert.modified.value">
+          <div class="col s12 m3">Modified</div>
+          <div class="col s12 m9 break-word">{{cert.modified.value}}</div>
+        </div>
+        <div class="row s12">
+          <div class="col s12 m3">Modulus</div>
+          <div class="col s12 m9 break-word">{{cert.modulus.value}}</div>
+        </div>
+        <div class="row s12">
+          <div class="col s12 m3">Exponent</div>
+          <div class="col s12 m9">{{cert.exponent.value}}</div>
+        </div>
+        <div class="row s12">
+          <button class="btn blue" ng-click="cert.edit=!cert.edit">Edit</button>
+          <button class="btn blue" ng-click="deleteCert($index)">Delete</button>
+        </div>
+      </div>
+      <div ng-show="cert.edit">
+        <div class="row s12">
+          <div class="col s12 m3">Key URI</div>
+          <div class="col s12 m9 break-word"><a href="{{cert.key.value}}" target="_blank" class="blue-text dotted" title="Key uri for {{cert.key.value}}">{{cert.key.value}}</a></div>
+        </div>
+        <div class="row s12" ng-if="cert.comment.value">
+          <div class="col s12">
+            <div class="input-field">
+              <input id="comment" type="text" ng-model="cert.comment.value" ng-blur="updateObject(cert)">
+              <label for="comment" ng-class="{active: cert.comment.value.length > 0}">Comment</label>
+            </div>
+          </div>
+        </div>
+        <div class="row s12">
+          <div class="col s12 input-field">
+            <textarea id="textarea" class="materialize-textarea" ng-change="fixHexa(cert.modulus)" ng-model="cert.modulus.value"></textarea>
+            <label for="textarea" ng-class="{active: cert.modulus.value.length > 0}">Modulus</label>
+          </div>
+        </div>
+        <div class="row s12">
+          <div class="col s12">
+            <div class="input-field">
+              <input id="exponent" type="text" ng-model="cert.exponent.value">
+              <label for="exponent" ng-class="{active: cert.exponent.value.length > 0}">Exponent</label>
+            </div>
+          </div>
+        </div>
+        <div class="row s12">
+          <button class="btn blue" ng-click="cert.edit=!cert.edit">View</button>
+          <button class="btn blue" ng-click="deleteCert($index)">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
