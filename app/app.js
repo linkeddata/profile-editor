@@ -56,6 +56,7 @@ angular.module( 'App', [
   }
   $scope.profile = {};
   $scope.authenticated = false;
+  $scope.overlay = false;
 
   // global knowledge base
   $scope.kb = new $rdf.graph();
@@ -124,7 +125,7 @@ angular.module( 'App', [
           query += " ;\n";
         }
       }
-      if (this.value.length > 0) {
+      if (this.value && this.value.length > 0) {
         // should ask the user where the new triple should be saved
         query += "INSERT DATA { " + this.statement.toNT() + " }";
         if (graphURI.length == 0) {
@@ -231,7 +232,6 @@ angular.module( 'App', [
     }
 
     var webid = (forWebID)?forWebID:uri;
-    console.log("WEBID: "+webid, uri, authenticated, redirect, forWebID);
 
     if (!$scope.profiles[webid]) {
       $scope.profiles[webid] = {};
@@ -470,7 +470,7 @@ angular.module( 'App', [
 
         if ($scope.authenticated == webid) {
           $scope.profile = $scope.profiles[webid];
-          __profile = $scope.profiles;
+          __profile = $scope.profile;
           $scope.saveCredentials($scope.authenticated);
         }
 

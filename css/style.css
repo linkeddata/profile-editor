@@ -12,6 +12,11 @@ footer {
 	padding-top: 20px;
 }
 
+.modal {
+	color: #434343;
+	font-size: 20px;
+}
+
 .row .col {
 	padding:0px;
 }
@@ -330,7 +335,6 @@ form {
 	word-wrap: break-word;
 }
 
-
 .grad-bg {
 	background: rgb(48,126,221);
     background: -moz-linear-gradient(-45deg,  rgba(48,126,221,1) 0%, rgba(242,92,137,1) 100%);
@@ -340,6 +344,19 @@ form {
     background: -ms-linear-gradient(-45deg,  rgba(48,126,221,1) 0%,rgba(242,92,137,1) 100%);
     background: linear-gradient(135deg,  rgba(48,126,221,1) 0%,rgba(242,92,137,1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#307edd', endColorstr='#f25c89',GradientType=1 );
+}
+
+.overlay {
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: 115%;
+	width: 100%;
+	background: #000;
+	opacity: 0.5;
 }
 
 .spinner {
