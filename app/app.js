@@ -56,6 +56,7 @@ angular.module( 'App', [
   }
   $scope.profile = {};
   $scope.authenticated = false;
+  $scope.overlay = false;
 
   // global knowledge base
   $scope.kb = new $rdf.graph();

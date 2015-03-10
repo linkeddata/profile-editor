@@ -346,6 +346,19 @@ form {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#307edd', endColorstr='#f25c89',GradientType=1 );
 }
 
+.overlay {
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: 115%;
+	width: 100%;
+	background: #000;
+	opacity: 0.5;
+}
+
 .spinner {
 	display: inline-block!important;
 }
