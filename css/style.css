@@ -20,9 +20,6 @@ footer {
 .row .col {
 	padding:0px;
 }
-.nav-wrapper {
-	padding: 0 10px 0 10px;
-}
 .navbar-fixed > .progress {
 	position: fixed;
 	margin: 0;
