@@ -238,7 +238,7 @@ angular.module( 'App.edit', [
     console.log("Saving background picture...");
     if ($scope.profile.bgpicture.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
       $scope.profile.bgpicture.picker = true;
-    } else {
+    } else if ($scope.bgFile.file[0]) {
       $scope.uploadPicture($scope.profile.bgpicture, $scope.bgFile.file[0], $scope.bgFile.file[0].name);
     }
   }
