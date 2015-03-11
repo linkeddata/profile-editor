@@ -306,25 +306,25 @@ angular.module( 'App.edit', [
           obj: '='
         },
         transclude: true,
-        template: `<div class="modal s12" id="location-picker">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        Add to profile:
-                      </div>
-                      <div class="modal-body">
-                        <div class="row s12 valign-wrapper">
-                          <!-- <div class="left row s12"><h5>Add to profile:</h5></div> -->
-                          <div class="col s12 valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">
-                            <i class="mdi-file-folder-shared valign right-10"></i>
-                            <a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <a href="#" class="blue white-text btn-flat modal-action modal-close" ng-click="cancel()">Cancel</a>
-                      </div>
-                    </div>
-                  </div>`,
+        template: '<div class="modal s12" id="location-picker">'+
+                  '  <div class="modal-content">'+
+                  '    <div class="modal-header">'+
+                  '      Add to profile:'+
+                  '    </div>'+
+                  '    <div class="modal-body">'+
+                  '      <div class="row s12 valign-wrapper">'+
+                  '        <div class="left row s12"><h5>Add to profile:</h5></div>'+
+                  '        <div class="col s12 valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">'+
+                  '          <i class="mdi-file-folder-shared valign right-10"></i>'+
+                  '          <a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>'+
+                  '        </div>'+
+                  '      </div>'+
+                  '    </div>'+
+                  '    <div class="modal-footer">'+
+                  '      <a href="#" class="blue white-text btn-flat modal-action modal-close" ng-click="cancel()">Cancel</a>'+
+                  '    </div>'+
+                  '  </div>'+
+                  '</div>',
         link: function($scope, $element, $attrs) {
           $('#location-picker').openModal();
           $scope.$parent.overlay = true;
