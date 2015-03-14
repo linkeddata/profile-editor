@@ -1,6 +1,6 @@
 // Globals
 var __kb;
-var __profile, __profiles;
+var __profile;
 var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
@@ -14,6 +14,7 @@ var SPACE = $rdf.Namespace("http://www.w3.org/ns/pim/space#");
 var UI = $rdf.Namespace("http://www.w3.org/ns/ui#");
 var DCT = $rdf.Namespace("http://purl.org/dc/terms/");
 var CERT = $rdf.Namespace("http://www.w3.org/ns/auth/cert#");
+var ACL = $rdf.Namespace("http://www.w3.org/ns/auth/acl#");
 
 $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 
@@ -46,13 +47,14 @@ angular.module( 'App', [
 })
 
 .controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state, $stateParams ) {
+  $scope.showMenu = true;
   $scope.appuri = window.location.host+window.location.pathname;
-  $scope.loginButtonText = 'Login';
+  $scope.loginTLSButtonText = 'With certificate';
+  $scope.loginRSAButtonText = 'With key store';
   $scope.webid = '';
 
   if (!$scope.profiles) {
     $scope.profiles = [];
-    __profiles = $scope.profiles;
   }
   $scope.profile = {};
   $scope.authenticated = false;
@@ -228,7 +230,6 @@ angular.module( 'App', [
   $scope.getProfile = function(uri, authenticated, redirect, forWebID) {
     if (!$scope.profiles) {
       $scope.profiles = [];
-      __profiles = $scope.profiles;
     }
 
     var webid = (forWebID)?forWebID:uri;
@@ -250,240 +251,260 @@ angular.module( 'App', [
       $scope.authenticated = webid;
     }
     // fetch user data
-    f.nowOrWhenFetched(docURI,undefined,function(ok, body, xhr) {
-      if (!ok) {
-        console.log('Warning - profile not found.');
-        var extra = '';
-        if (forWebID) {
-          extra = 'additional';
-        }
-        Notifier.error('Failed to fetch '+extra+' profile '+uri+'. HTTP '+xhr.status);
-        if (!$scope.profiles[webid].fullname) {
-          $scope.profiles[webid].fullname = webid;
-        }
-        $scope.profiles[webid].loading = false;
-        $scope.loginButtonText = "Login";
-        $scope.$apply();
-      } else {
-        if (xhr && xhr.getResponseHeader('User') && xhr.getResponseHeader('User') == uri) {
-          $scope.authenticated = uri;
-        }
-        // set time of loading
-        if (!$scope.profiles[webid].date) {
-          $scope.profiles[webid].date = Date.now();
-        }
-        // save docURI to list of sources
-        var docName = g.statementsMatching($rdf.sym(docURI), DCT('title'), undefined)[0];
-        if (docName) {
-          docName = docName['object']['value'];
+    return new Promise(function(resolve) {
+      f.nowOrWhenFetched(docURI,undefined,function(ok, body, xhr) {
+        if (!ok) {
+          console.log('Warning - profile not found.');
+          var extra = '';
+          if (forWebID) {
+            extra = 'additional';
+          }
+          Notifier.error('Failed to fetch '+extra+' profile '+uri+'. HTTP '+xhr.status);
+          if (!$scope.profiles[webid].fullname) {
+            $scope.profiles[webid].fullname = webid;
+          }
+          $scope.profiles[webid].loading = false;
+          $scope.loginTLSButtonText = "WebID-TLS Login";
+          $scope.$apply();
+          // return promise
+          // reject(ok, body, xhr);
         } else {
-          docName = docURI;
-        }
-        if (!$scope.profiles[webid].sources) {
-          $scope.profiles[webid].sources = [];
-        }
-        if (forWebID && $scope.profiles[forWebID].sources.indexOf(docURI) < 0) {
-          $scope.profiles[forWebID].sources.push({uri: docURI, name: docName});
-        } else if ($scope.profiles[webid].sources.indexOf(docURI) < 0) {
-          $scope.profiles[webid].sources.push({uri: docURI, name: docName});
-        }
+          if (xhr && xhr.getResponseHeader('User') && xhr.getResponseHeader('User') == uri) {
+            $scope.authenticated = uri;
+          }
+          // set time of loading
+          if (!$scope.profiles[webid].date) {
+            $scope.profiles[webid].date = Date.now();
+          }
+          // save docURI to list of sources
+          var docName = g.statementsMatching($rdf.sym(docURI), DCT('title'), undefined)[0];
+          if (docName) {
+            docName = docName['object']['value'];
+          } else {
+            docName = docURI;
+          }
+          // add to list of profile documents if it's an writable resource
+          // (i.e. it's an LDP resource)
+          if (!$scope.profiles[webid].sources) {
+            $scope.profiles[webid].sources = [];
+          }
+          if (xhr.getResponseHeader('Link')) {
+            var lh = parseLinkHeader(xhr.getResponseHeader('Link'));
+            if (lh['type'] && lh['type'].indexOf('http://www.w3.org/ns/ldp#Resource') >= 0 && 
+                $scope.profiles[webid].sources.indexOf(docURI) < 0) {
+              $scope.profiles[webid].sources.push({uri: docURI, name: docName});
+            }
+          }
 
-        // try to fetch additional data from sameAs, seeAlso and preferenceFile
-        if (!forWebID) {
-          var sameAs = g.statementsMatching(webidRes, OWL('sameAs'), undefined);
-          if (sameAs.length > 0) {
-            sameAs.forEach(function(same){
-              $scope.getProfile(same['object']['value'], false, false, webid);
+
+          // try to fetch additional data from sameAs, seeAlso and preferenceFile
+          if (!forWebID) {
+            var sameAs = g.statementsMatching(webidRes, OWL('sameAs'), undefined);
+            if (sameAs.length > 0) {
+              sameAs.forEach(function(same){
+                $scope.getProfile(same['object']['value'], false, false, webid);
+              });
+            }
+            var seeAlso = g.statementsMatching(webidRes, OWL('seeAlso'), undefined);
+            if (seeAlso.length > 0) {
+              seeAlso.forEach(function(see){
+                $scope.getProfile(see['object']['value'], false, false, webid);
+              });
+            }
+            var prefs = g.statementsMatching(webidRes, SPACE('preferencesFile'), undefined);
+            if (prefs.length > 0) {
+              prefs.forEach(function(pref){
+                if (pref['object']['value']) {
+                  $scope.getProfile(pref['object']['value'], false, false, webid);
+                }
+              });
+            }
+          }
+
+          // get the user's Key Store URI
+          if (!$scope.profiles[webid].keystore || $scope.profiles[webid].keystore.value.length == 0) {
+            var keystore = g.statementsMatching(webidRes, ACL('keystore'), undefined)[0];
+            if (!keystore || keystore['object']['value'].length == 0) {
+              keystore = $rdf.st(webidRes, ACL('keystore'), $rdf.lit(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].keystore = new $scope.ProfileElement(keystore);
+          }
+
+          // get info
+          if (!$scope.profiles[webid].fullname || $scope.profiles[webid].fullname.value.length == 0) {
+            var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
+            if (!fullname || fullname['object']['value'].length == 0) {
+              fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].fullname = new $scope.ProfileElement(fullname);
+          }
+          // Firstname
+          if (!$scope.profiles[webid].firstname || $scope.profiles[webid].firstname.value.length == 0) {
+            var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
+            if (!firstname || firstname['object']['value'].length == 0) {
+              firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].firstname = new $scope.ProfileElement(firstname);
+          }
+          // Lastname
+          if (!$scope.profiles[webid].lastname || $scope.profiles[webid].lastname.value.length == 0) {
+            var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
+            if (!lastname || lastname['object']['value'].length == 0) {
+              lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].lastname = new $scope.ProfileElement(lastname);
+          }
+          // Nickname
+          if (!$scope.profiles[webid].nick || $scope.profiles[webid].nick.value.length == 0) {
+            var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
+            if (!nick || nick['object']['value'].length == 0) {
+              nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].nick = new $scope.ProfileElement(nick);
+          }
+          // Gender
+          if (!$scope.profiles[webid].gender || $scope.profiles[webid].gender.value.length == 0) {
+            var gender = g.statementsMatching(webidRes, FOAF('gender'), undefined)[0];
+            if (!gender || gender['object']['value'].length == 0) {
+              gender = $rdf.st(webidRes, FOAF('gender'), $rdf.lit(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].gender = new $scope.ProfileElement(gender);
+          }
+
+          // Get profile picture
+          if (!$scope.profiles[webid].picture || $scope.profiles[webid].picture.value.length == 0) {
+            var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];
+            var pic;
+            if (img) {
+              pic = img;
+            } else {
+              // check if profile uses depic instead
+              var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
+              if (depic) {
+                pic = depic;
+              }
+            }
+            if (!pic || pic['object']['value'].length == 0) {
+              pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].picture = new $scope.ProfileElement(pic);
+          }
+
+          // Background image
+          if (!$scope.profiles[webid].bgpicture || $scope.profiles[webid].bgpicture.value.length == 0) {
+            var bgpic = g.statementsMatching(webidRes, UI('backgroundImage'), undefined)[0];
+            if (!bgpic || bgpic['object']['value'].length == 0) {
+              bgpic = $rdf.st(webidRes, UI('backgroundImage'), $rdf.sym(''), $rdf.sym(''));
+            }
+            $scope.profiles[webid].bgpicture = new $scope.ProfileElement(bgpic);
+          }
+
+          // Phones
+          if (!$scope.profiles[webid].phones) {
+            $scope.profiles[webid].phones = [];
+          }
+          var phones = g.statementsMatching(webidRes, FOAF('phone'), undefined);
+          if (phones.length > 0) {
+            phones.forEach(function(phone){
+              $scope.profiles[webid].phones.push(new $scope.ProfileElement(phone));
             });
           }
-          var seeAlso = g.statementsMatching(webidRes, OWL('seeAlso'), undefined);
-          if (seeAlso.length > 0) {
-            seeAlso.forEach(function(see){
-              $scope.getProfile(see['object']['value'], false, false, webid);
+
+          // Emails
+          if (!$scope.profiles[webid].emails) {
+            $scope.profiles[webid].emails = [];
+          }
+          var emails = g.statementsMatching(webidRes, FOAF('mbox'), undefined);
+          if (emails.length > 0) {
+            emails.forEach(function(email){
+              $scope.profiles[webid].emails.push(new $scope.ProfileElement(email));
             });
           }
-          var prefs = g.statementsMatching(webidRes, SPACE('preferencesFile'), undefined);
-          if (prefs.length > 0) {
-            prefs.forEach(function(pref){
-              if (pref['object']['value']) {
-                $scope.getProfile(pref['object']['value'], false, false, webid);
+
+          // Blogs
+          if (!$scope.profiles[webid].blogs) {
+            $scope.profiles[webid].blogs = [];
+          }
+          var blogs = g.statementsMatching(webidRes, FOAF('weblog'), undefined);
+          if (blogs.length > 0) {
+            blogs.forEach(function(blog){
+              $scope.profiles[webid].blogs.push(new $scope.ProfileElement(blog));
+            });
+          }
+
+          // Homepages
+          if (!$scope.profiles[webid].homepages) {
+            $scope.profiles[webid].homepages = [];
+          }
+          var homepages = g.statementsMatching(webidRes, FOAF('homepage'), undefined);
+          if (homepages.length > 0) {
+            homepages.forEach(function(homepage){
+              $scope.profiles[webid].homepages.push(new $scope.ProfileElement(homepage));
+            });
+          }
+
+          // Workpages
+          if (!$scope.profiles[webid].workpages) {
+            $scope.profiles[webid].workpages = [];
+          }
+          var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'), undefined);
+          if (workpages.length > 0) {
+            workpages.forEach(function(workpage){
+              $scope.profiles[webid].workpages.push(new $scope.ProfileElement(workpage));
+            });
+          }
+
+          // Certificates
+          if (!$scope.profiles[webid].certs) {
+            $scope.profiles[webid].certs = [];
+          }
+          var certRefs = g.statementsMatching(webidRes, CERT('key'), undefined);
+          if (certRefs.length > 0) {
+            certRefs.forEach(function(cRef){
+              var c = g.statementsMatching(cRef['object'], RDFS('comment'), undefined)[0];
+              var d = g.statementsMatching(cRef['object'], DCT('modified'), undefined)[0];
+              var e = g.statementsMatching(cRef['object'], CERT('exponent'), undefined)[0];
+              var m = g.statementsMatching(cRef['object'], CERT('modulus'), undefined)[0];
+              if (e && m) {
+                var cert = {
+                  key: new $scope.ProfileElement(cRef),
+                  comment: new $scope.ProfileElement(c), 
+                  modified: new $scope.ProfileElement(d),
+                  exponent: new $scope.ProfileElement(e),
+                  modulus: new $scope.ProfileElement(m)
+                };
+                $scope.profiles[webid].certs.push(cert);
               }
             });
           }
-        }
 
-        // get info
-        if (!$scope.profiles[webid].fullname || $scope.profiles[webid].fullname.value.length == 0) {
-          var fullname = g.statementsMatching(webidRes, FOAF('name'), undefined)[0];
-          if (!fullname || fullname['object']['value'].length == 0) {
-            fullname = $rdf.st(webidRes, FOAF('name'), $rdf.lit(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].fullname = new $scope.ProfileElement(fullname);
-        }
-        // Firstname
-        if (!$scope.profiles[webid].firstname || $scope.profiles[webid].firstname.value.length == 0) {
-          var firstname = g.statementsMatching(webidRes, FOAF('givenName'), undefined)[0];
-          if (!firstname || firstname['object']['value'].length == 0) {
-            firstname = $rdf.st(webidRes, FOAF('givenName'), $rdf.lit(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].firstname = new $scope.ProfileElement(firstname);
-        }
-        // Lastname
-        if (!$scope.profiles[webid].lastname || $scope.profiles[webid].lastname.value.length == 0) {
-          var lastname = g.statementsMatching(webidRes, FOAF('familyName'), undefined)[0];
-          if (!lastname || lastname['object']['value'].length == 0) {
-            lastname = $rdf.st(webidRes, FOAF('familyName'), $rdf.lit(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].lastname = new $scope.ProfileElement(lastname);
-        }
-        // Nickname
-        if (!$scope.profiles[webid].nick || $scope.profiles[webid].nick.value.length == 0) {
-          var nick = g.statementsMatching(webidRes, FOAF('nick'), undefined)[0];
-          if (!nick || nick['object']['value'].length == 0) {
-            nick = $rdf.st(webidRes, FOAF('nick'), $rdf.lit(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].nick = new $scope.ProfileElement(nick);
-        }
-        // Gender
-        if (!$scope.profiles[webid].gender || $scope.profiles[webid].gender.value.length == 0) {
-          var gender = g.statementsMatching(webidRes, FOAF('gender'), undefined)[0];
-          if (!gender || gender['object']['value'].length == 0) {
-            gender = $rdf.st(webidRes, FOAF('gender'), $rdf.lit(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].gender = new $scope.ProfileElement(gender);
-        }
-
-        // Get profile picture
-        if (!$scope.profiles[webid].picture || $scope.profiles[webid].picture.value.length == 0) {
-          var img = g.statementsMatching(webidRes, FOAF('img'), undefined)[0];
-          var pic;
-          if (img) {
-            pic = img;
-          } else {
-            // check if profile uses depic instead
-            var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
-            if (depic) {
-              pic = depic;
-            }
-          }
-          if (!pic || pic['object']['value'].length == 0) {
-            pic = $rdf.st(webidRes, FOAF('img'), $rdf.sym(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].picture = new $scope.ProfileElement(pic);
-        }
-
-        // Background image
-        if (!$scope.profiles[webid].bgpicture || $scope.profiles[webid].bgpicture.value.length == 0) {
-          var bgpic = g.statementsMatching(webidRes, UI('backgroundImage'), undefined)[0];
-          if (!bgpic || bgpic['object']['value'].length == 0) {
-            bgpic = $rdf.st(webidRes, UI('backgroundImage'), $rdf.sym(''), $rdf.sym(''));
-          }
-          $scope.profiles[webid].bgpicture = new $scope.ProfileElement(bgpic);
-        }
-
-        // Phones
-        if (!$scope.profiles[webid].phones) {
-          $scope.profiles[webid].phones = [];
-        }
-        var phones = g.statementsMatching(webidRes, FOAF('phone'), undefined);
-        if (phones.length > 0) {
-          phones.forEach(function(phone){
-            $scope.profiles[webid].phones.push(new $scope.ProfileElement(phone));
+          // Done, now add statements to knowledge base
+          g.statementsMatching(undefined, undefined, undefined, $rdf.sym(docURI)).forEach(function(statement) {
+            $scope.kb.add(statement['subject'], statement['predicate'], statement['object'], statement['why']);
           });
-        }
+          __kb = $scope.kb;
 
-        // Emails
-        if (!$scope.profiles[webid].emails) {
-          $scope.profiles[webid].emails = [];
-        }
-        var emails = g.statementsMatching(webidRes, FOAF('mbox'), undefined);
-        if (emails.length > 0) {
-          emails.forEach(function(email){
-            $scope.profiles[webid].emails.push(new $scope.ProfileElement(email));
-          });
-        }
+          $scope.profiles[webid].loading = false;
 
-        // Blogs
-        if (!$scope.profiles[webid].blogs) {
-          $scope.profiles[webid].blogs = [];
-        }
-        var blogs = g.statementsMatching(webidRes, FOAF('weblog'), undefined);
-        if (blogs.length > 0) {
-          blogs.forEach(function(blog){
-            $scope.profiles[webid].blogs.push(new $scope.ProfileElement(blog));
-          });
-        }
+          if ($scope.authenticated == webid) {
+            $scope.profile = $scope.profiles[webid];
+            __profile = $scope.profile;
+            $scope.saveCredentials($scope.authenticated);
+          }
 
-        // Homepages
-        if (!$scope.profiles[webid].homepages) {
-          $scope.profiles[webid].homepages = [];
-        }
-        var homepages = g.statementsMatching(webidRes, FOAF('homepage'), undefined);
-        if (homepages.length > 0) {
-          homepages.forEach(function(homepage){
-            $scope.profiles[webid].homepages.push(new $scope.ProfileElement(homepage));
-          });
-        }
+          $scope.$apply();
 
-        // Workpages
-        if (!$scope.profiles[webid].workpages) {
-          $scope.profiles[webid].workpages = [];
+          // debug
+          if (authenticated) {
+            $scope.loginTLSButtonText = "WebID-TLS Login";
+            var authUser = ($scope.profiles[webid].fullname.value)?" as "+$scope.profiles[webid].fullname.value:"";  
+            Notifier.success('Authenticated'+authUser);
+            $scope.saveCredentials($scope.authenticated, redirect);
+          }
+          // return promise
+          resolve($scope.profiles[webid]);
         }
-        var workpages = g.statementsMatching(webidRes, FOAF('workplaceHomepage'), undefined);
-        if (workpages.length > 0) {
-          workpages.forEach(function(workpage){
-            $scope.profiles[webid].workpages.push(new $scope.ProfileElement(workpage));
-          });
-        }
-
-        // Certificates
-        if (!$scope.profiles[webid].certs) {
-          $scope.profiles[webid].certs = [];
-        }
-        var certRefs = g.statementsMatching(webidRes, CERT('key'), undefined);
-        if (certRefs.length > 0) {
-          certRefs.forEach(function(cRef){
-            var c = g.statementsMatching(cRef['object'], RDFS('comment'), undefined)[0];
-            var d = g.statementsMatching(cRef['object'], DCT('modified'), undefined)[0];
-            var e = g.statementsMatching(cRef['object'], CERT('exponent'), undefined)[0];
-            var m = g.statementsMatching(cRef['object'], CERT('modulus'), undefined)[0];
-            if (e && m) {
-              var cert = {
-                key: new $scope.ProfileElement(cRef),
-                comment: new $scope.ProfileElement(c), 
-                modified: new $scope.ProfileElement(d),
-                exponent: new $scope.ProfileElement(e),
-                modulus: new $scope.ProfileElement(m)
-              };
-              $scope.profiles[webid].certs.push(cert);
-            }
-          });
-        }
-
-        // Done, now add statements to knowledge base
-        g.statementsMatching(undefined, undefined, undefined, $rdf.sym(docURI)).forEach(function(statement) {
-          $scope.kb.add(statement['subject'], statement['predicate'], statement['object'], statement['why']);
-        });
-        __kb = $scope.kb;
-
-        $scope.profiles[webid].loading = false;
-
-        if ($scope.authenticated == webid) {
-          $scope.profile = $scope.profiles[webid];
-          __profile = $scope.profile;
-          $scope.saveCredentials($scope.authenticated);
-        }
-
-        $scope.$apply();
-
-        // debug
-        if (authenticated) {
-          $scope.loginButtonText = "Login";
-          var authUser = ($scope.profiles[webid].fullname.value)?" as "+$scope.profiles[webid].fullname.value:"";  
-          Notifier.success('Authenticated'+authUser);
-          $scope.saveCredentials($scope.authenticated, redirect);
-        }
-      }
+      });
     });
   };
 
@@ -503,8 +524,8 @@ angular.module( 'App', [
     }
   };
 
-  $scope.login = function(redirect) {
-    $scope.loginButtonText = 'Loggin in...';
+  $scope.TLSlogin = function(redirect) {
+    $scope.loginTLSButtonText = 'Loggin in...';
     $http({
       method: 'HEAD',
       url: "https://rww.io/",
@@ -517,7 +538,7 @@ angular.module( 'App', [
           $scope.webid = user;
         }
         $scope.getProfile(user, true, redirect);
-        $scope.loginButtonText = 'Logged in';
+        $scope.loginTLSButtonText = 'Logged in';
       } else {
         Notifier.warning('WebID-TLS authentication failed.');
         console.log('WebID-TLS authentication failed.');
@@ -525,7 +546,7 @@ angular.module( 'App', [
     }).error(function(data, status, headers) {
       Notifier.error('Could not connect to auth server: HTTP '+status);
       console.log('Could not connect to auth server: HTTP '+status);
-      $scope.loginButtonText = 'Login done';
+      $scope.loginTLSButtonText = 'WebID-TLS Login';
     });
   };
 

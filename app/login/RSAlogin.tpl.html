@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="row s12 center">
+    <h5>Connect to your key store</h5>
+  </div>
+  <form>
+    <div class="row s12 valign-wrapper center card-panel">
+      <div class="input-field col s9 m3 valign flex">
+        <input id="webid" type="text" ng-model="toFetch">
+        <label for="webid" ng-class="{active: toFetch.length > 0}">Type your WebID</label>
+      </div>
+      <div class="col s3 m3 valign">
+        <button class="btn blue" type="submit" ng-click="loadProfile()">
+          Load
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
