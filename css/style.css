@@ -1,5 +1,6 @@
 body {
 	color: #fff;
+	font-weight: 300;
 }
 
 footer {
@@ -14,7 +15,6 @@ footer {
 
 .modal {
 	color: #434343;
-	font-size: 20px;
 }
 
 .row .col {
@@ -68,7 +68,7 @@ ul.side-nav li a {
 }
 
 #toggle-sidenav {
-	padding: 0 20px 0 10px;
+	padding: 0 20px 0 20px;
 	position: relative;
 	cursor: pointer;
 	font-size: 32px;
@@ -254,7 +254,7 @@ ul.side-nav li a {
 }
 
 form {
-	font-weight: 200;
+	font-weight: 300;
 }
 .pick-source {
 	background-color: #fff;
@@ -306,8 +306,8 @@ form {
 .right-10 {
 	margin-right: 10px!important;
 }
-.pad-right-10 {
-	padding-right: 10px!important;
+.pad-right-20 {
+	padding-right: 20px!important;
 }
 
 .w-500 {
