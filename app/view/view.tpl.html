@@ -24,10 +24,10 @@
         </div>
         <!-- Name -->
         <div class="profile-large-name right col s12 m8">
-          <h4 class="">
+          <h2 class="">
             {{profile.fullname.value}}
-          </h4>
-          <div class="truncate"><i class="mdi-content-link valign right-10"></i><a href="{{profile.webid}}" class="black-text" target="_blank" title="{{profile.webid}}">{{profile.webid}}</a></div>
+          </h2>
+          <div class="truncate"><span aria-hidden="true" class="mdi-content-link valign right-10"></span><a href="{{profile.webid}}" class="black-text" target="_blank" title="{{profile.webid}}">{{profile.webid}}</a></div>
         </div>
       </div>
     </div>
@@ -38,10 +38,10 @@
         <div class="card-panel c-p-l">
           <div class="row left-align">
             <div class="col s12">
-              <h5 class="valign-wrapper align-left">
-                <i class="mdi-action-account-box valign right-10"></i>
+              <h3 class="valign-wrapper align-left">
+                <span aria-hidden="true" class="mdi-action-account-box valign right-10"></span>
                 <strong>Basic information</strong>
-              </h5>
+              </h3>
             </div>
           </div>
           <div class="row left-align" ng-if="profile.fullname.value">
@@ -89,10 +89,10 @@
         <div class="card-panel c-p-l" ng-if="profile.phones.length > 0">
           <div class="row left-align">
             <div class="col s12">
-              <h5 class="valign-wrapper align-left">
-                <i class="mdi-communication-phone valign right-10"></i>
+              <h3 class="valign-wrapper align-left">
+                <span aria-hidden="true" class="mdi-communication-phone valign right-10"></span>
                 <strong>Phone numbers</strong>
-              </h5>
+              </h3>
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, phone) in profile.phones track by $index">
@@ -105,10 +105,10 @@
         <div class="card-panel c-p-r" ng-if="profile.emails.length > 0">
           <div class="row left-align">
             <div class="col s12">
-              <h5 class="valign-wrapper align-left">
-                <i class="mdi-communication-email valign right-10"></i>
+              <h3 class="valign-wrapper align-left">
+                <span aria-hidden="true" class="mdi-communication-email valign right-10"></span>
                 <strong>Email addresses</strong>
-              </h5>
+              </h3>
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, email) in profile.emails track by $index">
@@ -124,15 +124,15 @@
         <div class="card-panel c-p-r" ng-if="profile.blogs.length > 0">
           <div class="row left-align">
             <div class="col s12">
-              <h5 class="valign-wrapper align-left">
-                <i class="mdi-maps-rate-review valign right-10"></i>
+              <h3 class="valign-wrapper align-left">
+                <span aria-hidden="true" class="mdi-maps-rate-review valign right-10"></span>
                 <strong>Blogs</strong>
-              </h5>
+              </h3>
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, blog) in profile.blogs track by $index">
             <div class="col s12 truncate">
-              <i class="mdi-content-link valign right-10"></i><a href="{{blog.value}}" target="_blank" title="{{blog.value}}">{{blog.value}}</a>
+              <span aria-hidden="true" class="mdi-content-link valign right-10"></span><a href="{{blog.value}}" target="_blank" title="{{blog.value}}">{{blog.value}}</a>
             </div>
           </div>
         </div>
@@ -140,15 +140,15 @@
         <div class="card-panel c-p-r" ng-if="profile.homepages.length > 0">
           <div class="row left-align">
             <div class="col s12">
-              <h5 class="valign-wrapper align-left">
-                <i class="mdi-social-public valign right-10"></i>
+              <h3 class="valign-wrapper align-left">
+                <span aria-hidden="true" class="mdi-social-public valign right-10"></span>
                 <strong>Personal homepages</strong>
-              </h5>
+              </h3>
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, homepage) in profile.homepages track by $index">
             <div class="col s12 truncate">
-              <i class="mdi-content-link valign right-10"></i><a href="{{homepage.value}}" target="_blank" title="{{homepage.value}}">{{homepage.value}}</a>
+              <span aria-hidden="true" class="mdi-content-link valign right-10"></span><a href="{{homepage.value}}" target="_blank" title="{{homepage.value}}">{{homepage.value}}</a>
             </div>
           </div>
         </div>
@@ -156,15 +156,15 @@
         <div class="card-panel c-p-r" ng-if="profile.workpages.length > 0">
           <div class="row left-align">
             <div class="col s12">
-              <h5 class="valign-wrapper align-left">
-                <i class="mdi-social-public valign right-10"></i>
+              <h3 class="valign-wrapper align-left">
+                <span aria-hidden="true" class="mdi-social-public valign right-10"></span>
                 <strong>Work homepages</strong>
-              </h5>
+              </h3>
             </div>
           </div>
           <div class="row left-align" ng-repeat="(id, workpage) in profile.workpages track by $index">
             <div class="col s12 truncate">
-              <i class="mdi-content-link valign right-10"></i><a href="{{workpage.value}}" target="_blank" title="{{workpage.value}}">{{workpage.value}}</a>
+              <span aria-hidden="true" class="mdi-content-link valign right-10"></span><a href="{{workpage.value}}" target="_blank" title="{{workpage.value}}">{{workpage.value}}</a>
             </div>
           </div>
         </div>
@@ -176,7 +176,7 @@
     <form>
       <div class="col s12">
         <div class="row center">
-          <h4>Type a WebID or <a href="#/login" class="white-text show-link">login</a> to view your profile.</h4>
+          <h2>Type a WebID or <a href="#/login" class="white-text show-link">login</a> to view your profile.</h2>
         </div>
         <div class="row">
           <div class="input-field">
