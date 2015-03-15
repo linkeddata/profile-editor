@@ -314,7 +314,7 @@ angular.module( 'App.edit', [
                   '    <div class="modal-body">'+
                   '      <div class="row s12">'+
                   '        <div class="col s12 m4 valign-wrapper truncate left inline-block" ng-repeat="src in $parent.profile.sources">'+
-                  '          <i class="mdi-file-folder-shared valign right-10 inline-block"></i>'+
+                  '          <span aria-hidden="true" class="mdi-file-folder-shared valign right-10 inline-block"></span>'+
                   '          <a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>'+
                   '        </div>'+
                   '      </div>'+

@@ -9,6 +9,18 @@ footer {
 	width: 100%;
 }
 
+h2 {
+    font-size: 2.28rem;
+    line-height: 2.508rem;
+    margin: 1.14rem 0px 0.912rem;
+}
+
+h3 {
+    font-size: 1.64rem;
+    line-height: 1.804rem;
+    margin: 0.82rem 0px 0.656rem;
+}
+
 .main {
 	padding-top: 20px;
 }
@@ -30,6 +42,12 @@ nav .brand-logo {
 	left: inherit;
 	width: inherit;
 	font-weight: 200;
+}
+nav .brand-logo h1 {
+    font-weight: 200;
+    font-size: 2.1rem;
+    line-height: 1rem;
+    margin: 0;
 }
 .brand-text {
 	display: inline-block!important;
@@ -177,7 +195,7 @@ ul.side-nav li a {
 	margin-top: -70px;
 	color: #434343;
 }
-.profile-large-name h4 {
+.profile-large-name h2 {
 	margin: 1rem 0 0.2rem 0;
 }
 .change-bg {
@@ -436,4 +454,8 @@ form {
 .input-field input.valid {
 	border-bottom: 1px solid #90caf9;
 	box-shadow: 0 1px 0 0 #90caf9;
+}
+
+.blue {
+    background-color: #0378d5!important;
 }
