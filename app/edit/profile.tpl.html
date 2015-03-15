@@ -159,19 +159,12 @@
         <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-social-public valign right-10"></span>Personal pages</h4>
       </div>
       <div class="input-field col s12" ng-repeat="(id, homepage) in profile.homepages track by $index">
-<<<<<<< HEAD
         <form>
-          <a class="prefix" ng-click="deleteHomepage(id)"><i class="mdi-action-delete"></i></a>
+          <a class="prefix" ng-click="deleteHomepage(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
           <input id="homepage" type="text" ng-model="homepage.value" ng-blur="updateObject(homepage)" ng-disabled="homepage.locked">
           <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage{{homepage.locked?'...updating':''}}</label>
           <div pick-source obj="homepage" ng-if="homepage.picker"></div>
         </form>
-=======
-        <a class="prefix" ng-click="deleteHomepage(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
-        <input id="homepage" type="text" ng-model="homepage.value" ng-blur="updateObject(homepage)" ng-disabled="homepage.locked">
-        <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage{{homepage.locked?'...updating':''}}</label>
-        <div pick-source obj="homepage" ng-if="homepage.picker"></div>
->>>>>>> cptvitamin/a11y-enhancements
       </div>
       <div class="col s12">
         <a class="btn blue" ng-click="addHomepage()"><span aria-hidden="true" class="mdi-content-add left"></span>homepage</a>
