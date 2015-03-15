@@ -38,9 +38,9 @@
         </div>
         <!-- Name -->
         <div class="profile-large-name right col s12 m8">
-          <h4 class="">
+          <h2 class="">
             {{profile.fullname.value}}
-          </h4>
+          </h2>
           <div class="truncate"><span aria-hidden="true" class="mdi-content-link valign right-10"></span><a href="{{profile.webid}}" class="black-text" target="_blank" title="{{profile.webid}}">{{profile.webid}}</a></div>
         </div>
       </div>
@@ -48,7 +48,7 @@
 
     <div class="row card-panel">
       <div class="col s12 m8">
-        <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-box valign right-10"></span>Name</h4>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-box valign right-10"></span>Name</h3>
       </div>
       <div class="col s12">
         <div class="input-field pad-right-10 col s12 m6">
@@ -84,7 +84,7 @@
 
     <div class="row card-panel">
       <div class="col s12">
-        <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-communication-phone valign right-10"></span>Phone numbers</h4>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-communication-phone valign right-10"></span>Phone numbers</h3>
       </div>
       <div class="input-field col s12" ng-repeat="(id, phone) in profile.phones track by $index">
         <form>
@@ -101,7 +101,7 @@
 
     <div class="row card-panel">
       <div class="col s12">
-        <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-communication-email valign right-10"></span>Emails</h4>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-communication-email valign right-10"></span>Emails</h3>
       </div>
       <div class="input-field col s12" ng-repeat="(id, email) in profile.emails track by $index">
         <form>
@@ -118,7 +118,7 @@
 
     <div class="row card-panel">
       <div class="col s12">
-        <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-maps-rate-review valign right-10"></span>Blogs</h4>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-maps-rate-review valign right-10"></span>Blogs</h3>
       </div>
       <div class="input-field col s12" ng-repeat="(id, blog) in profile.blogs track by $index">
         <form>
@@ -135,7 +135,7 @@
 
     <div class="row card-panel">
       <div class="col s12">
-        <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-social-public valign right-10"></span>Personal pages</h4>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-social-public valign right-10"></span>Personal pages</h3>
       </div>
       <div class="input-field col s12" ng-repeat="(id, homepage) in profile.homepages track by $index">
         <form>
@@ -152,7 +152,7 @@
 
     <div class="row card-panel">
       <div class="col s12">
-        <h4 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-social-public valign right-10"></span>Work pages</h4>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-social-public valign right-10"></span>Work pages</h3>
       </div>
       <div class="input-field col s12" ng-repeat="(id, workpage) in profile.workpages track by $index">
         <form>
