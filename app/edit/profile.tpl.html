@@ -88,14 +88,18 @@
       </div>
       <div class="input-field col s12" ng-repeat="(id, phone) in profile.phones track by $index">
         <form>
-          <a class="prefix" ng-click="deletePhone(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
+          <a class="prefix" ng-click="deletePhone(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+            <span class="sr">Delete Phone</span>
+          </a>
           <input id="telephone" type="tel" ng-model="phone.value" ng-change="space2dash(phone)" ng-blur="updateObject(phone)" ng-disabled="phone.locked">
           <label for="telephone" ng-class="{active: phone.value.length > 0}">Phone{{phone.locked?'...updating':''}}</label>
           <div pick-source obj="phone" ng-if="phone.picker"></div>
         </form>
       </div>
       <div class="col s12">
-        <a class="btn blue" ng-click="addPhone()"><span aria-hidden="true" class="mdi-content-add left"></span>phone</a>
+        <a class="btn blue" ng-click="addPhone()"><span aria-hidden="true" class="mdi-content-add left"></span>
+          <span class="sr">Add </span>phone
+        </a>
       </div>
     </div>
 
@@ -105,14 +109,18 @@
       </div>
       <div class="input-field col s12" ng-repeat="(id, email) in profile.emails track by $index">
         <form>
-          <a class="prefix" ng-click="deleteEmail(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
+          <a class="prefix" ng-click="deleteEmail(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+            <span class="sr">Delete Email</span>
+          </a>
           <input id="email" type="text" ng-model="email.value" ng-blur="updateObject(email)" ng-disabled="email.locked">
           <label for="email" ng-class="{active: email.value.length > 0}">Email{{email.locked?'...updating':''}}</label>
           <div pick-source obj="email" ng-if="email.picker"></div>
         </form>
       </div>
       <div class="col s12">
-          <a class="btn blue" ng-click="addEmail()"><span aria-hidden="true" class="mdi-content-add left"></span>email</a>
+          <a class="btn blue" ng-click="addEmail()"><span aria-hidden="true" class="mdi-content-add left"></span>
+            <span class="sr">Add </span>email
+          </a>
       </div>
     </div>
 
@@ -122,14 +130,18 @@
       </div>
       <div class="input-field col s12" ng-repeat="(id, blog) in profile.blogs track by $index">
         <form>
-          <a class="prefix" ng-click="deleteBlog(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
+          <a class="prefix" ng-click="deleteBlog(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+            <span class="sr">Delete Blog</span>
+          </a>
           <input id="blog" type="text" ng-model="blog.value" ng-blur="updateObject(blog)" ng-disabled="blog.locked">
           <label for="blog" ng-class="{active: blog.value.length > 0}">Blog{{blog.locked?'...updating':''}}</label>
           <div pick-source obj="blog" ng-if="blog.picker"></div>
         </form>
       </div>
       <div class="col s12">
-          <a class="btn blue" ng-click="addBlog()"><span aria-hidden="true" class="mdi-content-add left"></span>blog</a>
+          <a class="btn blue" ng-click="addBlog()"><span aria-hidden="true" class="mdi-content-add left"></span>
+            <span class="sr">Add </span>blog
+          </a>
       </div>
     </div>
 
@@ -139,14 +151,18 @@
       </div>
       <div class="input-field col s12" ng-repeat="(id, homepage) in profile.homepages track by $index">
         <form>
-          <a class="prefix" ng-click="deleteHomepage(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
+          <a class="prefix" ng-click="deleteHomepage(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+            <span class="sr">Delete Personal homepage</span>
+          </a>
           <input id="homepage" type="text" ng-model="homepage.value" ng-blur="updateObject(homepage)" ng-disabled="homepage.locked">
           <label for="homepage" ng-class="{active: homepage.value.length > 0}">Personal homepage{{homepage.locked?'...updating':''}}</label>
           <div pick-source obj="homepage" ng-if="homepage.picker"></div>
         </form>
       </div>
       <div class="col s12">
-        <a class="btn blue" ng-click="addHomepage()"><span aria-hidden="true" class="mdi-content-add left"></span>homepage</a>
+        <a class="btn blue" ng-click="addHomepage()"><span aria-hidden="true" class="mdi-content-add left"></span>
+          <span class="sr">Add </span>homepage
+        </a>
       </div>
     </div>
 
@@ -156,14 +172,18 @@
       </div>
       <div class="input-field col s12" ng-repeat="(id, workpage) in profile.workpages track by $index">
         <form>
-          <a class="prefix" ng-click="deleteWorkpage(id)"><span aria-hidden="true" class="mdi-action-delete"></span></a>
+          <a class="prefix" ng-click="deleteWorkpage(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+            <span class="sr">Delete Work homepage</span>
+          </a>
           <input id="workpage" type="text" ng-model="workpage.value" ng-blur="updateObject(workpage)" ng-disabled="workpage.locked">
           <label for="workpage" ng-class="{active: workpage.value.length > 0}">Work homepage{{workpage.locked?'...updating':''}}</label>
           <div pick-source obj="workpage" ng-if="workpage.picker"></div>
         </form>
       </div>
       <div class="col s12">
-        <a class="btn blue" ng-click="addWorkpage()"><span aria-hidden="true" class="mdi-content-add left"></span>workpage</a>
+        <a class="btn blue" ng-click="addWorkpage()"><span aria-hidden="true" class="mdi-content-add left"></span>
+          <span class="sr">Add </span>workpage
+        </a>
       </div>
     </div>
 
@@ -173,16 +193,16 @@
     <form>
       <div class="col s12">
         <div class="row center">
-          <h2>Type a WebID or <a href="#/login" class="white-text show-link">login</a> to edit your profile.</h2>
+          <h2 id="profileDesc">Type a WebID or <a href="#/login" class="white-text show-link">login</a> to edit your profile.</h2>
         </div>
         <div class="row">
           <div class="input-field">
             <input id="profile" type="text" ng-model="form.webid">
-            <label for="profile" class="white-text" ng-class="{active: form.webid.length > 0}">WebID</label>
+            <label for="profile" class="white-text" ng-class="{active: form.webid.length > 0}" aria-describedby="profileDesc">WebID</label>
           </div>
         </div>
         <div class="row center">
-          <button class="btn blue" ng-click="editProfile()" type="submit">Edit</button>
+          <button class="btn blue" ng-click="editProfile()" type="submit">Edit<span class="sr"> your profile</span></button>
         </div>
       </div>
     </form>
@@ -197,12 +217,12 @@
           </div>
         </div>
         <div class="col s12 m6 valign-wrapper">
-          <img id="result-image" class="valign" ng-src="{{croppedImage}}" />
+          <img id="result-image" class="valign" ng-src="{{croppedImage}}" alt="Profile image" />
         </div>
       </div>
       <div class="modal-footer">
         <a href="#" class="blue white-text btn-flat modal-action modal-close">Cancel</a>
-        <a href="#" class="blue white-text btn-flat modal-action modal-close right-10" ng-click="savePicture()">Save</a>
+        <a href="#" class="blue white-text btn-flat modal-action modal-close right-10" ng-click="savePicture()">Save<span class="sr"> picture</span></a>
       </div>
     </div>
   </div>
