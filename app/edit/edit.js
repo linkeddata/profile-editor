@@ -309,7 +309,7 @@ angular.module( 'App.edit', [
         template: '<div class="modal s12" id="location-picker">'+
                   '  <div class="modal-content">'+
                   '    <div class="modal-header">'+
-                  '      <p>Put this information in:</p>'+
+                  '      <h5>Put this information in:</h5>'+
                   '    </div>'+
                   '    <div class="modal-body">'+
                   '      <div class="row s12">'+
@@ -355,6 +355,8 @@ angular.module( 'App.edit', [
     };
 });
 
+<<<<<<< HEAD
+=======
 // .directive('pickSource', function () {
 //     return {
 //         restrict: 'AE',
@@ -390,3 +392,4 @@ angular.module( 'App.edit', [
 //         }
 //     };
 // });
+>>>>>>> cptvitamin/a11y-enhancements

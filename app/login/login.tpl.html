@@ -1,13 +1,25 @@
 <div class="row">
   <form class="col s12 center">
     <div class="row">
+<<<<<<< HEAD
+    	<h3>WebID Login</h3>
+=======
     	<h2>Authenticate using WebID-TLS</h2>
+>>>>>>> cptvitamin/a11y-enhancements
     </div>
   	<div class="row valign-wrapper" ng-show="$parent.profile.loading">
         <div class="valign right-10">Loading profile </div><spinner class="valign"></spinner>
     </div>
-    <div class="row" ng-hide="$parent.profile.authenticated || $parent.profile.authenticated">
-      <button class="btn blue" type="submit" name="action" ng-click="login()">{{$parent.loginButtonText}}</button>
+    <div class="row s12" ng-hide="$parent.profile.authenticated || $parent.profile.authenticated">
+      <div class="col s12">
+        <button class="btn blue" type="submit" name="action" ng-click="TLSlogin()">{{$parent.loginTLSButtonText}}</button>
+      </div>
+     <!--  <div class="col s12 offset-m3 m3">
+        <button class="btn blue" type="submit" name="action" ng-click="TLSlogin()">{{$parent.loginTLSButtonText}}</button>
+      </div>
+      <div class="col s12 m3">
+        <button class="btn blue" type="submit" name="action" ng-click="RSAlogin()">{{$parent.loginRSAButtonText}}</button>
+      </div> -->
     </div>
   </form>
 </div>
