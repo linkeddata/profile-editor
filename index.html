@@ -23,7 +23,7 @@
       </div>
       <nav>
         <div class="blue-grey darken-4">
-          <div data-activates="left-menu" id="toggle-sidenav" class="left"><i class="mdi-navigation-menu"></i></div>
+          <div data-activates="left-menu" id="toggle-sidenav" class="left"><span aria-hidden="true" class="mdi-navigation-menu"></span></div>
           <div class="brand-logo valign-wrapper">
             <div ng-if="pageTitle" class="valign brand-text">
               <h1>{{pageTitle}}</h1>
@@ -31,20 +31,20 @@
             </div>
           </div>
           <div ng-if="toLoc" class="action valign right">
-              <div class="valign-wrapper pointer right-10" ng-if="toLoc == '/view'" ng-click="switchTo()"><i class="mdi-action-done valign right-10"></i>View</div>
-              <div class="valign-wrapper pointer right-10" ng-if="authenticated == toWebID && toLoc == '/edit/profile'" ng-click="switchTo()"><i class="mdi-editor-mode-edit right-10"></i>Edit</div>
+              <div class="valign-wrapper pointer right-10" ng-if="toLoc == '/view'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-action-done valign right-10"></span>View</div>
+              <div class="valign-wrapper pointer right-10" ng-if="authenticated == toWebID && toLoc == '/edit/profile'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-editor-mode-edit right-10"></span>Edit</div>
           </div>
           
           <ul class="side-nav blue-grey darken-3" id="left-menu">
             <li class="blue accent-2" ng-show="authenticated"><profile-card></profile-card></li>
             <li ng-show="authenticated">
-              <a href="#/edit/profile" class="white-text valign-wrapper align-left"><i class="mdi-action-account-box prefix valign inline-block"></i><span class="valign inline-block">Edit profile</span></a></li>
+              <a href="#/edit/profile" class="white-text valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-box prefix valign inline-block"></span><span class="valign inline-block">Edit profile</span></a></li>
             <li ng-show="authenticated">
-              <a href="#/share" class="valign-wrapper align-left white-text"><i class="mdi-social-share prefix valign"></i><span class="valign">Share my WebID</span></a></li>
+              <a href="#/share" class="valign-wrapper align-left white-text"><span aria-hidden="true" class="mdi-social-share prefix valign"></span><span class="valign">Share my WebID</span></a></li>
             <li ng-show="authenticated">
-              <a href="#" ng-click="logout()" class="valign-wrapper align-left white-text"><i class="mdi-action-exit-to-app prefix valign"></i><span class="valign">Logout</span></a></li>
+              <a href="#" ng-click="logout()" class="valign-wrapper align-left white-text"><span aria-hidden="true" class="mdi-action-exit-to-app prefix valign"></span><span class="valign">Logout</span></a></li>
             <li ng-hide="authenticated">
-              <a href="#/login" class="valign-wrapper align-left white-text"><i class="mdi-action-exit-to-app prefix valign"></i><span class="valign">Login</span>
+              <a href="#/login" class="valign-wrapper align-left white-text"><span aria-hidden="true" class="mdi-action-exit-to-app prefix valign"></span><span class="valign">Login</span>
               </a>
             </li>
           </ul>
@@ -62,7 +62,7 @@
       <div class="footer-inner center">
         <p>
           &copy; 2015
-          | <a href="https://github.com/linkeddata/profile-editor/issues" target="_blank" class="white-text"><i class="mdi-action-info-outline"></i> Issue tracker</a>
+          | <a href="https://github.com/linkeddata/profile-editor/issues" target="_blank" class="white-text"><span aria-hidden="true" class="mdi-action-info-outline"></span> Issue tracker</a>
           | <a href="https://github.com/linkeddata/profile-editor" target="_blank" class="white-text">GitHub</a>
         </p>
       </div>
