@@ -314,7 +314,7 @@ angular.module( 'App.edit', [
                   '    <div class="modal-body">'+
                   '      <div class="row s12">'+
                   '        <div class="col s12 m4 valign-wrapper truncate left inline-block" ng-repeat="src in $parent.profile.sources">'+
-                  '          <i class="mdi-file-folder-shared valign right-10 inline-block"></i>'+
+                  '          <span aria-hidden="true" class="mdi-file-folder-shared valign right-10 inline-block"></span>'+
                   '          <a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>'+
                   '        </div>'+
                   '      </div>'+
@@ -355,3 +355,41 @@ angular.module( 'App.edit', [
     };
 });
 
+<<<<<<< HEAD
+=======
+// .directive('pickSource', function () {
+//     return {
+//         restrict: 'AE',
+//         scope: {
+//           obj: '='
+//         },
+//         transclude: true,
+//         template: '<div class="left row s12"><h5>Add to profile:</h5></div>'+
+//           '<div class="row s12 valign-wrapper truncate left" ng-repeat="src in $parent.profile.sources">'+
+//           '  <span aria-hidden="true" class="mdi-file-folder-shared valign right-10"></span><a href="" class="dotted" ng-click="setWhy(src.uri)">{{src.name}}</a>'+
+//           '</div>'+
+//           '<button class="btn blue" ng-click="cancel()">Cancel</button>',
+//         link: function($scope, $element, $attrs) {
+//           $element.addClass('pick-source');
+//           $element.addClass('arrow-box');
+//           $scope.setWhy = function(uri) {
+//             $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
+//             console.log("Set Why to:"+uri);
+//             console.log($scope.obj.statement['why']);
+//             $scope.cancel();
+//             console.log($attrs.avatar, $attrs.bgpicture)
+//             if ($attrs.avatar) {
+//               $scope.$parent.savePicture();
+//             } else if ($attrs.bgpicture) {
+//               $scope.$parent.saveBackground();
+//             } else {
+//               $scope.$parent.updateObject($scope.obj);
+//             }
+//           }
+//           $scope.cancel = function() {
+//             $scope.obj.picker = false;
+//           }
+//         }
+//     };
+// });
+>>>>>>> cptvitamin/a11y-enhancements
