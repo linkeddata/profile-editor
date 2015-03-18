@@ -1,0 +1,51 @@
+<div class="row">
+  <div class="row s12 center" ng-if="profile.webid" ng-hide="profile.webid && !profile.loading">
+      <div class="row s12 center">
+        <spinner class="white-text"></spinner>
+      </div>
+      <div class="row s12 white-text center">Loading profile...</div>
+  </div>
+  <div class="col s12 center" ng-show="profile.friends && profile.friends.length == 0">
+    <h5>The profile does not contain any friends.</h5>
+  </div>
+
+  <div ng-if="!profile.webid">
+    <form>
+      <div class="col s12">
+        <div class="row center">
+          <h2 id="profileDesc">Type a WebID or <a href="#/login" class="white-text show-link">login</a> to view the friends list.</h2>
+        </div>
+        <div class="row">
+          <div class="input-field">
+            <input id="profile" type="text" ng-model="form.webid">
+            <label for="profile" class="white-text" ng-class="{active: form.webid.length > 0}" aria-describedby="profileDesc">WebID</label>
+          </div>
+        </div>
+        <div class="row center">
+          <button class="btn blue" ng-click="viewFriends()" type="submit">View<span class="sr"> friends list</span></button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="row card-panel" ng-if="profile.webid">
+      <div class="col s12">
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>Friends</h3>
+      </div>
+      <div class="input-field col s12" ng-repeat="(id, friend) in profile.friends track by $index">
+        <form>
+          <a class="prefix" ng-click="Unfriend(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+            <span class="sr">Delete Friend</span>
+          </a>
+          <input id="friend_{{id}}" type="tel" ng-model="friend.value" ng-blur="updateObject(friend)" ng-disabled="friend.locked">
+          <label for="friend_{{id}}" ng-class="{active: friend.value.length > 0}">Friend's WebID{{friend.locked?'...updating':''}}</label>
+          <div pick-source obj="friend" ng-if="friend.picker"></div>
+        </form>
+      </div>
+      <div class="col s12">
+        <a class="btn blue" ng-click="Befriend()"><span aria-hidden="true" class="mdi-content-add left"></span>
+          <span class="sr">Add </span>Friend
+        </a>
+      </div>
+    </div>
+</div>
