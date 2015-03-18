@@ -30,7 +30,7 @@
 
   <div class="row card-panel" ng-if="profile.webid">
       <div class="col s12">
-        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>Friends</h3>
+        <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span><span ng-show="profile.fullname">{{profile.fullname.value}}'s </span> Friends</h3>
       </div>
       <div class="input-field col s12" ng-repeat="(id, friend) in profile.friends track by $index">
         <form>
