@@ -1,7 +1,7 @@
 // Globals
 var __kb;
 var __profile;
-var PROXY = "https://rww.io/proxy.php?uri={uri}";
+var PROXY = "http://rww.io/proxy.php?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
@@ -26,6 +26,7 @@ angular.module( 'App', [
   'App.edit',
   'App.share',
   'App.certificates',
+  'App.friends',
   'ui.router'
 ])
 
@@ -264,7 +265,7 @@ angular.module( 'App', [
             $scope.profiles[webid].fullname = webid;
           }
           $scope.profiles[webid].loading = false;
-          $scope.loginTLSButtonText = "WebID-TLS Login";
+          $scope.loginTLSButtonText = "With certificate";
           $scope.$apply();
           // return promise
           // reject(ok, body, xhr);
@@ -454,6 +455,17 @@ angular.module( 'App', [
             });
           }
 
+          // Friends
+          if (!$scope.profiles[webid].friends) {
+            $scope.profiles[webid].friends = [];
+          }
+          var friends = g.statementsMatching(webidRes, FOAF('knows'), undefined);
+          if (friends.length > 0) {
+            friends.forEach(function(friend){
+              $scope.profiles[webid].friends.push(new $scope.ProfileElement(friend));
+            });
+          }
+
           // Certificates
           if (!$scope.profiles[webid].certs) {
             $scope.profiles[webid].certs = [];
@@ -496,7 +508,7 @@ angular.module( 'App', [
 
           // debug
           if (authenticated) {
-            $scope.loginTLSButtonText = "WebID-TLS Login";
+            $scope.loginTLSButtonText = "With certificate";
             var authUser = ($scope.profiles[webid].fullname.value)?" as "+$scope.profiles[webid].fullname.value:"";  
             Notifier.success('Authenticated'+authUser);
             $scope.saveCredentials($scope.authenticated, redirect);
@@ -546,7 +558,7 @@ angular.module( 'App', [
     }).error(function(data, status, headers) {
       Notifier.error('Could not connect to auth server: HTTP '+status);
       console.log('Could not connect to auth server: HTTP '+status);
-      $scope.loginTLSButtonText = 'WebID-TLS Login';
+      $scope.loginTLSButtonText = 'With certificate';
     });
   };
 

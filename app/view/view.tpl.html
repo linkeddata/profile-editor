@@ -17,8 +17,8 @@
         <div class="profile-large-avatar valign-wrapper center col s12 m4">
           <div class="profile-picture center valign-wrapper">
             <div class="relative center valign-wrapper">
-              <img ng-if="profile.picture.value" ng-src="{{profile.picture.value}}" />
-              <img ng-if="!profile.picture.value || profile.picture.value.length == 0" src="images/generic_photo.png" />
+              <img ng-if="profile.picture.value" ng-src="{{profile.picture.value}}" alt="Profile picture for {{profile.fullname.value}}" />
+              <img ng-if="!profile.picture.value || profile.picture.value.length == 0" src="images/generic_photo.png" alt="Generic profile picture" />
             </div>
           </div>
         </div>
@@ -185,7 +185,7 @@
           </div>
         </div>
         <div class="row center">
-          <button class="btn blue" ng-click="viewProfile()" type="submit">View</button>
+          <button class="btn blue" ng-click="viewProfile()" type="submit">View<span class="sr"> profile</span></button>
         </div>
       </div>
     </form>
