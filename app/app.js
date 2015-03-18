@@ -46,7 +46,11 @@ angular.module( 'App', [
 
 .run( function run () {
 })
-
+.filter('encodeURL', function() {
+  return function(url) {
+    return encodeURIComponent(url);
+  };
+})
 .controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state, $stateParams ) {
   $scope.showMenu = true;
   $scope.appuri = window.location.host+window.location.pathname;
@@ -92,6 +96,8 @@ angular.module( 'App', [
     if (this.value == this.prev && !force) {
       return;
     }
+
+    $scope.changeInProgress = true;
 
     if (!this.failed && this.value) {
       this.prev = angular.copy(this.value);
@@ -149,6 +155,7 @@ angular.module( 'App', [
 
   $scope.ProfileElement.prototype.deleteSubject = function (send) {
     this.locked = true;
+    $scope.changeInProgress = true;
     var query = '';
     var graphURI = '';
     var oldS = angular.copy(this.statement);
@@ -211,6 +218,7 @@ angular.module( 'App', [
     }).success(function(data, status, headers) {
       obj.locked = false;
       obj.uploading = false;
+      $scope.changeInProgress = false;
       Notifier.success('Profile updated!');
     }).error(function(data, status, headers) {
       obj.locked = false;
@@ -219,6 +227,7 @@ angular.module( 'App', [
       if (oldStatement) {
         obj.statement = oldStatement;
       }
+      $scope.changeInProgress = false;
       Notifier.error('Could not update profile: HTTP '+status);
       console.log(data);
     });
@@ -293,10 +302,9 @@ angular.module( 'App', [
             var lh = parseLinkHeader(xhr.getResponseHeader('Link'));
             if (lh['type'] && lh['type'].indexOf('http://www.w3.org/ns/ldp#Resource') >= 0 && 
                 $scope.profiles[webid].sources.indexOf(docURI) < 0) {
-              $scope.profiles[webid].sources.push({uri: docURI, name: docName});
+              $scope.profiles[webid].sources.push({uri: docURI, name: docName, loaded: false});
             }
           }
-
 
           // try to fetch additional data from sameAs, seeAlso and preferenceFile
           if (!forWebID) {
@@ -320,6 +328,7 @@ angular.module( 'App', [
                 }
               });
             }
+            $scope.profiles[webid].toLoad = sameAs.length + seeAlso.length + prefs.length + 1;
           }
 
           // get the user's Key Store URI
@@ -495,6 +504,14 @@ angular.module( 'App', [
             $scope.kb.add(statement['subject'], statement['predicate'], statement['object'], statement['why']);
           });
           __kb = $scope.kb;
+
+          $scope.profiles[webid].toLoad--;
+          console.log("Profiles left to load: "+$scope.profiles[webid].toLoad);
+          $scope.profiles[webid].sources.forEach(function(src) {
+            if (src.uri === docURI) {
+              src.loaded = true;
+            }
+          });
 
           $scope.profiles[webid].loading = false;
 
