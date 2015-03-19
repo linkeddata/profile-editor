@@ -68,6 +68,12 @@ angular.module( 'App', [
   // global knowledge base
   $scope.kb = new $rdf.graph();
 
+  $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    if (angular.isDefined(toState.data.pageTitle)) {
+      $('title')[0].innerHTML = toState.data.pageTitle + " - Profile Editor";
+    }
+  });
+
   $scope.ProfileElement = function(s) {
     this.locked = false;
     this.uploading = false;
@@ -628,12 +634,6 @@ angular.module( 'App', [
       $location.path('/edit/profile').replace();  
     }
   }
-
-  $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
-    if (angular.isDefined(toState.data.pageTitle)) {
-      $scope.pageTitle = toState.data.pageTitle;
-    }
-  });
 
   // initialize by retrieving user info from sessionStorage
   // retrieve from sessionStorage

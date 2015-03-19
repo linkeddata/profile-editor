@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="row s12 center" ng-if="profile.webid" ng-hide="profile.webid && !profile.loading">
+      <div class="row s12 center">
+        <spinner class="white-text"></spinner>
+      </div>
+      <div class="row s12 white-text center">Loading profile...</div>
+  </div>
+  <div class="col s12 center" ng-show="profile.friends && profile.friends.length == 0">
+    <h5>This profile does not contain any friends.</h5>
+  </div>
+
+  <div class="row" ng-show="profile.webid && !profile.loading">
+    <div class="col card-panel s12 center">
+      <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span><span ng-show="profile.fullname">{{profile.fullname.value}}'s </span> Friends</h3>
+    </div>
+  
+    <div class="col s12 card-panel" ng-repeat="(id, friend) in profile.friends track by $index">
+    
+
+        <span>{{friend.value}}</span>
+    
+
+    </div>
+    <div class="col s12" ng-show="authenticated">
+      <a class="btn blue" ng-click="editFriends()"><span aria-hidden="true" class="mdi-editor-mode-edit left right-10"></span>
+        <span class="sr">Switch to editor </span>Switch to editor
+      </a>
+    </div>
+  </div>
+
+  <div ng-if="!profile.webid">
+    <form>
+      <div class="col s12">
+        <div class="row center">
+          <h2 id="profileDesc">Type a WebID or <a href="#/login" class="white-text show-link">login</a> to view the friends list.</h2>
+        </div>
+        <div class="row">
+          <div class="input-field">
+            <input id="profile" type="text" ng-model="form.webid">
+            <label for="profile" class="white-text" ng-class="{active: form.webid.length > 0}" aria-describedby="profileDesc">WebID</label>
+          </div>
+        </div>
+        <div class="row center">
+          <button class="btn blue" ng-click="viewFriends()" type="submit">View<span class="sr"> friends list</span></button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

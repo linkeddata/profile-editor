@@ -27,7 +27,7 @@
           <div class="brand-logo valign-wrapper">
             <div ng-if="pageTitle" class="valign brand-text">
               <h1>{{pageTitle}}
-              <small ng-show="profile.loading || profile.toLoad > 0"> ...loading</small>
+              <span><small ng-show="profile.loading || profile.toLoad > 0"> ...loading profiles</small> <small ng-show="profile.toLoad">({{profile.toLoad}} left)</small></span>
               </h1>
             </div>
           </div>
