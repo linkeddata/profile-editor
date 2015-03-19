@@ -1,22 +1,36 @@
 angular.module( 'App.friends', [
   'ui.router'
 ])
-.config(function config( $stateProvider ) {
-  $stateProvider.state( 'friends', {
-    url: '/friends?webid',
+.config(function config( $stateProvider, $urlRouterProvider ) {
+  $stateProvider.state( 'editFriends', {
+    url: '/friends/edit?webid',
     views: {
       "main": {
-        controller: 'FriendsCtrl',
-        templateUrl: 'app/friends/friends.tpl.html'
+        controller: 'EditFriendsCtrl',
+        templateUrl: 'app/friends/edit-friends.tpl.html'
       }
     },
-    data:{ pageTitle: 'Friends' }
+    data:{ pageTitle: 'Edit friends' }
+  });
+  $stateProvider.state( 'viewFriends', {
+    url: '/friends/view?webid',
+    views: {
+      "main": {
+        controller: 'ViewFriendsCtrl',
+        templateUrl: 'app/friends/view-friends.tpl.html'
+      }
+    },
+    data:{ pageTitle: 'View friends' }
   });
 })
-
-.controller( 'FriendsCtrl', function FriendsCtrl( $scope, $state, $location, $upload, $stateParams ) {
-  $scope.form = {};
+.filter('encodeURL', function() {
+  return function(url) {
+    return encodeURIComponent(url);
+  };
+})
+.controller( 'EditFriendsCtrl', function EditFriendsCtrl( $scope, $state, $location, $upload, $stateParams ) {
   $scope.profile = {};
+  $scope.form = {};
 
   $scope.Befriend = function() {
     if (!$scope.profile.friends) {
@@ -42,7 +56,7 @@ angular.module( 'App.friends', [
 
   $scope.updateObject = function (obj, force) {
     // update object and also patch graph
-    if (obj.value && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
+    if (obj.value && obj.statement.why.value.length === 0 && $scope.profile.sources.length > 0) {
       obj.picker = true;
       // $scope.locationPicker = obj;
       // $scope.$parent.overlay = true;
@@ -51,6 +65,36 @@ angular.module( 'App.friends', [
       obj.updateObject(true, force);
     }
   };
+
+  $scope.viewFriends = function() {
+    var newPath = $location.path("/friends/view");
+    if ($stateParams['webid']) {
+      newPath.search({'webid': webid});
+    }
+    newPath.replace();
+  };
+
+  if (!$scope.profile.webid) {
+    if ($stateParams['webid']) {
+      var webid = $stateParams['webid'];
+      // check if it's the authenticated user
+      if ($scope.$parent.profile && $scope.$parent.profile.webid == webid) {
+        $scope.profile = $scope.$parent.profile;
+      } else if ($scope.$parent.profiles[webid] && $scope.$parent.profiles[webid].webid == webid) {
+        // load previous existing profile
+        $scope.profile = $scope.$parent.profiles[webid];
+      } else {
+        $scope.editProfile(webid);
+      }
+    } else {
+      $scope.profile = $scope.$parent.profile;
+    }
+  }
+})
+
+.controller( 'ViewFriendsCtrl', function ViewFriendsCtrl( $scope, $state, $location, $upload, $stateParams ) {
+  $scope.form = {};
+  $scope.profile = {};
 
   $scope.viewFriends = function(webid) {
     if (!$scope.$parent.profiles) {
@@ -64,9 +108,13 @@ angular.module( 'App.friends', [
     }
     $scope.profile = $scope.$parent.profiles[webid];
     $scope.$parent.toWebID = $scope.profile.webid;
-    $scope.$parent.toLoc = '/friends';
-    $location.path("/friends").search({'webid': webid}).replace();
-  }
+    $scope.$parent.toLoc = '/friends/view';
+    $location.path("/friends/view").search({'webid': webid}).replace();
+  };
+
+  $scope.editFriends = function() {
+    $location.path("/friends/edit").replace();
+  };
 
   if (!$scope.profile.webid) {
     if ($stateParams['webid']) {
@@ -84,4 +132,8 @@ angular.module( 'App.friends', [
       $scope.profile = $scope.$parent.profile;
     }
   }
+
 });
+
+
+
