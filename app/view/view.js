@@ -12,7 +12,7 @@ angular.module( 'App.view', [
         templateUrl: 'app/view/view.tpl.html'
       }
     },
-    data:{ pageTitle: 'Viewing profile' }
+    data:{ pageTitle: 'View profile' }
   });
 })
 

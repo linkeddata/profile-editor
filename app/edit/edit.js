@@ -12,7 +12,7 @@ angular.module( 'App.edit', [
         templateUrl: 'app/edit/profile.tpl.html'
       }
     },
-    data:{ pageTitle: 'Editing profile' }
+    data:{ pageTitle: 'Edit profile' }
   });
 })
 
