@@ -1,7 +1,7 @@
 // Globals
 var __kb;
 var __profile;
-var PROXY = "http://rww.io/proxy.php?uri={uri}";
+var PROXY = "https://rww.io/proxy.php?uri={uri}";
 var AUTH_PROXY = "https://rww.io/auth-proxy?uri=";
 var TIMEOUT = 90000;
 var DEBUG = true;
