@@ -323,6 +323,7 @@ form {
 }
 .collection-item {
   min-height: 120px;
+  color: #000;
 }
 .collection-item.title {
   max-height: 70px;
