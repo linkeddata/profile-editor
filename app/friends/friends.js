@@ -7,7 +7,7 @@ angular.module( 'App.friends', [
     views: {
       "main": {
         controller: 'EditFriendsCtrl',
-        templateUrl: 'app/friends/edit-friends.tpl.html'
+        templateUrl: 'app/friends/view-friends.tpl.html'
       }
     },
     data:{ pageTitle: 'Edit friends' }
@@ -31,6 +31,7 @@ angular.module( 'App.friends', [
 .controller( 'EditFriendsCtrl', function EditFriendsCtrl( $scope, $state, $location, $upload, $stateParams ) {
   $scope.profile = {};
   $scope.form = {};
+  $scope.editor = true;
 
   $scope.Befriend = function() {
     if (!$scope.profile.friends) {
@@ -90,11 +91,23 @@ angular.module( 'App.friends', [
       $scope.profile = $scope.$parent.profile;
     }
   }
+
+  $scope.$watch('profile.friends', function(newVal, oldVal) {
+    if (newVal !== undefined) {
+      newVal.forEach(function(webid) {
+        if (webid && webid.value && !$scope.$parent.profiles[webid.value]) {
+          $scope.$parent.getProfile(webid.value, false, false);
+        }
+      });
+    }
+  });
+
 })
 
 .controller( 'ViewFriendsCtrl', function ViewFriendsCtrl( $scope, $state, $location, $upload, $stateParams ) {
   $scope.form = {};
   $scope.profile = {};
+  $scope.editor = false;
 
   $scope.viewFriends = function(webid) {
     if (!$scope.$parent.profiles) {
@@ -133,7 +146,51 @@ angular.module( 'App.friends', [
     }
   }
 
+  $scope.$watch('profile.friends', function(newVal, oldVal) {
+    if (newVal !== undefined) {
+      newVal.forEach(function(webid) {
+        if (webid && webid.value && !$scope.$parent.profiles[webid.value]) {
+          $scope.$parent.getProfile(webid.value, false, false);
+        }
+      });
+    }
+  });
 });
+// .directive('addFriend', function () {
+//     return {
+//         restrict: 'AE',
+//         transclude: true,
+//         template: '<input id="newfriend" type="tel" ng-model="friend.value" ng-blur="updateObject(friend)" ng-disabled="friend.locked">'+
+//                   '<label for="newfriend" ng-class="{active: friend.value.length > 0}">WebID{{friend.locked?"...updating":""}}</label>'+
+//                   '<div pick-source obj="friend" ng-if="friend.picker"></div>',
+//         link: function($scope, $element, $attrs) {
+//           $('#location-picker').openModal();
+//           $scope.$parent.overlay = true;
+
+//           $scope.setWhy = function(uri) {
+//             $scope.obj.statement['why']['uri'] = $scope.obj.statement['why']['value'] = uri;
+//             console.log("Set Why to:"+uri);
+//             console.log($scope.obj.statement);
+//             if ($scope.obj.statement.predicate.value == FOAF('img').value || $scope.obj.statement.predicate.value == FOAF('depiction').value) {
+//               console.log("Supposed to save picture");
+//               $scope.$parent.savePicture();
+//             } else if ($scope.obj.statement.predicate.value == UI('backgroundImage').value) {
+//               console.log("Supposed to save bgpicture");
+//               $scope.$parent.saveBackground();
+//             } else {
+//               console.log("Supposed to update obj");
+//               $scope.$parent.updateObject($scope.obj);
+//             }
+//             $scope.cancel();
+//           }
+//           $scope.cancel = function() {
+//             $scope.$parent.overlay = false;
+//             $scope.obj.picker = false;
+//             $('#location-picker').closeModal();
+//           }
+//         }
+//     };
+// });
 
 
 

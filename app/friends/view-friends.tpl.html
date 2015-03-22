@@ -10,20 +10,62 @@
   </div>
 
   <div class="row" ng-show="profile.webid && !profile.loading">
-    <div class="col card-panel s12 center">
-      <h3 class="valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span><span ng-show="profile.fullname">{{profile.fullname.value}}'s </span> Friends</h3>
+    <div class="col s12 card-panel center">
+      <ul class="collection">
+        <li class="collection-item title">
+          <h3 class="valign-wrapper align-left truncate"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>
+          <span class="truncate">Friends of<a href="#/view?webid={{profile.webid|encodeURL}}" ng-show="profile.fullname" class="left-10">{{profile.fullname.value}}</a></span>
+          </h3>
+        </li>
+        <li class="collection-item avatar valign-wrapper" ng-repeat="(id, friend) in profile.friends track by $index">
+          <div class="small-circle valign">
+            <img ng-hide="profiles[friend.value].picture.value" ng-src="images/generic_photo.png" alt="Picture of {{profiles[friend.value].fullname.value}}">
+            <img ng-show="profiles[friend.value].picture.value" ng-src="{{profiles[friend.value].picture.value}}" alt="Picture of {{profiles[friend.value].fullname.value}}">
+          </div>
+          <div class="friend-details valign">
+            <h5 class="truncate" ng-show="profiles[friend.value].fullname">{{profiles[friend.value].fullname.value}}</h5>
+            <div>
+              <span class="truncate left" ng-show="profiles[friend.value].emails.length > 0">{{profiles[friend.value].emails[0].value}}</span>
+              <br>
+              <div ng-hide="editor" class="left truncate"><a href="{{friend.value}}" target="_blank">{{friend.value}}</a></div>
+              <form ng-show="editor">
+                <div class="input-field">
+                <input id="friend_{{id}}" type="tel" ng-model="friend.value" ng-blur="updateObject(friend)" ng-disabled="friend.locked">
+                <label for="friend_{{id}}" ng-class="{active: friend.value.length > 0}">Friend's WebID{{friend.locked?'...updating':''}}</label>
+                <div pick-source obj="friend" ng-if="friend.picker"></div>
+              </div>
+            </form>
+            </div>
+          </div>
+          <div class="right valign left-10" ng-show="editor">
+              <a href="#!" class="secondary-content" ng-click="Unfriend(id)"><span aria-hidden="true" class="mdi-action-delete medium blue-text"></span></a>
+            </div>
+        </li>
+        <!-- <li class="collection-item" ng-show="editor">
+          <form>
+            <div class="input-field">
+            <a class="prefix" ng-click="Unfriend(id)"><span aria-hidden="true" class="mdi-action-delete"></span>
+              <span class="sr">Delete Friend</span>
+            </a>
+            <input id="friend_{{id}}" type="tel" ng-model="friend.value" ng-blur="updateObject(friend)" ng-disabled="friend.locked">
+            <label for="friend_{{id}}" ng-class="{active: friend.value.length > 0}">Friend's WebID{{friend.locked?'...updating':''}}</label>
+            <div pick-source obj="friend" ng-if="friend.picker"></div>
+          </div>
+        </form>
+        </li> -->
+      </ul>
     </div>
-  
-    <div class="col s12 card-panel" ng-repeat="(id, friend) in profile.friends track by $index">
-    
-
-        <span>{{friend.value}}</span>
-    
-
-    </div>
-    <div class="col s12" ng-show="authenticated">
+    <div class="col s12" ng-show="authenticated && !editor">
       <a class="btn blue" ng-click="editFriends()"><span aria-hidden="true" class="mdi-editor-mode-edit left right-10"></span>
         <span class="sr">Switch to editor </span>Switch to editor
+      </a>
+    </div>
+    <div class="col s12" ng-show="authenticated && editor">
+      <a class="btn blue" ng-click="Befriend()"><span aria-hidden="true" class="mdi-content-add left right-10"></span>
+        <span class="sr">Add </span>Friend
+      </a>
+      <a class="btn blue" ng-click="viewFriends()"><span aria-hidden="true" class="mdi-action-done left right-10"></span>
+        <span class="sr">Switch to viewer </span>Switch to viewer
       </a>
     </div>
   </div>
