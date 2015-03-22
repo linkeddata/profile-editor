@@ -325,7 +325,7 @@ form {
   min-height: 120px;
 }
 .collection-item.title {
-  height: 70px;
+  max-height: 70px;
 }
 .friend-details {
   position: relative;
@@ -479,6 +479,7 @@ form {
 }
 .input-field label {
 	color: #434343;
+  left: 0;
 }
 /* label focus color */
 .input-field input:focus + label {
