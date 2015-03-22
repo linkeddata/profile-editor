@@ -30,7 +30,7 @@
             <div>
               <span class="truncate left" ng-show="profiles[friend.value].emails.length > 0">{{profiles[friend.value].emails[0].value}}</span>
               <br>
-              <div ng-hide="editor" class="left truncate"><a href="{{friend.value}}" target="_blank">{{friend.value}}</a></div>
+              <div ng-hide="editor" class="left truncate"><a href="#/friends/view?webid={{friend.value|encodeURL}}" class="blue-text">{{friend.value}}</a></div>
               <form ng-show="editor">
                 <div class="input-field">
                 <input id="friend_{{id}}" type="tel" ng-model="friend.value" ng-blur="updateObject(friend)" ng-disabled="friend.locked">
