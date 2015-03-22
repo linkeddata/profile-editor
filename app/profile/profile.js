@@ -1,21 +1,66 @@
-angular.module( 'App.edit', [
+angular.module( 'App.profile', [
   'ui.router',
   'angularFileUpload',
   'ngImgCrop'
 ])
 .config(function config( $stateProvider ) {
   $stateProvider.state( 'editProfile', {
-    url: '/edit/profile?webid',
+    url: '/profile/edit?webid',
     views: {
       "main": {
         controller: 'EditProfileCtrl',
-        templateUrl: 'app/edit/profile.tpl.html'
+        templateUrl: 'app/profile/edit.tpl.html'
       }
     },
     data:{ pageTitle: 'Edit profile' }
   });
 })
+.config(function config( $stateProvider ) {
+  $stateProvider.state( 'viewProfile', {
+    url: '/profile/view?webid',
+    views: {
+      "main": {
+        controller: 'ViewCtrl',
+        templateUrl: 'app/profile/view.tpl.html'
+      }
+    },
+    data:{ pageTitle: 'View profile' }
+  });
+})
+.controller( 'ViewCtrl', function ViewCtrl( $scope, $location, $state, $stateParams ) {
+  $scope.form = {};
 
+  $scope.viewProfile = function(webid) {
+    if (!$scope.$parent.profiles) {
+      $scope.$parent.profiles = [];
+    }
+    var webid = (webid)?webid:$scope.form.webid;
+    if (!$scope.$parent.profiles[webid]) {
+      $scope.$parent.profiles[webid] = {};
+      $scope.$parent.getProfile(webid, false);
+    }
+    $scope.profile = $scope.$parent.profiles[webid];
+    $scope.$parent.toWebID = $scope.profile.webid;
+    $scope.$parent.toLoc = '/profile/edit';
+    $location.path("/profile/view").search({'webid': webid}).replace();
+    $scope.form = {};
+  };
+
+  if ($stateParams['webid']) {
+    var webid = $stateParams['webid'];
+    // check if it's the authenticated user
+    if ($scope.$parent.profile && $scope.$parent.profile.webid == webid) {
+      $scope.profile = $scope.$parent.profile;
+    } else if ($scope.$parent.profiles[webid] && $scope.$parent.profiles[webid].webid == webid) {
+      // load previous profile if it exists
+      $scope.profile = $scope.$parent.profiles[webid];
+    } else {
+      $scope.viewProfile(webid);
+    }
+  }
+  $scope.$parent.toWebID = $scope.profile.webid;
+  $scope.$parent.toLoc = '/profile/edit';
+})
 .controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $location, $upload, $stateParams ) {
   // blank
   $scope.form = {};
@@ -133,22 +178,6 @@ angular.module( 'App.edit', [
   };
 
   // Updates
-  
-
-  // $scope.setWhy = function(obj, uri) {
-  //   obj.statement.why.uri = obj.statement.why.value = uri;
-  //   console.log(obj.statement);
-  //   if (obj.statement.predicate == FOAF('img') || obj.statement.predicate == FOAF('depiction')) {
-  //     $scope.savePicture();
-  //   } else if (obj.statement.predicate == UI('backgroundImage')) {
-  //     $scope.saveBackground();
-  //   } else {
-  //     $scope.updateObject(obj);
-  //   }
-  //   $scope.$parent.overlay = false;
-  //   $('#location-picker').closeModal();
-  // }
-
   // select file for picture
   $scope.handleFileSelect = function(file) {
     if (file) {
@@ -194,9 +223,7 @@ angular.module( 'App.edit', [
     // update object and also patch graph
     if (obj.value && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
       obj.picker = true;
-      // $scope.locationPicker = obj;
-      // $scope.$parent.overlay = true;
-      // $('#location-picker').openModal();
+
     } else {
       obj.updateObject(true, force);
     }
@@ -260,8 +287,8 @@ angular.module( 'App.edit', [
     }
     $scope.profile = $scope.$parent.profiles[webid];
     $scope.$parent.toWebID = $scope.profile.webid;
-    $scope.$parent.toLoc = '/view';
-    $location.path("/edit/profile").search({'webid': webid}).replace();
+    $scope.$parent.toLoc = '/profile/view';
+    $location.path("/profile/edit").search({'webid': webid}).replace();
     console.log($scope.profile);
   }
 
@@ -282,7 +309,7 @@ angular.module( 'App.edit', [
     }
   }
   $scope.$parent.toWebID = $scope.profile.webid;
-  $scope.$parent.toLoc = '/view';
+  $scope.$parent.toLoc = '/profile/view';
 
   $scope.$watch('pictureFile.file', function (newFile, oldFile) {
     if (newFile != undefined) {
@@ -354,4 +381,3 @@ angular.module( 'App.edit', [
         }
     };
 });
-

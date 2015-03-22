@@ -32,14 +32,14 @@
             </div>
           </div>
           <div ng-if="toLoc" class="action valign right">
-              <div class="valign-wrapper pointer pad-right-20" ng-if="toLoc == '/view'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-action-done valign right-10"></span>View</div>
-              <div class="valign-wrapper pointer pad-right-20" ng-if="authenticated == toWebID && toLoc == '/edit/profile'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-editor-mode-edit right-10"></span>Edit</div>
+              <div class="valign-wrapper pointer pad-right-20" ng-if="toLoc == '/profile/view'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-action-done valign right-10"></span>View</div>
+              <div class="valign-wrapper pointer pad-right-20" ng-if="authenticated == toWebID && toLoc == '/profile/edit'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-editor-mode-edit right-10"></span>Edit</div>
           </div>
           
           <ul class="side-nav blue-grey darken-3" id="left-menu">
             <li class="blue accent-2" ng-show="authenticated"><profile-card></profile-card></li>
             <li>
-              <a href="#/edit/profile" class="white-text valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-box prefix valign inline-block right-10"></span><span class="valign inline-block">Edit profile</span></a></li>
+              <a href="#/profile/edit" class="white-text valign-wrapper align-left"><span aria-hidden="true" class="mdi-action-account-box prefix valign inline-block right-10"></span><span class="valign inline-block">Edit profile</span></a></li>
             <li>
               <a href="#/friends/view" class="valign-wrapper align-left white-text"><span aria-hidden="true" class="mdi-action-account-child prefix valign right-10"></span><span class="valign">Friends list</span></a></li>
             <li ng-show="authenticated">
@@ -87,10 +87,9 @@
 <script src="app/vendor/qrcode.js"></script>
 <!-- App -->
 <script src="app/app.js"></script>
-<script src="app/edit/edit.js"></script>
+<script src="app/profile/profile.js"></script>
 <script src="app/about/about.js"></script>
 <script src="app/login/login.js"></script>
-<script src="app/view/view.js"></script>
 <script src="app/share/share.js"></script>
 <script src="app/friends/friends.js"></script>
 <script src="app/certificates/certificates.js"></script>

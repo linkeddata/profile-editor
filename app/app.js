@@ -22,8 +22,7 @@ $rdf.Fetcher.crossSiteProxyTemplate=PROXY;
 angular.module( 'App', [
   'App.about',
   'App.login',
-  'App.view',
-  'App.edit',
+  'App.profile',
   'App.share',
   'App.certificates',
   'App.friends',
@@ -31,8 +30,7 @@ angular.module( 'App', [
 ])
 
 .config( function AppConfig ( $stateProvider, $urlRouterProvider ) {
-  $urlRouterProvider.otherwise( 'view' );
-  $urlRouterProvider.when('/?', '/view?');
+  $urlRouterProvider.otherwise( 'profile/view' );
   $stateProvider.state( 'home', {
     url: '/',
     views: {
@@ -556,7 +554,8 @@ angular.module( 'App', [
     // redirect to view page
     if (redirect) {
       // switch to view once it's available
-      $state.go('view', {}, true);
+      window.location = '#/profile/view';
+      $state.reload();
     }
   };
 
@@ -605,7 +604,7 @@ angular.module( 'App', [
     $scope.profile = {};
     $scope.webid = undefined;
     $scope.authenticated = false;
-    window.location = '#/view';
+    window.location = '#/profile/view';
     $state.reload();
   };
 
@@ -622,17 +621,17 @@ angular.module( 'App', [
   $scope.view = function(webid) {
     $('#toggle-sidenav').sideNav('hide');
     if (webid) {
-      $location.path('/view').search({'webid': webid}).replace();
+      $location.path('/profile/view').search({'webid': webid}).replace();
     } else {
-      $location.path('/view').replace();  
+      $location.path('/profile/view').replace();  
     }
   }
   $scope.editProfile = function(webid) {
     $('#toggle-sidenav').sideNav('hide');
     if (webid) {
-      $location.path('/edit/profile').search({'webid': webid}).replace();
+      $location.path('/profile/edit').search({'webid': webid}).replace();
     } else {
-      $location.path('/edit/profile').replace();  
+      $location.path('/profile/edit').replace();  
     }
   }
 
