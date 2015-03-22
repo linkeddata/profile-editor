@@ -22,6 +22,16 @@ angular.module( 'App.friends', [
     },
     data:{ pageTitle: 'View friends' }
   });
+  $stateProvider.state( 'addFriends', {
+    url: '/friends/add?webid',
+    views: {
+      "main": {
+        controller: 'AddFriendsCtrl',
+        templateUrl: 'app/friends/add.tpl.html'
+      }
+    },
+    data:{ pageTitle: 'Add friends' }
+  });
 })
 .filter('encodeURL', function() {
   return function(url) {
@@ -130,6 +140,17 @@ angular.module( 'App.friends', [
     }
     newPath.replace();
   };
+
+  // $scope.isKnown = function(webid) {
+  //   $scope.profile.friends.forEach(function(uri) {
+  //     console.log(webid, uri.value);
+  //     console.log("KNOWN ", !$scope.editor, $scope.$parent.authenticated, $scope.$parent.authenticated != uri.value, webid == uri.value);
+  //     if (!$scope.editor && $scope.$parent.authenticated && ($scope.$parent.authenticated != uri.value || webid == uri.value)) {
+  //       return true;
+  //     }
+  //   });
+  //   return false;
+  // }
 
   if (!$scope.profile.webid) {
     if ($stateParams['webid']) {

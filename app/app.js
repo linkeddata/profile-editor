@@ -66,6 +66,7 @@ angular.module( 'App', [
   // global knowledge base
   $scope.kb = new $rdf.graph();
 
+  $scope.pageTitleExtra = undefined;
   $scope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     if (angular.isDefined(toState.data.pageTitle)) {
       $scope.pageTitle = toState.data.pageTitle;
@@ -78,6 +79,7 @@ angular.module( 'App', [
     this.uploading = false;
     this.failed = false;
     this.picker = false;
+    this.knowsme = false;
     this.statement = angular.copy(s);
     this.value = this.prev = '';
     if (s && s['object']['value']) {
@@ -477,6 +479,9 @@ angular.module( 'App', [
           if (friends.length > 0) {
             friends.forEach(function(friend){
               $scope.profiles[webid].friends.push(new $scope.ProfileElement(friend));
+              if ($scope.profile && $scope.profile.webid == friend.object.value) {
+                $scope.profiles[webid].knowsme = true;
+              }
             });
           }
 
@@ -511,7 +516,7 @@ angular.module( 'App', [
           __kb = $scope.kb;
 
           $scope.profiles[webid].toLoad--;
-          console.log("Profiles left to load: "+$scope.profiles[webid].toLoad);
+          console.log("Profiles left to load for "+webid+": "+$scope.profiles[webid].toLoad);
           $scope.profiles[webid].sources.forEach(function(src) {
             if (src.uri === docURI) {
               src.loaded = true;
@@ -525,7 +530,6 @@ angular.module( 'App', [
             __profile = $scope.profile;
             $scope.saveCredentials($scope.authenticated);
           }
-
           $scope.$apply();
 
           // debug

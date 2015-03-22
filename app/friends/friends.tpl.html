@@ -5,12 +5,12 @@
       </div>
       <div class="row s12 white-text center">Loading profile...</div>
   </div>
-  <div class="col s12 center" ng-show="profile.friends && profile.friends.length == 0">
-    <h5>This profile does not contain any friends.</h5>
+  <div class="col s12 center" ng-show="!profile.loading && profile.friends && profile.friends.length == 0">
+    <h5>{{profile.webid}} does not contain any friends.</h5>
   </div>
 
-  <div class="row" ng-show="profile.webid && !profile.loading">
-    <div class="col s12 card-panel">
+  <div class="row" ng-show="profile.webid && !profile.loading && profile.friends.length > 0">
+    <div class="col s12 card-panel white">
       <h3 class="valign-wrapper align-left left-10"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>
         <span>Friends of <a href="#/profile/view?webid={{profile.webid|encodeURL}}" ng-show="profile.fullname"><span class="truncate">{{profile.fullname.value}}</span></a></span>
       </h3>
@@ -23,7 +23,8 @@
             <img ng-show="profiles[friend.value].picture.value" ng-src="{{profiles[friend.value].picture.value}}" alt="Picture of {{profiles[friend.value].fullname.value}}">
           </div>
           <div class="friend-details valign">
-            <h5 class="truncate" ng-show="profiles[friend.value].fullname.value">{{profiles[friend.value].fullname.value}}</h5>
+            <h5 class="truncate margin-0" ng-show="profiles[friend.value].fullname.value">{{profiles[friend.value].fullname.value}}</h5>
+            <div ng-show="profiles[friend.value].knowsme"><small class="green-text">also knows you</small></div>
             <div>
               <span class="truncate left" ng-show="profiles[friend.value].emails.length > 0">{{profiles[friend.value].emails[0].value}}</span>
               <br>
@@ -37,6 +38,9 @@
             </form>
             </div>
           </div>
+          <!-- <div class="right valign left-10" ng-hide="isKnown(friend.value)">
+            <a class="btn-floating btn-large blue"><span aria-hidde="true" class="mdi-content-add"></span></a>
+          </div> -->
           <div class="right valign left-10" ng-show="editor">
               <a href="#!" class="secondary-content" ng-click="Unfriend(id)"><span aria-hidden="true" class="mdi-action-delete medium blue-text"></span></a>
             </div>

@@ -356,7 +356,9 @@ form {
 	-moz-justify-content: inherit!important;
 	justify-content: inherit!important;
 }
-
+.margin-0 {
+  margin: 0!important;
+}
 .right-10 {
 	margin-right: 10px!important;
 }
