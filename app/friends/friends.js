@@ -7,7 +7,7 @@ angular.module( 'App.friends', [
     views: {
       "main": {
         controller: 'EditFriendsCtrl',
-        templateUrl: 'app/friends/view-friends.tpl.html'
+        templateUrl: 'app/friends/friends.tpl.html'
       }
     },
     data:{ pageTitle: 'Edit friends' }
@@ -17,7 +17,7 @@ angular.module( 'App.friends', [
     views: {
       "main": {
         controller: 'ViewFriendsCtrl',
-        templateUrl: 'app/friends/view-friends.tpl.html'
+        templateUrl: 'app/friends/friends.tpl.html'
       }
     },
     data:{ pageTitle: 'View friends' }
@@ -84,8 +84,6 @@ angular.module( 'App.friends', [
       } else if ($scope.$parent.profiles[webid] && $scope.$parent.profiles[webid].webid == webid) {
         // load previous existing profile
         $scope.profile = $scope.$parent.profiles[webid];
-      } else {
-        $scope.editProfile(webid);
       }
     } else {
       $scope.profile = $scope.$parent.profile;
@@ -126,7 +124,11 @@ angular.module( 'App.friends', [
   };
 
   $scope.editFriends = function() {
-    $location.path("/friends/edit").replace();
+    var newPath = $location.path("/friends/edit");
+    if ($stateParams['webid']) {
+      newPath.search({'webid': webid});
+    }
+    newPath.replace();
   };
 
   if (!$scope.profile.webid) {
@@ -139,7 +141,7 @@ angular.module( 'App.friends', [
         // load previous existing profile
         $scope.profile = $scope.$parent.profiles[webid];
       } else {
-        $scope.editProfile(webid);
+        $scope.viewFriends(webid);
       }
     } else {
       $scope.profile = $scope.$parent.profile;
