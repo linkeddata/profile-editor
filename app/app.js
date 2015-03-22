@@ -53,7 +53,7 @@ angular.module( 'App', [
 })
 .controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state, $stateParams ) {
   $scope.showMenu = true;
-  $scope.appuri = window.location.host+window.location.pathname;
+  $scope.appuri = window.location.origin;
   $scope.loginTLSButtonText = 'With certificate';
   $scope.loginRSAButtonText = 'With key store';
   $scope.webid = '';
@@ -276,7 +276,7 @@ angular.module( 'App', [
           if (forWebID) {
             extra = 'additional';
           }
-          Notifier.error('Failed to fetch '+extra+' profile '+uri+'. HTTP '+xhr.status);
+          console.log('Failed to fetch '+extra+' profile '+uri+'. HTTP '+xhr.status);
           if (!$scope.profiles[webid].fullname) {
             $scope.profiles[webid].fullname = webid;
           }

@@ -305,6 +305,41 @@ form {
 	height: 200px;
 }
 
+.small-circle {
+  overflow:hidden;
+  position:absolute;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  background-clip: padding-box;
+  max-height: 100px;
+  width: 100px;
+  height: auto;
+}
+.small-circle img {
+  max-width: 100px;
+  height: 100px;
+  width: auto;
+}
+.collection-item {
+  min-height: 120px;
+}
+.collection-item.title {
+  height: 70px;
+}
+.friend-details {
+  position: relative;
+  padding-left: 120px;
+  width: 100%;
+  text-align: left;
+  line-height: 1.5rem;
+}
+.truncate {
+  width: 100%;
+}
+.medium {
+  font-size: 2rem;
+}
 .fixed {
 	position: fixed!important;
 }
@@ -323,6 +358,9 @@ form {
 
 .right-10 {
 	margin-right: 10px!important;
+}
+.left-10 {
+  margin-left: 10px!important;
 }
 .pad-right-20 {
 	padding-right: 20px!important;
