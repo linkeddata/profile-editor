@@ -10,13 +10,16 @@
   </div>
 
   <div class="row" ng-show="profile.webid && !profile.loading">
+    <div class="col s12 card-panel">
+      <h3 class="valign-wrapper align-left left-10 truncate"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>
+        <span class="truncate">Friends of<a href="#/view?webid={{profile.webid|encodeURL}}" ng-show="profile.fullname" class="left-10">{{profile.fullname.value}}</a></span>
+      </h3>
+    </div>
     <div class="col s12 card-panel center">
       <ul class="collection">
-        <li class="collection-item title">
-          <h3 class="valign-wrapper align-left truncate"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>
-          <span class="truncate">Friends of<a href="#/view?webid={{profile.webid|encodeURL}}" ng-show="profile.fullname" class="left-10">{{profile.fullname.value}}</a></span>
-          </h3>
-        </li>
+        <!-- <li class="collection-item title">
+          
+        </li> -->
         <li class="collection-item avatar valign-wrapper" ng-repeat="(id, friend) in profile.friends track by $index">
           <div class="small-circle valign">
             <img ng-hide="profiles[friend.value].picture.value" ng-src="images/generic_photo.png" alt="Picture of {{profiles[friend.value].fullname.value}}">
