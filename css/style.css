@@ -312,13 +312,14 @@ form {
   -moz-border-radius: 50%;
   border-radius: 50%;
   background-clip: padding-box;
-  max-height: 100px;
-  width: 100px;
+  max-height: 75px;
+  width: 75px;
   height: auto;
+  margin-top: 10px;
 }
 .small-circle img {
-  max-width: 100px;
-  height: 100px;
+  max-width: 75px;
+  height: 75px;
   width: auto;
 }
 .collection-item {
@@ -330,7 +331,7 @@ form {
 }
 .friend-details {
   position: relative;
-  padding-left: 120px;
+  padding-left: 100px;
   width: 100%;
   text-align: left;
   line-height: 1.5rem;
