@@ -51,7 +51,7 @@ angular.module( 'App.share', [
   $scope.showQR = function() {
     var webid = ($stateParams['webid'])?$stateParams['webid']:$scope.profile.webid;
     $scope.webid = webid;
-    $scope.viewerURI = $scope.$parent.appuri+'#/view?webid='+encodeURIComponent(webid);
+    $scope.viewerURI = $scope.$parent.appuri+'/#/profile/view?webid='+encodeURIComponent(webid);
     $scope.webidQr = $scope.getQRparams(webid);
     $scope.viewerQr = $scope.getQRparams($scope.viewerURI);
   }
