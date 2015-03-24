@@ -51,7 +51,10 @@ angular.module( 'App', [
 })
 .controller( 'MainCtrl', function MainCtrl ( $scope, $location, $http, $timeout, $state, $stateParams ) {
   $scope.showMenu = true;
-  $scope.appuri = window.location.origin+window.location.pathname;
+  $scope.appuri = window.location.origin;
+  if (window.location.pathname !== '/') {
+    $scope.appuri += window.location.pathname;
+  }
   $scope.loginTLSButtonText = 'With certificate';
   $scope.loginRSAButtonText = 'With key store';
   $scope.webid = '';
