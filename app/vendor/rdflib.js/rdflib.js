@@ -4292,6 +4292,7 @@ $rdf.sparqlUpdateParser = function(str, kb, base) {
     } // while
     //return clauses
 
+
 }; // End of spaqlUpdateParser
 
 
@@ -4368,6 +4369,7 @@ $rdf.IndexedFormula.prototype.applyPatch = function(patch, target, patchCallback
         doPatch(patchCallback)
     };
 };
+
 
 
 
@@ -8064,6 +8066,8 @@ $rdf.Fetcher = function(store, timeout, async) {
     **
     **/
     this.nowOrWhenFetched = function(uri, referringTerm, userCallback) {
+        // Sanitize URI (remove #fragment)
+        uri = (uri.indexOf('#') >= 0)?uri.slice(0, uri.indexOf('#')):uri;
         var sta = this.getState(uri);
         if (sta == 'fetched') return userCallback(true);
 
@@ -8082,13 +8086,13 @@ $rdf.Fetcher = function(store, timeout, async) {
     //
     this.getHeader = function(doc, header) {
         var kb = this.store;
-        var requests = kb.each(undefined, tabulator.ns.link("requestedURI"), doc.uri);
+        var requests = kb.each(undefined, ns.link("requestedURI"), doc.uri);
         for (var r=0; r<requests.length; r++) {
             var request = requests[r];
             if (request !== undefined) {
-                var response = kb.any(request, tabulator.ns.link("response"));
+                var response = kb.any(request, ns.link("response"));
                 if (request !== undefined) {
-                    var results = kb.each(response, tabulator.ns.httph(header.toLowerCase()));
+                    var results = kb.each(response, ns.httph(header.toLowerCase()));
                     if (results.length) {
                         return results.map(function(v){return v.value});
                     }
@@ -8113,35 +8117,21 @@ $rdf.Fetcher = function(store, timeout, async) {
      
     this.saveRequestMetadata = function(xhr, kb, docuri) {
         var request = kb.bnode();
-        if (typeof tabulator != 'undefined' && tabulator.isExtension) {
-            var ns = tabulator.ns;
-        } else {
-            var ns = {};
-            ns.link = $rdf.Namespace("http://www.w3.org/2007/ont/link#");
-            ns.rdfs = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
-        }
+        xhr.resource = $rdf.sym(docuri);
 
         xhr.req = request;
         var now = new Date();
         var timeNow = "[" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] ";
         kb.add(request, ns.rdfs("label"), kb.literal(timeNow + ' Request for ' + docuri), this.appNode);
         kb.add(request, ns.link("requestedURI"), kb.literal(docuri), this.appNode);
+
         kb.add(request, ns.link('status'), kb.collection(), this.appNode);
         return request;
     };
        
     this.saveResponseMetadata = function(xhr, kb) {
         var response = kb.bnode();
-        // define the set of namespaces if not using tabulator
-        if (typeof tabulator != 'undefined' && tabulator.isExtension) {
-            var ns = tabulator.ns;
-        } else {
-            var ns = {};
-            ns.link = $rdf.Namespace("http://www.w3.org/2007/ont/link#");
-            ns.http = $rdf.Namespace("http://www.w3.org/2007/ont/http#");
-            ns.httph = $rdf.Namespace("http://www.w3.org/2007/ont/httph#");
-            ns.rdfs = $rdf.Namespace("http://www.w3.org/2000/01/rdf-schema#");
-        }
+
         kb.add(xhr.req, ns.link('response'), response);
         kb.add(response, ns.http('status'), kb.literal(xhr.status), response);
         kb.add(response, ns.http('statusText'), kb.literal(xhr.statusText), response);
@@ -8155,9 +8145,6 @@ $rdf.Fetcher = function(store, timeout, async) {
         }
         return response;
     };
-    
-
-    
     
 
     /** Requests a document URI and arranges to load the document.
@@ -8211,7 +8198,7 @@ $rdf.Fetcher = function(store, timeout, async) {
             xhr.resource = docterm;
             xhr.requestedURI = args[0];
         } else {
-            var req = kb.bnode(); // @@ Joe, no need for xhr.req?
+            var req = kb.bnode(); 
         }
         var requestHandlers = kb.collection();
         var sf = this;
@@ -8238,52 +8225,57 @@ $rdf.Fetcher = function(store, timeout, async) {
                 var here = '' + document.location;
                 var uri = xhr.resource.uri
                 if (hostpart(here) && hostpart(uri) && hostpart(here) != hostpart(uri)) {
-                    newURI = $rdf.Fetcher.crossSiteProxy(uri);
-                    sf.addStatus(xhr.req, "BLOCKED -> Cross-site Proxy to <" + newURI + ">");
-                    if (xhr.aborted) return;
+                    if (xhr.status === 401 || xhr.status === 403) {
+                        onreadystatechangeFactory(xhr)();
+                    } else {
+                        newURI = $rdf.Fetcher.crossSiteProxy(uri);
+                        sf.addStatus(xhr.req, "BLOCKED -> Cross-site Proxy to <" + newURI + ">");
+                        if (xhr.aborted) return;
 
-                    var kb = sf.store;
-                    var oldreq = xhr.req;
-                    kb.add(oldreq, ns.http('redirectedTo'), kb.sym(newURI), oldreq);
+                        var kb = sf.store;
+                        var oldreq = xhr.req;
+                        kb.add(oldreq, ns.http('redirectedTo'), kb.sym(newURI), oldreq);
 
 
-                    ////////////// Change the request node to a new one:  @@@@@@@@@@@@ Duplicate of what will be done by requestURI below
-                    /* var newreq = xhr.req = kb.bnode() // Make NEW reqest for everything else
-                    kb.add(oldreq, ns.http('redirectedRequest'), newreq, xhr.req);
+                        ////////////// Change the request node to a new one:  @@@@@@@@@@@@ Duplicate of what will be done by requestURI below
+                        /* var newreq = xhr.req = kb.bnode() // Make NEW reqest for everything else
+                        kb.add(oldreq, ns.http('redirectedRequest'), newreq, xhr.req);
 
-                    var now = new Date();
-                    var timeNow = "[" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] ";
-                    kb.add(newreq, ns.rdfs("label"), kb.literal(timeNow + ' Request for ' + newURI), this.appNode)
-                    kb.add(newreq, ns.link('status'), kb.collection(), this.appNode);
-                    kb.add(newreq, ns.link("requestedURI"), kb.literal(newURI), this.appNode);
+                        var now = new Date();
+                        var timeNow = "[" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] ";
+                        kb.add(newreq, ns.rdfs("label"), kb.literal(timeNow + ' Request for ' + newURI), this.appNode)
+                        kb.add(newreq, ns.link('status'), kb.collection(), this.appNode);
+                        kb.add(newreq, ns.link("requestedURI"), kb.literal(newURI), this.appNode);
 
-                    var response = kb.bnode();
-                    kb.add(oldreq, ns.link('response'), response);
-                    */
-                    // kb.add(response, ns.http('status'), kb.literal(xhr.status), response);
-                    // if (xhr.statusText) kb.add(response, ns.http('statusText'), kb.literal(xhr.statusText), response)
+                        var response = kb.bnode();
+                        kb.add(oldreq, ns.link('response'), response);
+                        */
+                        // kb.add(response, ns.http('status'), kb.literal(xhr.status), response);
+                        // if (xhr.statusText) kb.add(response, ns.http('statusText'), kb.literal(xhr.statusText), response)
 
-                    xhr.abort()
-                    xhr.aborted = true
+                        xhr.abort()
+                        xhr.aborted = true
 
-                    sf.addStatus(oldreq, 'done - redirected') // why
-                    //the callback throws an exception when called from xhr.onerror (so removed)
-                    //sf.fireCallbacks('done', args) // Are these args right? @@@   Noit done yet! done means success
-                    sf.requested[xhr.resource.uri] = 'redirected';
+                        sf.addStatus(oldreq, 'done - redirected') // why
+                        //the callback throws an exception when called from xhr.onerror (so removed)
+                        //sf.fireCallbacks('done', args) // Are these args right? @@@   Noit done yet! done means success
+                        sf.requested[xhr.resource.uri] = 'redirected';
 
-                    var xhr2 = sf.requestURI(newURI, xhr.resource, force, userCallback);
-                    xhr2.proxyUsed = true; //only try the proxy once
+                        var xhr2 = sf.requestURI(newURI, xhr.resource, force, userCallback);
+                        xhr2.proxyUsed = true; //only try the proxy once
 
-                    if (xhr2 && xhr2.req) {
-                        kb.add(xhr.req,
-                            kb.sym('http://www.w3.org/2007/ont/link#redirectedRequest'),
-                            xhr2.req,
-                            sf.appNode);
-                        return;
+                        if (xhr2 && xhr2.req) {
+                            kb.add(xhr.req,
+                                kb.sym('http://www.w3.org/2007/ont/link#redirectedRequest'),
+                                xhr2.req,
+                                sf.appNode);
+                            return;
+                        }
                     }
                 }
             } else {
                 if (xhr.withCredentials) {
+                    console.log("@@ Retrying with no credentials for " + xhr.resource)
                     xhr.abort();
                     xhr.withCredentials = false;
                     sf.addStatus(xhr.req, "Credentials SUPPRESSED to see if that helps");
@@ -8304,24 +8296,17 @@ $rdf.Fetcher = function(store, timeout, async) {
                 sf.fireCallbacks('recv', args)
                 var kb = sf.store;
                 sf.saveResponseMetadata(xhr, kb);
-
                 sf.fireCallbacks('headers', [{uri: docuri, headers: xhr.headers}]);
 
-                if (xhr.status === 0) {
-                    if (xhr.statusText === 'abort') {
-                        // Aborted by browser
-                        kb.add(response, ns.http('content'), kb.literal("Browser aborted connection"), response);
-                    } else {
-                        // Offline mode
-                        kb.add(response, ns.http('content'), kb.literal("Operating in offline mode"), response);
-                    }
-                    sf.failFetch(xhr, "HTTP error for " +xhr.resource + ": "+ xhr.status + ' ' + xhr.statusText);
-                    return;
-                } else if (xhr.status >= 400) { // For extra dignostics, keep the reply
+                if (xhr.status >= 400) { // For extra dignostics, keep the reply
                 //  @@@ 401 should cause  a retry with credential son
                 // @@@ cache the credentials flag by host ????
                     if (xhr.responseText.length > 10) {
+                        var response = kb.bnode();
                         kb.add(response, ns.http('content'), kb.literal(xhr.responseText), response);
+                        if (xhr.statusText) {
+                            kb.add(response, ns.http('statusText'), kb.literal(xhr.statusText), response);
+                        }
                         // dump("HTTP >= 400 responseText:\n"+xhr.responseText+"\n"); // @@@@
                     }
                     sf.failFetch(xhr, "HTTP error for " +xhr.resource + ": "+ xhr.status + ' ' + xhr.statusText);
@@ -8559,6 +8544,7 @@ $rdf.Fetcher = function(store, timeout, async) {
                     xhr.userCallback = userCallback;
                     xhr.resource = docterm;
                     xhr.requestedURI = uri2;
+                    xhr.withCredentials = withCredentials; // Somehow gets lost by jq
 
 
                     if (s == 'timeout')
@@ -8635,7 +8621,7 @@ $rdf.Fetcher = function(store, timeout, async) {
                                     // var requestHandlers = kb.collection()
 
                                     // kb.add(kb.sym(newURI), ns.link("request"), req, this.appNode)
-                                    kb.add(oldreq, ns.http('redirectedRequest'), newreq, xhr.req);
+                                    kb.add(oldreq, ns.http('redirectedRequest'), newreq, this.appNode);
 
                                     var now = new Date();
                                     var timeNow = "[" + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds() + "] ";
@@ -8926,7 +8912,7 @@ $rdf.parse = function parse(str, kb, base, contentType) {
 
 //   Serialize to the appropriate format
 //
-$rdf.serialize = function(target, kb, base, contentType) {
+$rdf.serialize = function(target, kb, base, contentType, callback) {
     var documentString;
     var sz = $rdf.Serializer(kb);
     var newSts = kb.statementsMatching(undefined, undefined, undefined, target);
@@ -8944,12 +8930,12 @@ $rdf.serialize = function(target, kb, base, contentType) {
             break;
         case 'application/json+ld':
             var n3String = sz.statementsToN3(newSts);
-            documentString = convertToJson(n3String);
+            convertToJson(n3String, callback);
             break;
         case 'application/n-quads':
         case 'application/nquads': // @@@ just outpout the quads? Does not work for collections
             var n3String = sz.statementsToN3(newSts);
-            documentString = convertToNQuads(n3String); 
+            documentString = convertToNQuads(n3String, callback);
             break;
         default:
             throw "serialise: Content-type "+content_type +" not supported for data write";
@@ -8958,63 +8944,74 @@ $rdf.serialize = function(target, kb, base, contentType) {
 };
 
 ////////////////// JSON-LD code currently requires Node
+if (typeof module !== 'undefined' && module.require) { // Node
+    var asyncLib = require('async');
+    var jsonld = require('jsonld');
+    var N3 = require('n3');
 
-if (typeof module !== 'undefined' && module.require) { // Node 
-
-    var convertToJson = function(n3String) {
+    var convertToJson = function(n3String, jsonCallback) {
         var jsonString = undefined;
         var n3Parser = N3.Parser();
-        var n3Writer = N3.Parser({format: 'N-Quads'});
+        var n3Writer = N3.Writer({
+            format: 'N-Quads'
+        });
         asyncLib.waterfall([
-            function(parseCallback) {
-                n3Parser.parse(n3String, prefixCallback);
+            function(callback) {
+                n3Parser.parse(n3String, callback);
             },
-            function(err, triple, prefix, writeCallback) {
-                if (!err) {
+            function(triple, prefix, callback) {
+                if (triple !== null) {
                     n3Writer.addTriple(triple);
-                    if (typeof writeCallback === 'function') {
-                        writer.end(writeCallback);
-                    }
+                }
+                if (typeof callback === 'function') {
+                    n3Writer.end(callback);
                 }
             },
-            function(err, result) {
-                if (!err) {
-                    $rdf.jsonld.fromRDF(result, {format: 'application/nquads'}, stringCallback);
+            function(result, callback) {
+                try {
+                    jsonld.fromRDF(result, {
+                        format: 'application/nquads'
+                    }, callback);
+                } catch (err) {
+                    callback(err);
                 }
             },
-            function(err, json) {
-                if (!error) {
-                    jsonString = JSON.stringify(json);
-                }
+            function(json, callback) {
+                jsonString = JSON.stringify(json);
+                jsonCallback(null, jsonString);
             }
-        ]);
-        return jsonString;
+        ], function(err, result) {
+            jsonCallback(err, jsonString);
+        });
     }
 
-    var convertToNQuads = function(n3String) {
+    var convertToNQuads = function(n3String, nquadCallback) {
         var nquadString = undefined;
         var n3Parser = N3.Parser();
-        var n3Writer = N3.Parser({format: 'N-Quads'});
+        var n3Writer = N3.Writer({
+            format: 'N-Quads'
+        });
         asyncLib.waterfall([
-            function(parseCallback) {
-                n3Parser.parse(n3String, tripleCallback);
+            function(callback) {
+                n3Parser.parse(n3String, callback);
             },
-            function(err, triple, prefix, writeCallback) {
-                if (!err) {
+            function(triple, prefix, callback) {
+                if (triple !== null) {
                     n3Writer.addTriple(triple);
-                    if (typeof writeCallback === 'function') {
-                        writer.end(writeCallback);
-                    }
+                }
+                if (typeof callback === 'function') {
+                    n3Writer.end(callback);
                 }
             },
-            function(err, result) {
-                if (!err) {
-                    nquadString = result;
-                }
+            function(result, callback) {
+                nquadString = result;
+                nquadCallback(null, nquadString);
             },
-        ]);
-        return nquadString;
-    } // endif Node 
+        ], function(err, result) {
+            nquadCallback(err, nquadString);
+        });
+    }
+
 }
 // ends
 
