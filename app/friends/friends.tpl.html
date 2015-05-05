@@ -5,15 +5,13 @@
       </div>
       <div class="row s12 white-text center">Loading profile...</div>
   </div>
-  <div class="col s12 center" ng-show="!profile.loading && profile.friends && profile.friends.length == 0">
-    <h5>{{profile.webid}} does not contain any friends.</h5>
-  </div>
 
-  <div class="row" ng-show="profile.webid && !profile.loading && profile.friends.length > 0">
+  <div class="row" ng-show="profile.webid && !profile.loading">
     <div class="col s12 card-panel white">
       <h3 class="valign-wrapper align-left left-10"><span aria-hidden="true" class="mdi-action-account-child valign right-10"></span>
         <span>Friends of <a href="#/profile/view?webid={{profile.webid|encodeURL}}" ng-show="profile.fullname"><span class="truncate">{{profile.fullname.value}}</span></a></span>
       </h3>
+      <h5 ng-show="profile.friends.length == 0">It seems you do not have any friends.</h5>
     </div>
     <div class="col s12 center">
       <ul class="collection">
