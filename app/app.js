@@ -101,7 +101,7 @@ angular.module( 'App', [
 
   // };
 
-  $scope.ProfileElement.prototype.updateObject = function(update, force) {
+  $scope.ProfileElement.updateObject = function(update, force) {
     // do not update if value hasn't changed
     if (this.value == this.prev && !force) {
       return;
@@ -570,7 +570,7 @@ angular.module( 'App', [
     $scope.loginTLSButtonText = 'Loggin in...';
     $http({
       method: 'HEAD',
-      url: "https://rww.io/",
+      url: "https://databox.me/",
       withCredentials: true
     }).success(function(data, status, headers) {
       // add dir to local list
