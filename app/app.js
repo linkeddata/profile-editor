@@ -101,7 +101,7 @@ angular.module( 'App', [
 
   // };
 
-  $scope.ProfileElement.updateObject = function(update, force) {
+  $scope.ProfileElement.prototype.updateObject = function(update, force) {
     // do not update if value hasn't changed
     if (this.value == this.prev && !force) {
       return;
