@@ -223,7 +223,6 @@ angular.module( 'App.profile', [
     // update object and also patch graph
     if (obj.value && obj.statement.why.value.length == 0 && $scope.profile.sources.length > 0) {
       obj.picker = true;
-
     } else {
       obj.updateObject(true, force);
     }
@@ -243,7 +242,6 @@ angular.module( 'App.profile', [
       }).success(function (data, status, headers, config) {
         var pic = headers("Location");
         obj.value = pic;
-        console.log(obj.value);
         $scope.updateObject(obj, true);
       }).error(function (data, status, headers, config) {
         $scope.uploading = false;
