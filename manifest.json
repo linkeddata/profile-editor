@@ -1,0 +1,14 @@
+{
+  "name": "WebID Profile",
+  "icons": [
+    {
+      "src": "images/favicon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "density": "4.0"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "orientation": "portrait"
+}
