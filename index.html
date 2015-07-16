@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/style.css"/>
   <!-- favicon -->
   <link rel="shortcut icon" type="img/png" href="images/favicon.png">
+  <link rel="manifest" href="manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
 <body flow-prevent-drop class="blue-grey darken-2">
@@ -36,7 +37,7 @@
               <div class="valign-wrapper pointer pad-right-20" ng-if="toLoc == '/profile/view'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-action-done valign right-10"></span>View</div>
               <div class="valign-wrapper pointer pad-right-20" ng-if="authenticated == toWebID && toLoc == '/profile/edit'" ng-click="switchTo()"><span aria-hidden="true" class="mdi-editor-mode-edit right-10"></span>Edit</div>
           </div>
-          
+
           <ul class="side-nav blue-grey darken-3" id="left-menu">
             <li class="blue accent-2" ng-show="authenticated"><profile-card></profile-card></li>
             <li>
