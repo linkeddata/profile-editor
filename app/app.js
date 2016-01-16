@@ -199,7 +199,7 @@ angular.module( 'App', [
           query +=  " ;\n";
         }
       };
-      
+
       for (i in inc) {
         var s = inc[i];
         // check type?
@@ -300,6 +300,8 @@ angular.module( 'App', [
           var docName = g.statementsMatching($rdf.sym(docURI), DCT('title'), undefined)[0];
           if (docName) {
             docName = docName['object']['value'];
+          } else if (uri == webid) {
+            docName = "Public profile";
           } else {
             docName = docURI;
           }
@@ -310,7 +312,7 @@ angular.module( 'App', [
           }
           if (xhr.getResponseHeader('Link')) {
             var lh = parseLinkHeader(xhr.getResponseHeader('Link'));
-            if (lh['type'] && lh['type'].indexOf('http://www.w3.org/ns/ldp#Resource') >= 0 && 
+            if (lh['type'] && lh['type'].indexOf('http://www.w3.org/ns/ldp#Resource') >= 0 &&
                 $scope.profiles[webid].sources.indexOf(docURI) < 0) {
               $scope.profiles[webid].sources.push({uri: docURI, name: docName, loaded: false});
             }
@@ -399,7 +401,7 @@ angular.module( 'App', [
               pic = img;
             } else {
               // check if profile uses depic instead
-              var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];  
+              var depic = g.statementsMatching(webidRes, FOAF('depiction'), undefined)[0];
               if (depic) {
                 pic = depic;
               }
@@ -502,7 +504,7 @@ angular.module( 'App', [
               if (e && m) {
                 var cert = {
                   key: new $scope.ProfileElement(cRef),
-                  comment: new $scope.ProfileElement(c), 
+                  comment: new $scope.ProfileElement(c),
                   modified: new $scope.ProfileElement(d),
                   exponent: new $scope.ProfileElement(e),
                   modulus: new $scope.ProfileElement(m)
@@ -538,7 +540,7 @@ angular.module( 'App', [
           // debug
           if (authenticated) {
             $scope.loginTLSButtonText = "With certificate";
-            var authUser = ($scope.profiles[webid].fullname.value)?" as "+$scope.profiles[webid].fullname.value:"";  
+            var authUser = ($scope.profiles[webid].fullname.value)?" as "+$scope.profiles[webid].fullname.value:"";
             Notifier.success('Authenticated'+authUser);
             $scope.saveCredentials($scope.authenticated, redirect);
           }
@@ -551,7 +553,7 @@ angular.module( 'App', [
 
   $scope.saveCredentials = function (uri, redirect) {
     var app = {
-      profile: { 
+      profile: {
         webid: $scope.profiles[uri].webid,
         date: $scope.profiles[uri].date
       },
@@ -630,7 +632,7 @@ angular.module( 'App', [
     if (webid) {
       $location.path('/profile/view').search({'webid': webid}).replace();
     } else {
-      $location.path('/profile/view').replace();  
+      $location.path('/profile/view').replace();
     }
   }
   $scope.editProfile = function(webid) {
@@ -638,7 +640,7 @@ angular.module( 'App', [
     if (webid) {
       $location.path('/profile/edit').search({'webid': webid}).replace();
     } else {
-      $location.path('/profile/edit').replace();  
+      $location.path('/profile/edit').replace();
     }
   }
 
@@ -677,7 +679,7 @@ angular.module( 'App', [
       replace : true,
       restrict : 'E',
       templateUrl: 'app/profileCard.tpl.html'
-    }; 
+    };
 })
 
 //simple directive to display list of channels
@@ -686,7 +688,7 @@ angular.module( 'App', [
       replace : true,
       restrict : 'E',
       templateUrl: 'app/spinner.tpl.html'
-    }; 
+    };
 })
 .directive('bgImage', function () {
   return {
