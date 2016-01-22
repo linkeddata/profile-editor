@@ -61,7 +61,7 @@ angular.module( 'App.profile', [
   $scope.$parent.toWebID = $scope.profile.webid;
   $scope.$parent.toLoc = '/profile/edit';
 })
-.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $location, $upload, $stateParams ) {
+.controller( 'EditProfileCtrl', function EditProfileCtrl( $scope, $state, $location, $http, $stateParams ) {
   // blank
   $scope.form = {};
   $scope.pictureFile = {};
@@ -230,22 +230,23 @@ angular.module( 'App.profile', [
 
   $scope.uploadPicture = function (obj, file, filename) {
     if (obj && file && filename) {
-      var newPicURL = '';
       newPicContainer = dirname(obj.statement.why.value)+'/';
       obj.uploading = true;
-      $upload.upload({
-          method: 'POST',
-          url: newPicContainer,
-          withCredentials: true,
-          file: file,
-          fileName: filename
-      }).success(function (data, status, headers, config) {
-        var pic = headers("Location");
-        obj.value = pic;
+      var newPicURL = newPicContainer + filename;
+      $http({
+        method: 'PUT',
+        url: newPicURL,
+        headers: {
+          'Content-Type': $scope.imageType
+        },
+        withCredentials: true,
+        data: file
+      }).success(function () {
+        obj.value = newPicURL;
         $scope.updateObject(obj, true);
-      }).error(function (data, status, headers, config) {
+      }).error(function () {
         $scope.uploading = false;
-        Notifier.error('Could not upload picture -- HTTP '+status);
+        Notifier.error('Could not upload picture to ' + newPicURL + ' -- HTTP '+status);
       });
     }
   };
