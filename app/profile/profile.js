@@ -230,7 +230,7 @@ angular.module( 'App.profile', [
 
   $scope.uploadPicture = function (obj, file, filename) {
     if (obj && file && filename) {
-      filename = encoreURI(filename)
+      filename = encodeURI(filename)
       newPicContainer = dirname(obj.statement.why.value)+'/';
       obj.uploading = true;
       var newPicURL = newPicContainer + filename;
