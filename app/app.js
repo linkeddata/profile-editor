@@ -326,7 +326,7 @@ angular.module( 'App', [
                 $scope.getProfile(same['object']['value'], false, false, webid);
               });
             }
-            var seeAlso = g.statementsMatching(webidRes, OWL('seeAlso'), undefined);
+            var seeAlso = g.statementsMatching(webidRes, RDFS('seeAlso'), undefined);
             if (seeAlso.length > 0) {
               seeAlso.forEach(function(see){
                 $scope.getProfile(see['object']['value'], false, false, webid);
